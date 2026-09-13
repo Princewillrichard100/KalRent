@@ -1,16 +1,105 @@
 import { Request, Response } from "express";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { wktToGeoJSON } from "@terraformer/wkt";
-import { S3Client } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { Location } from "@prisma/client";
 import { Upload } from "@aws-sdk/lib-storage";
+import { Readable } from "stream";
 import axios from "axios";
 
 const prisma = new PrismaClient();
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
+  region: process.env.AWS_REGION || "us-east-1",
+  ...(process.env.S3_ENDPOINT ? { endpoint: process.env.S3_ENDPOINT } : {}),
+  ...(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
+    ? {
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        },
+      }
+    : {}),
 });
+
+export const normalizePhotoUrls = (photoUrls: string[]): string[] => {
+  const baseUrl =
+    process.env.API_BASE_URL ||
+    `http://localhost:${process.env.PORT || 3002}`;
+
+  return (photoUrls || []).map((url) => {
+    if (url && url.includes(".r2.cloudflarestorage.com/")) {
+      const key = url.split(".r2.cloudflarestorage.com/")[1];
+      return process.env.R2_PUBLIC_URL
+        ? `${process.env.R2_PUBLIC_URL}/${key}`
+        : `${baseUrl}/photos/${key}`;
+    }
+    return url;
+  });
+};
+
+export const getPropertyPhoto = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const rawKey = req.params[0] || (req.params as any).key;
+    if (!rawKey) {
+      res.status(400).json({ message: "Photo key is required" });
+      return;
+    }
+
+    const key = decodeURIComponent(rawKey);
+    const command = new GetObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME!,
+      Key: key,
+    });
+
+    const s3Response = await s3Client.send(command);
+
+    if (s3Response.ContentType) {
+      res.setHeader("Content-Type", s3Response.ContentType);
+    }
+    if (s3Response.ContentLength) {
+      res.setHeader("Content-Length", s3Response.ContentLength);
+    }
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+
+    if (s3Response.Body instanceof Readable) {
+      s3Response.Body.pipe(res);
+    } else {
+      const body: any = s3Response.Body;
+      if (body && typeof body.pipe === "function") {
+        body.pipe(res);
+      } else {
+        const byteArray = await s3Response.Body?.transformToByteArray();
+        if (byteArray) {
+          res.send(Buffer.from(byteArray));
+        } else {
+          res.status(404).json({ message: "Photo stream empty" });
+        }
+      }
+    }
+  } catch (error: any) {
+    if (error.name === "NoSuchKey") {
+      res.status(404).json({ message: "Photo not found" });
+    } else {
+      res
+        .status(500)
+        .json({ message: `Error retrieving photo: ${error.message}` });
+    }
+  }
+};
+
+export const CAMPUS_ZONE_COORDINATES: Record<string, [number, number]> = {
+  // [longitude, latitude] - campus zones in Ilorin, Kwara State
+  Tanke: [4.5901, 8.4799],
+  Sanrab: [4.5875, 8.4765],
+  OkeOdo: [4.6015, 8.483],
+  Jalala: [4.652, 8.495],
+  MarkJunction: [4.588, 8.4815],
+  Other: [4.6, 8.48],
+};
 
 export const getProperties = async (
   req: Request,
@@ -24,13 +113,26 @@ export const getProperties = async (
       beds,
       baths,
       propertyType,
-      squareFeetMin,
-      squareFeetMax,
+      campusZone,
       amenities,
       availableFrom,
       latitude,
       longitude,
+      userLat,
+      userLng,
+      sortBy,
     } = req.query;
+
+    const hasUserCoords =
+      userLat !== undefined &&
+      userLng !== undefined &&
+      userLat !== "" &&
+      userLng !== "" &&
+      !isNaN(parseFloat(userLat as string)) &&
+      !isNaN(parseFloat(userLng as string));
+
+    const parsedUserLat = hasUserCoords ? parseFloat(userLat as string) : 0;
+    const parsedUserLng = hasUserCoords ? parseFloat(userLng as string) : 0;
 
     let whereConditions: Prisma.Sql[] = [];
 
@@ -43,13 +145,13 @@ export const getProperties = async (
 
     if (priceMin) {
       whereConditions.push(
-        Prisma.sql`p."pricePerMonth" >= ${Number(priceMin)}`
+        Prisma.sql`p."annualRent" >= ${Number(priceMin)}`
       );
     }
 
     if (priceMax) {
       whereConditions.push(
-        Prisma.sql`p."pricePerMonth" <= ${Number(priceMax)}`
+        Prisma.sql`p."annualRent" <= ${Number(priceMax)}`
       );
     }
 
@@ -61,15 +163,9 @@ export const getProperties = async (
       whereConditions.push(Prisma.sql`p.baths >= ${Number(baths)}`);
     }
 
-    if (squareFeetMin) {
+    if (campusZone && campusZone !== "any") {
       whereConditions.push(
-        Prisma.sql`p."squareFeet" >= ${Number(squareFeetMin)}`
-      );
-    }
-
-    if (squareFeetMax) {
-      whereConditions.push(
-        Prisma.sql`p."squareFeet" <= ${Number(squareFeetMax)}`
+        Prisma.sql`p."campusZone" = ${campusZone}::"CampusZone"`
       );
     }
 
@@ -131,6 +227,11 @@ export const getProperties = async (
             'latitude', ST_Y(l."coordinates"::geometry)
           )
         ) as location
+        ${
+          hasUserCoords
+            ? Prisma.sql`, ST_Distance(l.coordinates, ST_SetSRID(ST_MakePoint(${parsedUserLng}, ${parsedUserLat}), 4326)::geography) as "distanceMeters"`
+            : Prisma.empty
+        }
       FROM "Property" p
       JOIN "Location" l ON p."locationId" = l.id
       ${
@@ -138,11 +239,28 @@ export const getProperties = async (
           ? Prisma.sql`WHERE ${Prisma.join(whereConditions, " AND ")}`
           : Prisma.empty
       }
+      ${
+        hasUserCoords && (sortBy === "distance" || sortBy === "proximity")
+          ? Prisma.sql`ORDER BY "distanceMeters" ASC`
+          : Prisma.sql`ORDER BY p."postedDate" DESC`
+      }
     `;
 
-    const properties = await prisma.$queryRaw(completeQuery);
+    const properties = await prisma.$queryRaw<any[]>(completeQuery);
+    const normalizedProperties = properties.map((p) => {
+      const distanceKm =
+        p.distanceMeters !== undefined && p.distanceMeters !== null
+          ? Math.round((Number(p.distanceMeters) / 1000) * 10) / 10
+          : undefined;
 
-    res.json(properties);
+      return {
+        ...p,
+        distanceKm,
+        photoUrls: normalizePhotoUrls(p.photoUrls),
+      };
+    });
+
+    res.json(normalizedProperties);
   } catch (error: any) {
     res
       .status(500)
@@ -173,6 +291,7 @@ export const getProperty = async (
 
       const propertyWithCoordinates = {
         ...property,
+        photoUrls: normalizePhotoUrls(property.photoUrls),
         location: {
           ...property.location,
           coordinates: {
@@ -206,46 +325,89 @@ export const createProperty = async (
       ...propertyData
     } = req.body;
 
+    const baseUrl =
+      process.env.API_BASE_URL ||
+      `http://localhost:${process.env.PORT || 3002}`;
+
     const photoUrls = await Promise.all(
       files.map(async (file) => {
+        const key = `properties/${Date.now()}-${file.originalname}`;
         const uploadParams = {
           Bucket: process.env.S3_BUCKET_NAME!,
-          Key: `properties/${Date.now()}-${file.originalname}`,
+          Key: key,
           Body: file.buffer,
           ContentType: file.mimetype,
         };
 
-        const uploadResult = await new Upload({
+        await new Upload({
           client: s3Client,
           params: uploadParams,
         }).done();
 
-        return uploadResult.Location;
+        return process.env.R2_PUBLIC_URL
+          ? `${process.env.R2_PUBLIC_URL}/${encodeURI(key)}`
+          : `${baseUrl}/photos/${encodeURI(key)}`;
       })
     );
 
-    const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
-      {
-        street: address,
-        city,
-        country,
-        postalcode: postalCode,
-        format: "json",
-        limit: "1",
+    const annualRent = parseFloat(propertyData.annualRent);
+    if (isNaN(annualRent) || annualRent <= 0) {
+      res.status(400).json({ message: "annualRent must be a positive number" });
+      return;
+    }
+
+    const agentFee = parseFloat(propertyData.agentFee || "0");
+    const maxAgentFee = annualRent * 0.1;
+    if (agentFee > maxAgentFee) {
+      res.status(400).json({
+        message: `Agent fee cannot exceed 10% of annual rent. Max allowed: ${maxAgentFee}, provided: ${agentFee}`,
+      });
+      return;
+    }
+
+    const cautionDeposit = parseFloat(propertyData.cautionDeposit || "0");
+    const platformFee = annualRent * 0.05; // Auto-calculate as 5% of annualRent
+
+    let longitude = 0;
+    let latitude = 0;
+
+    try {
+      const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
+        {
+          street: address,
+          city,
+          country: country || "Nigeria",
+          postalcode: postalCode || "",
+          format: "json",
+          limit: "1",
+        }
+      ).toString()}`;
+      const geocodingResponse = await axios.get(geocodingUrl, {
+        headers: {
+          "User-Agent": "KalRent/1.0 (contact@kalrent.ng)",
+        },
+        timeout: 3000,
+      });
+
+      if (geocodingResponse.data[0]?.lon && geocodingResponse.data[0]?.lat) {
+        longitude = parseFloat(geocodingResponse.data[0].lon);
+        latitude = parseFloat(geocodingResponse.data[0].lat);
       }
-    ).toString()}`;
-    const geocodingResponse = await axios.get(geocodingUrl, {
-      headers: {
-        "User-Agent": "RealEstateApp (justsomedummyemail@gmail.com",
-      },
-    });
-    const [longitude, latitude] =
-      geocodingResponse.data[0]?.lon && geocodingResponse.data[0]?.lat
-        ? [
-            parseFloat(geocodingResponse.data[0]?.lon),
-            parseFloat(geocodingResponse.data[0]?.lat),
-          ]
-        : [0, 0];
+    } catch {
+      // Nominatim failed, timed out, or rate-limited; fallback to campus zone coordinates
+    }
+
+    // Fallback gracefully to fixed campusZone coordinates rather than saving [0,0]
+    if (
+      (longitude === 0 && latitude === 0) ||
+      isNaN(longitude) ||
+      isNaN(latitude)
+    ) {
+      const zoneCoords =
+        CAMPUS_ZONE_COORDINATES[propertyData.campusZone] ||
+        CAMPUS_ZONE_COORDINATES.Other;
+      [longitude, latitude] = zoneCoords;
+    }
 
     // create location
     const [location] = await prisma.$queryRaw<Location[]>`
@@ -261,22 +423,31 @@ export const createProperty = async (
         photoUrls,
         locationId: location.id,
         managerCognitoId,
+        campusZone: propertyData.campusZone,
+        landmark: propertyData.landmark || "",
+        annualRent,
+        agentFee,
+        cautionDeposit,
+        platformFee,
         amenities:
           typeof propertyData.amenities === "string"
-            ? propertyData.amenities.split(",")
+            ? propertyData.amenities.startsWith("[")
+              ? JSON.parse(propertyData.amenities)
+              : propertyData.amenities.split(",").map((s: string) => s.trim()).filter(Boolean)
+            : Array.isArray(propertyData.amenities)
+            ? propertyData.amenities
             : [],
         highlights:
           typeof propertyData.highlights === "string"
-            ? propertyData.highlights.split(",")
+            ? propertyData.highlights.startsWith("[")
+              ? JSON.parse(propertyData.highlights)
+              : propertyData.highlights.split(",").map((s: string) => s.trim()).filter(Boolean)
+            : Array.isArray(propertyData.highlights)
+            ? propertyData.highlights
             : [],
-        isPetsAllowed: propertyData.isPetsAllowed === "true",
         isParkingIncluded: propertyData.isParkingIncluded === "true",
-        pricePerMonth: parseFloat(propertyData.pricePerMonth),
-        securityDeposit: parseFloat(propertyData.securityDeposit),
-        applicationFee: parseFloat(propertyData.applicationFee),
         beds: parseInt(propertyData.beds),
         baths: parseFloat(propertyData.baths),
-        squareFeet: parseInt(propertyData.squareFeet),
       },
       include: {
         location: true,

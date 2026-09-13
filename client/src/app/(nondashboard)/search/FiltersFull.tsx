@@ -143,14 +143,14 @@ const FiltersFull = () => {
 
         {/* Price Range */}
         <div>
-          <h4 className="font-bold mb-2">Price Range (Monthly)</h4>
+          <h4 className="font-bold mb-2">Price Range (Annual Rent)</h4>
           <Slider
             min={0}
-            max={10000}
-            step={100}
+            max={3000000}
+            step={25000}
             value={[
               localFilters.priceRange[0] ?? 0,
-              localFilters.priceRange[1] ?? 10000,
+              localFilters.priceRange[1] ?? 3000000,
             ]}
             onValueChange={(value: any) =>
               setLocalFilters((prev) => ({
@@ -160,8 +160,10 @@ const FiltersFull = () => {
             }
           />
           <div className="flex justify-between mt-2">
-            <span>${localFilters.priceRange[0] ?? 0}</span>
-            <span>${localFilters.priceRange[1] ?? 10000}</span>
+            <span>₦{(localFilters.priceRange[0] ?? 0).toLocaleString()}</span>
+            <span>
+              ₦{(localFilters.priceRange[1] ?? 3000000).toLocaleString()}
+            </span>
           </div>
         </div>
 
@@ -278,19 +280,19 @@ const FiltersFull = () => {
         </div>
 
         {/* Apply and Reset buttons */}
-        <div className="flex gap-4 mt-6">
+        <div className="flex gap-3 mt-6 pt-2 border-t border-slate-100">
           <Button
             onClick={handleSubmit}
-            className="flex-1 bg-primary-700 text-white rounded-xl"
+            className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold h-11 shadow-xs cursor-pointer"
           >
-            APPLY
+            Apply Filters
           </Button>
           <Button
             onClick={handleReset}
             variant="outline"
-            className="flex-1 rounded-xl"
+            className="flex-1 rounded-xl border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold h-11 cursor-pointer"
           >
-            Reset Filters
+            Reset All
           </Button>
         </div>
       </div>

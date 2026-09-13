@@ -2,14 +2,14 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { Compass, FileCheck2, KeyRound } from "lucide-react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
+      staggerChildren: 0.15,
     },
   },
 };
@@ -20,82 +20,79 @@ const itemVariants = {
 };
 
 const DiscoverSection = () => {
+  const steps = [
+    {
+      icon: Compass,
+      step: "01",
+      title: "Discover & Verify",
+      description:
+        "Filter student accommodations by campus zone, inspect GPS distance to campus gates, and examine clear upfront fee schedules.",
+    },
+    {
+      icon: FileCheck2,
+      step: "02",
+      title: "Apply & Escrow Lock",
+      description:
+        "Submit your application digitally. Caution deposits are protected in segregated BaaS escrow with instant tenancy agreement generation.",
+    },
+    {
+      icon: KeyRound,
+      step: "03",
+      title: "Inspect & Move In",
+      description:
+        "Complete your digital move-in inspection. When your lease concludes, early inspection triggers guaranteed escrow refund.",
+    },
+  ];
+
   return (
-    <motion.div
+    <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.8 }}
+      viewport={{ once: true, amount: 0.4 }}
       variants={containerVariants}
-      className="py-12 bg-white mb-16"
+      className="py-20 bg-white border-t border-slate-100"
     >
-      <div className="max-w-6xl xl:max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
-        <motion.div variants={itemVariants} className="my-12 text-center">
-          <h2 className="text-3xl font-semibold leading-tight text-gray-800">
-            Discover
+      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+        <motion.div variants={itemVariants} className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            How It Works
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            Rent Confidently in Three Simple Steps
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            Find your Dream Rental Property Today!
-          </p>
-          <p className="mt-2 text-gray-500 max-w-3xl mx-auto">
-            Searching for your dream rental property has never been easier. With
-            our user-friendly search feature, you can quickly find the perfect
-            home that meets all your needs. Start your search today and discover
-            your dream rental property!
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+            From discovering verified hostels to receiving your keys with legal protection.
           </p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 xl:gap-16 text-center">
-          {[
-            {
-              imageSrc: "/landing-icon-wand.png",
-              title: "Search for Properties",
-              description:
-                "Browse through our extensive collection of rental properties in your desired location.",
-            },
-            {
-              imageSrc: "/landing-icon-calendar.png",
-              title: "Book Your Rental",
-              description:
-                "Once you've found the perfect rental property, easily book it online with just a few clicks.",
-            },
-            {
-              imageSrc: "/landing-icon-heart.png",
-              title: "Enjoy your New Home",
-              description:
-                "Move into your new rental property and start enjoying your dream home.",
-            },
-          ].map((card, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <DiscoverCard {...card} />
-            </motion.div>
-          ))}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {steps.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                className="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 text-left relative overflow-hidden group hover:border-emerald-300 hover:shadow-md transition-all duration-200"
+              >
+                <div className="absolute top-4 right-4 text-3xl font-black text-slate-200 group-hover:text-emerald-100 transition-colors">
+                  {item.step}
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center mb-6 text-emerald-600 shadow-2xs">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  {item.description}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
-    </motion.div>
+    </motion.section>
   );
 };
-
-const DiscoverCard = ({
-  imageSrc,
-  title,
-  description,
-}: {
-  imageSrc: string;
-  title: string;
-  description: string;
-}) => (
-  <div className="px-4 py-12 shadow-lg rounded-lg bg-primary-50 md:h-72">
-    <div className="bg-primary-700 p-[0.6rem] rounded-full mb-4 h-10 w-10 mx-auto">
-      <Image
-        src={imageSrc}
-        width={30}
-        height={30}
-        className="w-full h-full"
-        alt={title}
-      />
-    </div>
-    <h3 className="mt-4 text-xl font-medium text-gray-800">{title}</h3>
-    <p className="mt-2 text-base text-gray-500">{description}</p>
-  </div>
-);
 
 export default DiscoverSection;

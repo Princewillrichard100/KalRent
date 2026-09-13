@@ -16,6 +16,7 @@ import {
   useGetPropertyQuery,
 } from "@/state/api";
 import { Lease, Payment, Property } from "@/types/prismaTypes";
+import { EnterpriseTenancyCard } from "@/components/EnterpriseTenancyCard";
 import {
   ArrowDownToLineIcon,
   Check,
@@ -32,196 +33,130 @@ import React from "react";
 
 const PaymentMethod = () => {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 mt-10 md:mt-0 flex-1">
-      <h2 className="text-2xl font-bold mb-4">Payment method</h2>
-      <p className="mb-4">Change how you pay for your plan.</p>
-      <div className="border rounded-lg p-6">
+    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 flex-1">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          {/* Card Info */}
-          <div className="flex gap-10">
-            <div className="w-36 h-20 bg-blue-600 flex items-center justify-center rounded-md">
-              <span className="text-white text-2xl font-bold">VISA</span>
-            </div>
-            <div className="flex flex-col justify-between">
-              <div>
-                <div className="flex items-start gap-5">
-                  <h3 className="text-lg font-semibold">Visa ending in 2024</h3>
-                  <span className="text-sm font-medium border border-primary-700 text-primary-700 px-3 py-1 rounded-full">
-                    Default
-                  </span>
-                </div>
-                <div className="text-sm text-gray-500 flex items-center">
-                  <CreditCard className="w-4 h-4 mr-1" />
-                  <span>Expiry • 26/06/2024</span>
-                </div>
-              </div>
-              <div className="text-sm text-gray-500 flex items-center">
-                <Mail className="w-4 h-4 mr-1" />
-                <span>billing@baseclub.com</span>
-              </div>
-            </div>
-          </div>
-
-          <hr className="my-4" />
-          <div className="flex justify-end">
-            <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-primary-700 hover:text-primary-50">
-              <Edit className="w-5 h-5 mr-2" />
-              <span>Edit</span>
-            </button>
-          </div>
+          <h2 className="text-lg font-bold text-slate-900">Payment & Escrow Method</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Secured via KalRent BaaS Escrow Trust & Paystack.
+          </p>
         </div>
+        <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <Check className="w-3.5 h-3.5" />
+          Verified Active
+        </span>
       </div>
-    </div>
-  );
-};
 
-const ResidenceCard = ({
-  property,
-  currentLease,
-}: {
-  property: Property;
-  currentLease: Lease;
-}) => {
-  return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 flex-1 flex flex-col justify-between">
-      {/* Header */}
-      <div className="flex gap-5">
-        <div className="w-64 h-32 object-cover bg-slate-500 rounded-xl"></div>
-
-        <div className="flex flex-col justify-between">
-          <div>
-            <div className="bg-green-500 w-fit text-white px-4 py-1 rounded-full text-sm font-semibold">
-              Active Leases
-            </div>
-
-            <h2 className="text-2xl font-bold my-2">{property.name}</h2>
-            <div className="flex items-center mb-2">
-              <MapPin className="w-5 h-5 mr-1" />
-              <span>
-                {property.location.city}, {property.location.country}
-              </span>
-            </div>
+      <div className="border border-slate-200/80 rounded-xl p-5 bg-slate-50/50">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="w-20 h-12 bg-slate-900 text-emerald-400 font-mono font-bold text-sm flex items-center justify-center rounded-xl shadow-xs shrink-0">
+            PAYSTACK
           </div>
-          <div className="text-xl font-bold">
-            ${currentLease.rent}{" "}
-            <span className="text-gray-500 text-sm font-normal">/ night</span>
-          </div>
-        </div>
-      </div>
-      {/* Dates */}
-      <div>
-        <hr className="my-4" />
-        <div className="flex justify-between items-center">
-          <div className="xl:flex">
-            <div className="text-gray-500 mr-2">Start Date: </div>
-            <div className="font-semibold">
-              {new Date(currentLease.startDate).toLocaleDateString()}
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-slate-900">
+                Direct Debit & BaaS Escrow Account
+              </h3>
             </div>
-          </div>
-          <div className="border-[0.5px] border-primary-300 h-4" />
-          <div className="xl:flex">
-            <div className="text-gray-500 mr-2">End Date: </div>
-            <div className="font-semibold">
-              {new Date(currentLease.endDate).toLocaleDateString()}
-            </div>
-          </div>
-          <div className="border-[0.5px] border-primary-300 h-4" />
-          <div className="xl:flex">
-            <div className="text-gray-500 mr-2">Next Payment: </div>
-            <div className="font-semibold">
-              {new Date(currentLease.endDate).toLocaleDateString()}
+            <div className="text-xs text-slate-500 flex items-center gap-1.5">
+              <CreditCard className="w-3.5 h-3.5 text-slate-400" />
+              <span>Cards (Verve, Mastercard, Visa), Bank Transfer & USSD</span>
             </div>
           </div>
         </div>
-        <hr className="my-4" />
-      </div>
-      {/* Buttons */}
-      <div className="flex justify-end gap-2 w-full">
-        <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-primary-700 hover:text-primary-50">
-          <User className="w-5 h-5 mr-2" />
-          Manager
-        </button>
-        <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-primary-700 hover:text-primary-50">
-          <Download className="w-5 h-5 mr-2" />
-          Download Agreement
-        </button>
+
+        <div className="mt-4 pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500">
+          <span>Caution deposit held securely in escrow until tenancy termination</span>
+          <span className="font-medium text-emerald-700">100% Protected</span>
+        </div>
       </div>
     </div>
   );
 };
 
 const BillingHistory = ({ payments }: { payments: Payment[] }) => {
+  const hasPayments = payments && payments.length > 0;
+
   return (
-    <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden p-6 sm:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold mb-1">Billing History</h2>
-          <p className="text-sm text-gray-500">
-            Download your previous plan receipts and usage details.
+          <h2 className="text-xl font-bold text-slate-900 mb-1">Billing & Receipt History</h2>
+          <p className="text-sm text-slate-500">
+            Download your verified payment receipts and statutory lease statements.
           </p>
         </div>
-        <div>
-          <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-primary-700 hover:text-primary-50">
-            <Download className="w-5 h-5 mr-2" />
+        {hasPayments && (
+          <button className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 py-2 px-4 rounded-xl flex items-center justify-center text-sm font-medium shadow-xs transition-colors self-start sm:self-auto">
+            <Download className="w-4 h-4 mr-2 text-slate-500" />
             <span>Download All</span>
           </button>
-        </div>
+        )}
       </div>
-      <hr className="mt-4 mb-1" />
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Invoice</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Billing Date</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {payments.map((payment) => (
-              <TableRow key={payment.id} className="h-16">
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    <FileText className="w-4 h-4 mr-2" />
-                    Invoice #{payment.id} -{" "}
-                    {new Date(payment.paymentDate).toLocaleString("default", {
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold border ${
-                      payment.paymentStatus === "Paid"
-                        ? "bg-green-100 text-green-800 border-green-300"
-                        : "bg-yellow-100 text-yellow-800 border-yellow-300"
-                    }`}
-                  >
-                    {payment.paymentStatus === "Paid" ? (
-                      <Check className="w-4 h-4 inline-block mr-1" />
-                    ) : null}
-                    {payment.paymentStatus}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {new Date(payment.paymentDate).toLocaleDateString()}
-                </TableCell>
-                <TableCell>${payment.amountPaid.toFixed(2)}</TableCell>
-                <TableCell>
-                  <button className="border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center font-semibold hover:bg-primary-700 hover:text-primary-50">
-                    <ArrowDownToLineIcon className="w-4 h-4 mr-1" />
-                    Download
-                  </button>
-                </TableCell>
+
+      {hasPayments ? (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-slate-50/70 border-b border-slate-200/80">
+              <TableRow>
+                <TableHead className="font-semibold text-slate-700">Invoice</TableHead>
+                <TableHead className="font-semibold text-slate-700">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700">Billing Date</TableHead>
+                <TableHead className="font-semibold text-slate-700">Amount</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody className="divide-y divide-slate-100">
+              {payments.map((payment) => (
+                <TableRow key={payment.id} className="h-16 hover:bg-slate-50/60 transition-colors">
+                  <TableCell className="font-medium text-slate-900 text-sm">
+                    <div className="flex items-center">
+                      <FileText className="w-4 h-4 mr-2 text-emerald-600" />
+                      Invoice #{payment.id} -{" "}
+                      {new Date(payment.paymentDate).toLocaleString("default", {
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                        payment.paymentStatus === "Paid" || payment.paymentStatus === "PAID"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-amber-50 text-amber-700 border-amber-200"
+                      }`}
+                    >
+                      {(payment.paymentStatus === "Paid" || payment.paymentStatus === "PAID") && (
+                        <Check className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                      )}
+                      {payment.paymentStatus}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-sm text-slate-600">
+                    {new Date(payment.paymentDate).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-sm font-semibold text-slate-900">
+                    ₦{payment.amountPaid.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <button className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-200 hover:bg-emerald-50/50 py-1.5 px-3 rounded-xl font-medium cursor-pointer text-xs transition-colors shadow-xs">
+                      <ArrowDownToLineIcon className="w-3.5 h-3.5" />
+                      <span>Download</span>
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="py-12 text-center border-t border-slate-100">
+          <p className="text-sm text-slate-500">
+            No billing records or payments yet for this tenancy.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
@@ -245,23 +180,30 @@ const Residence = () => {
   );
 
   if (propertyLoading || leasesLoading || paymentsLoading) return <Loading />;
-  if (!property || propertyError) return <div>Error loading property</div>;
+  if (!property || propertyError) {
+    return (
+      <div className="dashboard-container py-12 text-center">
+        <h3 className="text-lg font-bold text-slate-900">Failed to load property details</h3>
+        <p className="text-sm text-slate-500 mt-1">Please try refreshing the page.</p>
+      </div>
+    );
+  }
 
   const currentLease = leases?.find(
     (lease) => lease.propertyId === property.id
   );
 
   return (
-    <div className="dashboard-container">
-      <div className="w-full mx-auto">
-        <div className="md:flex gap-10">
-          {currentLease && (
-            <ResidenceCard property={property} currentLease={currentLease} />
-          )}
-          <PaymentMethod />
-        </div>
-        <BillingHistory payments={payments || []} />
-      </div>
+    <div className="dashboard-container space-y-6">
+      {currentLease && (
+        <EnterpriseTenancyCard
+          leaseId={currentLease.id}
+          propertyName={property.name}
+          propertyAddress={property.location?.address}
+        />
+      )}
+      <PaymentMethod />
+      <BillingHistory payments={payments || []} />
     </div>
   );
 };

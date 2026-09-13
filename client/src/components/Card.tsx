@@ -1,4 +1,4 @@
-import { Bath, Bed, Heart, House, Star } from "lucide-react";
+import { Bath, Bed, Heart, House, MapPin, ShieldCheck, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -9,13 +9,21 @@ const Card = ({
   onFavoriteToggle,
   showFavoriteButton = true,
   propertyLink,
+  isHovered = false,
 }: CardProps) => {
   const [imgSrc, setImgSrc] = useState(
     property.photoUrls?.[0] || "/placeholder.jpg"
   );
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full mb-5">
+    <div
+      id={`property-${property.id}`}
+      className={`bg-white rounded-2xl border transition-all duration-200 w-full mb-5 ${
+        isHovered
+          ? "border-emerald-500 ring-2 ring-emerald-500/40 shadow-lg scale-[1.01]"
+          : "border-slate-200/80 shadow-xs hover:shadow-md"
+      }`}
+    >
       <div className="relative">
         <div className="w-full h-48 relative">
           <Image
@@ -27,37 +35,47 @@ const Card = ({
             onError={() => setImgSrc("/placeholder.jpg")}
           />
         </div>
-        <div className="absolute bottom-4 left-4 flex gap-2">
-          {property.isPetsAllowed && (
-            <span className="bg-white/80 text-black text-xs font-semibold px-2 py-1 rounded-full">
-              Pets Allowed
+        <div className="absolute bottom-3 left-3 flex gap-1.5 flex-wrap">
+          {property.distanceKm !== undefined && (
+            <span className="bg-emerald-600/95 backdrop-blur-xs text-white text-xs font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
+              <MapPin className="w-3 h-3 shrink-0" />
+              {property.distanceKm} km away
             </span>
           )}
+          {property.campusZone && (
+            <span className="bg-slate-900/85 backdrop-blur-xs text-white text-xs font-semibold px-2.5 py-0.5 rounded-lg">
+              {property.campusZone}
+            </span>
+          )}
+          <span className="bg-emerald-700/85 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
+            <ShieldCheck className="w-3 h-3 shrink-0" />
+            Escrow Protected
+          </span>
           {property.isParkingIncluded && (
-            <span className="bg-white/80 text-black text-xs font-semibold px-2 py-1 rounded-full">
-              Parking Included
+            <span className="bg-white/90 backdrop-blur-xs text-slate-800 text-xs font-medium px-2 py-0.5 rounded-lg">
+              Parking
             </span>
           )}
         </div>
         {showFavoriteButton && (
           <button
-            className="absolute bottom-4 right-4 bg-white hover:bg-white/90 rounded-full p-2 cursor-pointer"
+            className="absolute bottom-3 right-3 bg-white/90 hover:bg-white backdrop-blur-xs rounded-full p-2 cursor-pointer shadow-xs transition-transform active:scale-95"
             onClick={onFavoriteToggle}
           >
             <Heart
-              className={`w-5 h-5 ${
-                isFavorite ? "text-red-500 fill-red-500" : "text-gray-600"
+              className={`w-4 h-4 ${
+                isFavorite ? "text-red-500 fill-red-500" : "text-slate-600"
               }`}
             />
           </button>
         )}
       </div>
       <div className="p-4">
-        <h2 className="text-xl font-bold mb-1">
+        <h2 className="text-lg font-bold mb-1 text-slate-900 tracking-tight">
           {propertyLink ? (
             <Link
               href={propertyLink}
-              className="hover:underline hover:text-blue-600"
+              className="hover:underline hover:text-emerald-700 transition-colors"
               scroll={false}
             >
               {property.name}
@@ -66,37 +84,51 @@ const Card = ({
             property.name
           )}
         </h2>
-        <p className="text-gray-600 mb-2">
-          {property?.location?.address}, {property?.location?.city}
+        <p className="text-slate-500 mb-2.5 text-xs truncate">
+          {property.landmark ? `${property.landmark}, ` : ""}
+          {property?.location?.address || property.campusZone},{" "}
+          {property?.location?.city || "Ilorin"}
         </p>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center mb-2">
-            <Star className="w-4 h-4 text-yellow-400 mr-1" />
-            <span className="font-semibold">
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center">
+            <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 mr-1" />
+            <span className="font-semibold text-xs text-slate-800">
               {property.averageRating.toFixed(1)}
             </span>
-            <span className="text-gray-600 ml-1">
-              ({property.numberOfReviews} Reviews)
+            <span className="text-slate-500 ml-1 text-xs">
+              ({property.numberOfReviews})
             </span>
           </div>
-          <p className="text-lg font-bold mb-3">
-            ${property.pricePerMonth.toFixed(0)}{" "}
-            <span className="text-gray-600 text-base font-normal"> /month</span>
+          <p className="text-lg font-extrabold text-slate-900 tracking-tight">
+            ₦{property.annualRent?.toLocaleString()}{" "}
+            <span className="text-slate-500 text-xs font-normal"> /yr</span>
           </p>
         </div>
-        <hr />
-        <div className="flex justify-between items-center gap-4 text-gray-600 mt-5">
+        <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 mb-3 text-xs text-slate-600 flex justify-between items-center">
+          <span className="text-slate-600 font-medium">Total Upfront:</span>
+          <span className="font-bold text-emerald-800 text-xs">
+            ₦
+            {(
+              (property.annualRent || 0) +
+              (property.agentFee || 0) +
+              (property.cautionDeposit || 0) +
+              (property.platformFee || 0)
+            ).toLocaleString()}
+          </span>
+        </div>
+        <hr className="border-slate-100" />
+        <div className="flex justify-between items-center gap-4 text-slate-600 mt-3 text-xs font-medium">
           <span className="flex items-center">
-            <Bed className="w-5 h-5 mr-2" />
+            <Bed className="w-3.5 h-3.5 mr-1 text-slate-400" />
             {property.beds} Bed
           </span>
           <span className="flex items-center">
-            <Bath className="w-5 h-5 mr-2" />
+            <Bath className="w-3.5 h-3.5 mr-1 text-slate-400" />
             {property.baths} Bath
           </span>
           <span className="flex items-center">
-            <House className="w-5 h-5 mr-2" />
-            {property.squareFeet} sq ft
+            <House className="w-3.5 h-3.5 mr-1 text-slate-400" />
+            {property.propertyType}
           </span>
         </div>
       </div>

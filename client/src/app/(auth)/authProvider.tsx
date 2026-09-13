@@ -118,20 +118,26 @@ const formFields = {
       label: "Username",
       isRequired: true,
     },
-    email: {
+    preferred_username: {
       order: 2,
+      placeholder: "Choose a preferred username",
+      label: "Preferred Username",
+      isRequired: true,
+    },
+    email: {
+      order: 3,
       placeholder: "Enter your email address",
       label: "Email",
       isRequired: true,
     },
     password: {
-      order: 3,
+      order: 4,
       placeholder: "Create a password",
       label: "Password",
       isRequired: true,
     },
     confirm_password: {
-      order: 4,
+      order: 5,
       placeholder: "Confirm your password",
       label: "Confirm Password",
       isRequired: true,

@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ["var(--font-outfit)", "ui-sans-serif", "system-ui", "sans-serif"],
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -19,6 +22,30 @@ const config: Config = {
   			popover: {
   				DEFAULT: 'hsl(var(--popover))',
   				foreground: 'hsl(var(--popover-foreground))'
+  			},
+  			trust: {
+  				'50': '#ecfdf5',
+  				'100': '#d1fae5',
+  				'200': '#a7f3d0',
+  				'300': '#6ee7b7',
+  				'400': '#34d399',
+  				'500': '#10b981',
+  				'600': '#059669',
+  				'700': '#047857',
+  				'800': '#065f46',
+  				'900': '#064e3b',
+  				DEFAULT: '#059669',
+  			},
+  			caution: {
+  				'50': '#fffbeb',
+  				'100': '#fef3c7',
+  				'200': '#fde68a',
+  				'300': '#fcd34d',
+  				'400': '#fbbf24',
+  				'500': '#f59e0b',
+  				'600': '#d97706',
+  				'700': '#b45309',
+  				DEFAULT: '#d97706',
   			},
   			primary: {
   				'50': '#fcfcfc',

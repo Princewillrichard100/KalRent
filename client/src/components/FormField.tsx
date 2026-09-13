@@ -92,15 +92,16 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
       case "select":
         return (
           <Select
-            value={field.value || (initialValue as string)}
-            defaultValue={field.value || (initialValue as string)}
+            value={field.value !== undefined && field.value !== null ? String(field.value) : ""}
             onValueChange={field.onChange}
           >
-            <SelectTrigger
-              className={`w-full border-gray-200 p-4 ${inputClassName}`}
-            >
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
+            <FormControl>
+              <SelectTrigger
+                className={`w-full border-gray-200 p-4 ${inputClassName}`}
+              >
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+            </FormControl>
             <SelectContent className="w-full border-gray-200 shadow">
               {options?.map((option) => (
                 <SelectItem
@@ -177,7 +178,6 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
     <FormField
       control={control}
       name={name}
-      defaultValue={initialValue}
       render={({ field }) => (
         <FormItem
           className={`${
@@ -198,12 +198,19 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
                 )}
             </div>
           )}
-          <FormControl>
-            {renderFormControl({
+          {type === "select" ? (
+            renderFormControl({
               ...field,
               value: field.value !== undefined ? field.value : initialValue,
-            })}
-          </FormControl>
+            })
+          ) : (
+            <FormControl>
+              {renderFormControl({
+                ...field,
+                value: field.value !== undefined ? field.value : initialValue,
+              })}
+            </FormControl>
+          )}
           <FormMessage className="text-red-400" />
         </FormItem>
       )}

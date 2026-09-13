@@ -4,54 +4,58 @@ import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { ArrowRight, Search } from "lucide-react";
 
 const CallToActionSection = () => {
   return (
-    <div className="relative py-24">
+    <section className="relative py-24 overflow-hidden">
       <Image
         src="/landing-call-to-action.jpg"
-        alt="Rentiful Search Section Background"
+        alt="KalRent Campus Housing CTA"
         fill
         className="object-cover object-center"
       />
-      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs"></div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="relative max-w-4xl xl:max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 py-12"
+        className="relative max-w-5xl mx-auto px-4 sm:px-8 py-10"
       >
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-6 md:mb-0 md:mr-10">
-            <h2 className="text-2xl font-bold text-white">
-              Find Your Dream Rental Property
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 bg-slate-900/60 p-8 sm:p-10 rounded-3xl border border-slate-700/60 shadow-2xl backdrop-blur-md">
+          <div className="space-y-3 max-w-lg text-center md:text-left">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+              Ready for the upcoming semester?
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Lock in Your Verified Student Hostel Today
             </h2>
-          </div>
-          <div>
-            <p className="text-white mb-3">
-              Discover a wide range of rental properties in your desired
-              location.
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              Explore listings across Tanke, Sanrab, Oke-Odo, and Jalala with BaaS escrow security and zero agent fee overcharging.
             </p>
-            <div className="flex justify-center md:justify-start gap-4">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="inline-block text-primary-700 bg-white rounded-lg px-6 py-3 font-semibold hover:bg-primary-500 hover:text-primary-50"
-              >
-                Search
-              </button>
-              <Link
-                href="/signup"
-                className="inline-block text-white bg-secondary-500 rounded-lg px-6 py-3 font-semibold hover:bg-secondary-600"
-                scroll={false}
-              >
-                Sign Up
-              </Link>
-            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto shrink-0">
+            <Link
+              href="/search"
+              className="inline-flex items-center justify-center gap-2 text-slate-900 bg-white rounded-xl px-5 py-3 text-xs font-bold hover:bg-slate-100 transition-colors shadow-xs cursor-pointer"
+            >
+              <Search className="w-4 h-4 text-emerald-600" />
+              <span>Browse All Hostels</span>
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center gap-2 text-white bg-emerald-600 rounded-xl px-5 py-3 text-xs font-bold hover:bg-emerald-500 transition-colors shadow-md cursor-pointer group"
+              scroll={false}
+            >
+              <span>Get Started</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
       </motion.div>
-    </div>
+    </section>
   );
 };
 

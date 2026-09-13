@@ -11,15 +11,23 @@ import managerRoutes from "./routes/managerRoutes";
 import propertyRoutes from "./routes/propertyRoutes";
 import leaseRoutes from "./routes/leaseRoutes";
 import applicationRoutes from "./routes/applicationRoutes";
+import paymentRoutes from "./routes/paymentRoutes";
+import webhookRoutes from "./routes/webhookRoutes";
+import { getPropertyPhoto } from "./controllers/propertyControllers";
 
 /* CONFIGURATIONS */
 dotenv.config();
 const app = express();
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+);
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
@@ -28,9 +36,13 @@ app.get("/", (req, res) => {
   res.send("This is home route");
 });
 
+app.get("/photos/*", getPropertyPhoto);
 app.use("/applications", applicationRoutes);
 app.use("/properties", propertyRoutes);
 app.use("/leases", leaseRoutes);
+app.use("/payments", paymentRoutes);
+app.use("/webhooks", webhookRoutes);
+app.use("/api/webhooks", webhookRoutes);
 app.use("/tenants", authMiddleware(["tenant"]), tenantRoutes);
 app.use("/managers", authMiddleware(["manager"]), managerRoutes);
 

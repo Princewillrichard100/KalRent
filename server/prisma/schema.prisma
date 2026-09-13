@@ -52,10 +52,20 @@ enum PropertyType {
   Cottage
 }
 
+enum CampusZone {
+  Tanke
+  Sanrab
+  OkeOdo
+  Jalala
+  MarkJunction
+  Other
+}
+
 enum ApplicationStatus {
-  Pending
-  Denied
-  Approved
+  PENDING
+  APPROVED
+  REJECTED
+  LEASE_PENDING
 }
 
 enum PaymentStatus {
@@ -65,21 +75,54 @@ enum PaymentStatus {
   Overdue
 }
 
+enum LeaseStatus {
+  DRAFT
+  PENDING_PAYMENT
+  ACTIVE
+  TERMINATED
+  EXPIRED
+}
+
+enum EscrowStatus {
+  HELD
+  DISBURSED_TO_LANDLORD
+  REFUNDED_TO_TENANT
+  DISPUTED
+}
+
+enum TransactionType {
+  PLATFORM_FEE
+  CAUTION_DEPOSIT
+  AGENT_COMMISSION
+  FULL_RENT
+}
+
+enum TransactionStatus {
+  INITIALIZED
+  SUCCESS
+  FAILED
+}
+
+enum PaymentProvider {
+  PAYSTACK
+}
+
 model Property {
   id                Int          @id @default(autoincrement())
   name              String
   description       String
-  pricePerMonth     Float
-  securityDeposit   Float
-  applicationFee    Float
+  annualRent        Float
+  agentFee          Float
+  cautionDeposit    Float
+  platformFee       Float
+  campusZone        CampusZone
+  landmark          String
   photoUrls         String[]
   amenities         Amenity[]
   highlights        Highlight[]
-  isPetsAllowed     Boolean      @default(false)
   isParkingIncluded Boolean      @default(false)
   beds              Int
   baths             Float
-  squareFeet        Int
   propertyType      PropertyType
   postedDate        DateTime     @default(now())
   averageRating     Float?       @default(0)
@@ -132,34 +175,40 @@ model Location {
 
 model Application {
   id              Int               @id @default(autoincrement())
-  applicationDate DateTime
-  status          ApplicationStatus
+  applicationDate DateTime          @default(now())
+  status          ApplicationStatus @default(PENDING)
   propertyId      Int
   tenantCognitoId String
   name            String
   email           String
   phoneNumber     String
   message         String?
-  leaseId         Int?              @unique
 
   property Property @relation(fields: [propertyId], references: [id])
   tenant   Tenant   @relation(fields: [tenantCognitoId], references: [cognitoId])
-  lease    Lease?   @relation(fields: [leaseId], references: [id])
+  lease    Lease?
 }
 
 model Lease {
   id              Int      @id @default(autoincrement())
   startDate       DateTime
   endDate         DateTime
-  rent            Float
-  deposit         Float
+  annualRent      Float
+  cautionDeposit  Float
+  agentFee        Float
+  platformFee     Float
+  status          LeaseStatus  @default(DRAFT)
+  paidAt          DateTime?
   propertyId      Int
   tenantCognitoId String
+  applicationId   Int?     @unique
 
-  property    Property     @relation(fields: [propertyId], references: [id])
-  tenant      Tenant       @relation(fields: [tenantCognitoId], references: [cognitoId])
-  application Application?
-  payments    Payment[]
+  property     Property      @relation(fields: [propertyId], references: [id])
+  tenant       Tenant        @relation(fields: [tenantCognitoId], references: [cognitoId])
+  application  Application?  @relation(fields: [applicationId], references: [id])
+  escrowHolds  EscrowHold[]
+  transactions Transaction[]
+  payments     Payment[]
 }
 
 model Payment {
@@ -170,6 +219,33 @@ model Payment {
   paymentDate   DateTime
   paymentStatus PaymentStatus
   leaseId       Int
+
+  lease Lease @relation(fields: [leaseId], references: [id])
+}
+
+model EscrowHold {
+  id                Int          @id @default(autoincrement())
+  leaseId           Int
+  amount            Float
+  status            EscrowStatus @default(HELD)
+  providerReference String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  lease Lease @relation(fields: [leaseId], references: [id])
+}
+
+model Transaction {
+  id        Int               @id @default(autoincrement())
+  leaseId   Int
+  amount    Float
+  type      TransactionType
+  status    TransactionStatus @default(INITIALIZED)
+  reference String            @unique
+  provider  PaymentProvider   @default(PAYSTACK)
+  paidAt    DateTime?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 
   lease Lease @relation(fields: [leaseId], references: [id])
 }

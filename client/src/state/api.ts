@@ -11,6 +11,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
 
+export type PropertyWithDistance = Property & { distanceKm?: number };
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -77,7 +79,7 @@ export const api = createApi({
 
     // property related endpoints
     getProperties: build.query<
-      Property[],
+      PropertyWithDistance[],
       Partial<FiltersState> & { favoriteIds?: number[] }
     >({
       query: (filters) => {
@@ -95,6 +97,9 @@ export const api = createApi({
           favoriteIds: filters.favoriteIds?.join(","),
           latitude: filters.coordinates?.[1],
           longitude: filters.coordinates?.[0],
+          userLat: filters.userLat,
+          userLng: filters.userLng,
+          sortBy: filters.sortBy,
         });
 
         return { url: "properties", params };
@@ -282,6 +287,16 @@ export const api = createApi({
       },
     }),
 
+    getPropertyPayments: build.query<Payment[], number>({
+      query: (propertyId) => `properties/${propertyId}/payments`,
+      providesTags: ["Payments"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch property payment info.",
+        });
+      },
+    }),
+
     getPayments: build.query<Payment[], number>({
       query: (leaseId) => `leases/${leaseId}/payments`,
       providesTags: ["Payments"],
@@ -348,6 +363,61 @@ export const api = createApi({
         });
       },
     }),
+
+    initializePayment: build.mutation<
+      {
+        authorization_url: string;
+        access_code: string;
+        reference: string;
+        totalAmount: number;
+        breakdown: {
+          annualRent: number;
+          agentFee: number;
+          cautionDeposit: number;
+          platformFee: number;
+        };
+      },
+      { leaseId: number }
+    >({
+      query: ({ leaseId }) => ({
+        url: `payments/initialize`,
+        method: "POST",
+        body: { leaseId },
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Secure escrow payment initialized!",
+          error: "Failed to initialize payment.",
+        });
+      },
+    }),
+
+    getLeaseLifecycle: build.query<LeaseLifecycle, number>({
+      query: (leaseId) => `leases/${leaseId}/lifecycle`,
+      providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch lease lifecycle.",
+        });
+      },
+    }),
+
+    verifyPayment: build.mutation<
+      { success: boolean; leaseId: number; message: string },
+      { reference: string }
+    >({
+      query: ({ reference }) => ({
+        url: `payments/verify/${encodeURIComponent(reference)}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["Leases", "Applications", "Payments"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Payment verified! Tenancy is now active.",
+          error: "Failed to verify payment.",
+        });
+      },
+    }),
   }),
 });
 
@@ -365,8 +435,13 @@ export const {
   useRemoveFavoritePropertyMutation,
   useGetLeasesQuery,
   useGetPropertyLeasesQuery,
+  useGetPropertyPaymentsQuery,
   useGetPaymentsQuery,
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
   useCreateApplicationMutation,
+  useInitializePaymentMutation,
+  useGetLeaseLifecycleQuery,
+  useVerifyPaymentMutation,
 } = api;
+

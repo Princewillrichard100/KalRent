@@ -101,6 +101,15 @@ export enum PropertyTypeEnum {
   Cottage = "Cottage",
 }
 
+export enum CampusZoneEnum {
+  Tanke = "Tanke",
+  Sanrab = "Sanrab",
+  OkeOdo = "OkeOdo",
+  Jalala = "Jalala",
+  MarkJunction = "MarkJunction",
+  Other = "Other",
+}
+
 export const PropertyTypeIcons: Record<PropertyTypeEnum, LucideIcon> = {
   Rooms: Home,
   Tinyhouse: Warehouse,

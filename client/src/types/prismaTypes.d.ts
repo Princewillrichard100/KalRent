@@ -48,6 +48,16 @@ export type Lease = $Result.DefaultSelection<Prisma.$LeasePayload>
  * 
  */
 export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
+/**
+ * Model EscrowHold
+ * 
+ */
+export type EscrowHold = $Result.DefaultSelection<Prisma.$EscrowHoldPayload>
+/**
+ * Model Transaction
+ * 
+ */
+export type Transaction = $Result.DefaultSelection<Prisma.$TransactionPayload>
 
 /**
  * Enums
@@ -105,10 +115,23 @@ export const PropertyType: {
 export type PropertyType = (typeof PropertyType)[keyof typeof PropertyType]
 
 
+export const CampusZone: {
+  Tanke: 'Tanke',
+  Sanrab: 'Sanrab',
+  OkeOdo: 'OkeOdo',
+  Jalala: 'Jalala',
+  MarkJunction: 'MarkJunction',
+  Other: 'Other'
+};
+
+export type CampusZone = (typeof CampusZone)[keyof typeof CampusZone]
+
+
 export const ApplicationStatus: {
-  Pending: 'Pending',
-  Denied: 'Denied',
-  Approved: 'Approved'
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  LEASE_PENDING: 'LEASE_PENDING'
 };
 
 export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
@@ -122,6 +145,53 @@ export const PaymentStatus: {
 };
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const LeaseStatus: {
+  DRAFT: 'DRAFT',
+  PENDING_PAYMENT: 'PENDING_PAYMENT',
+  ACTIVE: 'ACTIVE',
+  TERMINATED: 'TERMINATED',
+  EXPIRED: 'EXPIRED'
+};
+
+export type LeaseStatus = (typeof LeaseStatus)[keyof typeof LeaseStatus]
+
+
+export const EscrowStatus: {
+  HELD: 'HELD',
+  DISBURSED_TO_LANDLORD: 'DISBURSED_TO_LANDLORD',
+  REFUNDED_TO_TENANT: 'REFUNDED_TO_TENANT',
+  DISPUTED: 'DISPUTED'
+};
+
+export type EscrowStatus = (typeof EscrowStatus)[keyof typeof EscrowStatus]
+
+
+export const TransactionType: {
+  PLATFORM_FEE: 'PLATFORM_FEE',
+  CAUTION_DEPOSIT: 'CAUTION_DEPOSIT',
+  AGENT_COMMISSION: 'AGENT_COMMISSION',
+  FULL_RENT: 'FULL_RENT'
+};
+
+export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]
+
+
+export const TransactionStatus: {
+  INITIALIZED: 'INITIALIZED',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
+
+export type TransactionStatus = (typeof TransactionStatus)[keyof typeof TransactionStatus]
+
+
+export const PaymentProvider: {
+  PAYSTACK: 'PAYSTACK'
+};
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
 
 }
 
@@ -137,6 +207,10 @@ export type PropertyType = $Enums.PropertyType
 
 export const PropertyType: typeof $Enums.PropertyType
 
+export type CampusZone = $Enums.CampusZone
+
+export const CampusZone: typeof $Enums.CampusZone
+
 export type ApplicationStatus = $Enums.ApplicationStatus
 
 export const ApplicationStatus: typeof $Enums.ApplicationStatus
@@ -144,6 +218,26 @@ export const ApplicationStatus: typeof $Enums.ApplicationStatus
 export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
+
+export type LeaseStatus = $Enums.LeaseStatus
+
+export const LeaseStatus: typeof $Enums.LeaseStatus
+
+export type EscrowStatus = $Enums.EscrowStatus
+
+export const EscrowStatus: typeof $Enums.EscrowStatus
+
+export type TransactionType = $Enums.TransactionType
+
+export const TransactionType: typeof $Enums.TransactionType
+
+export type TransactionStatus = $Enums.TransactionStatus
+
+export const TransactionStatus: typeof $Enums.TransactionStatus
+
+export type PaymentProvider = $Enums.PaymentProvider
+
+export const PaymentProvider: typeof $Enums.PaymentProvider
 
 /**
  * ##  Prisma Client ʲˢ
@@ -339,6 +433,26 @@ export class PrismaClient<
     * ```
     */
   get payment(): Prisma.PaymentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.escrowHold`: Exposes CRUD operations for the **EscrowHold** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EscrowHolds
+    * const escrowHolds = await prisma.escrowHold.findMany()
+    * ```
+    */
+  get escrowHold(): Prisma.EscrowHoldDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.transaction`: Exposes CRUD operations for the **Transaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Transactions
+    * const transactions = await prisma.transaction.findMany()
+    * ```
+    */
+  get transaction(): Prisma.TransactionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -785,7 +899,9 @@ export namespace Prisma {
     Location: 'Location',
     Application: 'Application',
     Lease: 'Lease',
-    Payment: 'Payment'
+    Payment: 'Payment',
+    EscrowHold: 'EscrowHold',
+    Transaction: 'Transaction'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -801,7 +917,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "property" | "manager" | "tenant" | "location" | "application" | "lease" | "payment"
+      modelProps: "property" | "manager" | "tenant" | "location" | "application" | "lease" | "payment" | "escrowHold" | "transaction"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1307,6 +1423,154 @@ export namespace Prisma {
           }
         }
       }
+      EscrowHold: {
+        payload: Prisma.$EscrowHoldPayload<ExtArgs>
+        fields: Prisma.EscrowHoldFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EscrowHoldFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EscrowHoldFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>
+          }
+          findFirst: {
+            args: Prisma.EscrowHoldFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EscrowHoldFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>
+          }
+          findMany: {
+            args: Prisma.EscrowHoldFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>[]
+          }
+          create: {
+            args: Prisma.EscrowHoldCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>
+          }
+          createMany: {
+            args: Prisma.EscrowHoldCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EscrowHoldCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>[]
+          }
+          delete: {
+            args: Prisma.EscrowHoldDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>
+          }
+          update: {
+            args: Prisma.EscrowHoldUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>
+          }
+          deleteMany: {
+            args: Prisma.EscrowHoldDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EscrowHoldUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EscrowHoldUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>[]
+          }
+          upsert: {
+            args: Prisma.EscrowHoldUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EscrowHoldPayload>
+          }
+          aggregate: {
+            args: Prisma.EscrowHoldAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEscrowHold>
+          }
+          groupBy: {
+            args: Prisma.EscrowHoldGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EscrowHoldGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EscrowHoldCountArgs<ExtArgs>
+            result: $Utils.Optional<EscrowHoldCountAggregateOutputType> | number
+          }
+        }
+      }
+      Transaction: {
+        payload: Prisma.$TransactionPayload<ExtArgs>
+        fields: Prisma.TransactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
+          }
+          findFirst: {
+            args: Prisma.TransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
+          }
+          findMany: {
+            args: Prisma.TransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>[]
+          }
+          create: {
+            args: Prisma.TransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
+          }
+          createMany: {
+            args: Prisma.TransactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TransactionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>[]
+          }
+          delete: {
+            args: Prisma.TransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
+          }
+          update: {
+            args: Prisma.TransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.TransactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TransactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TransactionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>[]
+          }
+          upsert: {
+            args: Prisma.TransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
+          }
+          aggregate: {
+            args: Prisma.TransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTransaction>
+          }
+          groupBy: {
+            args: Prisma.TransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TransactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<TransactionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1398,6 +1662,8 @@ export namespace Prisma {
     application?: ApplicationOmit
     lease?: LeaseOmit
     payment?: PaymentOmit
+    escrowHold?: EscrowHoldOmit
+    transaction?: TransactionOmit
   }
 
   /* Types for Logging */
@@ -1670,10 +1936,14 @@ export namespace Prisma {
    */
 
   export type LeaseCountOutputType = {
+    escrowHolds: number
+    transactions: number
     payments: number
   }
 
   export type LeaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    escrowHolds?: boolean | LeaseCountOutputTypeCountEscrowHoldsArgs
+    transactions?: boolean | LeaseCountOutputTypeCountTransactionsArgs
     payments?: boolean | LeaseCountOutputTypeCountPaymentsArgs
   }
 
@@ -1686,6 +1956,20 @@ export namespace Prisma {
      * Select specific fields to fetch from the LeaseCountOutputType
      */
     select?: LeaseCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * LeaseCountOutputType without action
+   */
+  export type LeaseCountOutputTypeCountEscrowHoldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EscrowHoldWhereInput
+  }
+
+  /**
+   * LeaseCountOutputType without action
+   */
+  export type LeaseCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TransactionWhereInput
   }
 
   /**
@@ -1714,12 +1998,12 @@ export namespace Prisma {
 
   export type PropertyAvgAggregateOutputType = {
     id: number | null
-    pricePerMonth: number | null
-    securityDeposit: number | null
-    applicationFee: number | null
+    annualRent: number | null
+    agentFee: number | null
+    cautionDeposit: number | null
+    platformFee: number | null
     beds: number | null
     baths: number | null
-    squareFeet: number | null
     averageRating: number | null
     numberOfReviews: number | null
     locationId: number | null
@@ -1727,12 +2011,12 @@ export namespace Prisma {
 
   export type PropertySumAggregateOutputType = {
     id: number | null
-    pricePerMonth: number | null
-    securityDeposit: number | null
-    applicationFee: number | null
+    annualRent: number | null
+    agentFee: number | null
+    cautionDeposit: number | null
+    platformFee: number | null
     beds: number | null
     baths: number | null
-    squareFeet: number | null
     averageRating: number | null
     numberOfReviews: number | null
     locationId: number | null
@@ -1742,14 +2026,15 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
-    pricePerMonth: number | null
-    securityDeposit: number | null
-    applicationFee: number | null
-    isPetsAllowed: boolean | null
+    annualRent: number | null
+    agentFee: number | null
+    cautionDeposit: number | null
+    platformFee: number | null
+    campusZone: $Enums.CampusZone | null
+    landmark: string | null
     isParkingIncluded: boolean | null
     beds: number | null
     baths: number | null
-    squareFeet: number | null
     propertyType: $Enums.PropertyType | null
     postedDate: Date | null
     averageRating: number | null
@@ -1762,14 +2047,15 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
-    pricePerMonth: number | null
-    securityDeposit: number | null
-    applicationFee: number | null
-    isPetsAllowed: boolean | null
+    annualRent: number | null
+    agentFee: number | null
+    cautionDeposit: number | null
+    platformFee: number | null
+    campusZone: $Enums.CampusZone | null
+    landmark: string | null
     isParkingIncluded: boolean | null
     beds: number | null
     baths: number | null
-    squareFeet: number | null
     propertyType: $Enums.PropertyType | null
     postedDate: Date | null
     averageRating: number | null
@@ -1782,17 +2068,18 @@ export namespace Prisma {
     id: number
     name: number
     description: number
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: number
+    landmark: number
     photoUrls: number
     amenities: number
     highlights: number
-    isPetsAllowed: number
     isParkingIncluded: number
     beds: number
     baths: number
-    squareFeet: number
     propertyType: number
     postedDate: number
     averageRating: number
@@ -1805,12 +2092,12 @@ export namespace Prisma {
 
   export type PropertyAvgAggregateInputType = {
     id?: true
-    pricePerMonth?: true
-    securityDeposit?: true
-    applicationFee?: true
+    annualRent?: true
+    agentFee?: true
+    cautionDeposit?: true
+    platformFee?: true
     beds?: true
     baths?: true
-    squareFeet?: true
     averageRating?: true
     numberOfReviews?: true
     locationId?: true
@@ -1818,12 +2105,12 @@ export namespace Prisma {
 
   export type PropertySumAggregateInputType = {
     id?: true
-    pricePerMonth?: true
-    securityDeposit?: true
-    applicationFee?: true
+    annualRent?: true
+    agentFee?: true
+    cautionDeposit?: true
+    platformFee?: true
     beds?: true
     baths?: true
-    squareFeet?: true
     averageRating?: true
     numberOfReviews?: true
     locationId?: true
@@ -1833,14 +2120,15 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
-    pricePerMonth?: true
-    securityDeposit?: true
-    applicationFee?: true
-    isPetsAllowed?: true
+    annualRent?: true
+    agentFee?: true
+    cautionDeposit?: true
+    platformFee?: true
+    campusZone?: true
+    landmark?: true
     isParkingIncluded?: true
     beds?: true
     baths?: true
-    squareFeet?: true
     propertyType?: true
     postedDate?: true
     averageRating?: true
@@ -1853,14 +2141,15 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
-    pricePerMonth?: true
-    securityDeposit?: true
-    applicationFee?: true
-    isPetsAllowed?: true
+    annualRent?: true
+    agentFee?: true
+    cautionDeposit?: true
+    platformFee?: true
+    campusZone?: true
+    landmark?: true
     isParkingIncluded?: true
     beds?: true
     baths?: true
-    squareFeet?: true
     propertyType?: true
     postedDate?: true
     averageRating?: true
@@ -1873,17 +2162,18 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
-    pricePerMonth?: true
-    securityDeposit?: true
-    applicationFee?: true
+    annualRent?: true
+    agentFee?: true
+    cautionDeposit?: true
+    platformFee?: true
+    campusZone?: true
+    landmark?: true
     photoUrls?: true
     amenities?: true
     highlights?: true
-    isPetsAllowed?: true
     isParkingIncluded?: true
     beds?: true
     baths?: true
-    squareFeet?: true
     propertyType?: true
     postedDate?: true
     averageRating?: true
@@ -1983,17 +2273,18 @@ export namespace Prisma {
     id: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls: string[]
     amenities: $Enums.Amenity[]
     highlights: $Enums.Highlight[]
-    isPetsAllowed: boolean
     isParkingIncluded: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate: Date
     averageRating: number | null
@@ -2025,17 +2316,18 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    pricePerMonth?: boolean
-    securityDeposit?: boolean
-    applicationFee?: boolean
+    annualRent?: boolean
+    agentFee?: boolean
+    cautionDeposit?: boolean
+    platformFee?: boolean
+    campusZone?: boolean
+    landmark?: boolean
     photoUrls?: boolean
     amenities?: boolean
     highlights?: boolean
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds?: boolean
     baths?: boolean
-    squareFeet?: boolean
     propertyType?: boolean
     postedDate?: boolean
     averageRating?: boolean
@@ -2055,17 +2347,18 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    pricePerMonth?: boolean
-    securityDeposit?: boolean
-    applicationFee?: boolean
+    annualRent?: boolean
+    agentFee?: boolean
+    cautionDeposit?: boolean
+    platformFee?: boolean
+    campusZone?: boolean
+    landmark?: boolean
     photoUrls?: boolean
     amenities?: boolean
     highlights?: boolean
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds?: boolean
     baths?: boolean
-    squareFeet?: boolean
     propertyType?: boolean
     postedDate?: boolean
     averageRating?: boolean
@@ -2080,17 +2373,18 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    pricePerMonth?: boolean
-    securityDeposit?: boolean
-    applicationFee?: boolean
+    annualRent?: boolean
+    agentFee?: boolean
+    cautionDeposit?: boolean
+    platformFee?: boolean
+    campusZone?: boolean
+    landmark?: boolean
     photoUrls?: boolean
     amenities?: boolean
     highlights?: boolean
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds?: boolean
     baths?: boolean
-    squareFeet?: boolean
     propertyType?: boolean
     postedDate?: boolean
     averageRating?: boolean
@@ -2105,17 +2399,18 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    pricePerMonth?: boolean
-    securityDeposit?: boolean
-    applicationFee?: boolean
+    annualRent?: boolean
+    agentFee?: boolean
+    cautionDeposit?: boolean
+    platformFee?: boolean
+    campusZone?: boolean
+    landmark?: boolean
     photoUrls?: boolean
     amenities?: boolean
     highlights?: boolean
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds?: boolean
     baths?: boolean
-    squareFeet?: boolean
     propertyType?: boolean
     postedDate?: boolean
     averageRating?: boolean
@@ -2124,7 +2419,7 @@ export namespace Prisma {
     managerCognitoId?: boolean
   }
 
-  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "pricePerMonth" | "securityDeposit" | "applicationFee" | "photoUrls" | "amenities" | "highlights" | "isPetsAllowed" | "isParkingIncluded" | "beds" | "baths" | "squareFeet" | "propertyType" | "postedDate" | "averageRating" | "numberOfReviews" | "locationId" | "managerCognitoId", ExtArgs["result"]["property"]>
+  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "annualRent" | "agentFee" | "cautionDeposit" | "platformFee" | "campusZone" | "landmark" | "photoUrls" | "amenities" | "highlights" | "isParkingIncluded" | "beds" | "baths" | "propertyType" | "postedDate" | "averageRating" | "numberOfReviews" | "locationId" | "managerCognitoId", ExtArgs["result"]["property"]>
   export type PropertyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     location?: boolean | LocationDefaultArgs<ExtArgs>
     manager?: boolean | ManagerDefaultArgs<ExtArgs>
@@ -2157,17 +2452,18 @@ export namespace Prisma {
       id: number
       name: string
       description: string
-      pricePerMonth: number
-      securityDeposit: number
-      applicationFee: number
+      annualRent: number
+      agentFee: number
+      cautionDeposit: number
+      platformFee: number
+      campusZone: $Enums.CampusZone
+      landmark: string
       photoUrls: string[]
       amenities: $Enums.Amenity[]
       highlights: $Enums.Highlight[]
-      isPetsAllowed: boolean
       isParkingIncluded: boolean
       beds: number
       baths: number
-      squareFeet: number
       propertyType: $Enums.PropertyType
       postedDate: Date
       averageRating: number | null
@@ -2606,17 +2902,18 @@ export namespace Prisma {
     readonly id: FieldRef<"Property", 'Int'>
     readonly name: FieldRef<"Property", 'String'>
     readonly description: FieldRef<"Property", 'String'>
-    readonly pricePerMonth: FieldRef<"Property", 'Float'>
-    readonly securityDeposit: FieldRef<"Property", 'Float'>
-    readonly applicationFee: FieldRef<"Property", 'Float'>
+    readonly annualRent: FieldRef<"Property", 'Float'>
+    readonly agentFee: FieldRef<"Property", 'Float'>
+    readonly cautionDeposit: FieldRef<"Property", 'Float'>
+    readonly platformFee: FieldRef<"Property", 'Float'>
+    readonly campusZone: FieldRef<"Property", 'CampusZone'>
+    readonly landmark: FieldRef<"Property", 'String'>
     readonly photoUrls: FieldRef<"Property", 'String[]'>
     readonly amenities: FieldRef<"Property", 'Amenity[]'>
     readonly highlights: FieldRef<"Property", 'Highlight[]'>
-    readonly isPetsAllowed: FieldRef<"Property", 'Boolean'>
     readonly isParkingIncluded: FieldRef<"Property", 'Boolean'>
     readonly beds: FieldRef<"Property", 'Int'>
     readonly baths: FieldRef<"Property", 'Float'>
-    readonly squareFeet: FieldRef<"Property", 'Int'>
     readonly propertyType: FieldRef<"Property", 'PropertyType'>
     readonly postedDate: FieldRef<"Property", 'DateTime'>
     readonly averageRating: FieldRef<"Property", 'Float'>
@@ -6395,13 +6692,11 @@ export namespace Prisma {
   export type ApplicationAvgAggregateOutputType = {
     id: number | null
     propertyId: number | null
-    leaseId: number | null
   }
 
   export type ApplicationSumAggregateOutputType = {
     id: number | null
     propertyId: number | null
-    leaseId: number | null
   }
 
   export type ApplicationMinAggregateOutputType = {
@@ -6414,7 +6709,6 @@ export namespace Prisma {
     email: string | null
     phoneNumber: string | null
     message: string | null
-    leaseId: number | null
   }
 
   export type ApplicationMaxAggregateOutputType = {
@@ -6427,7 +6721,6 @@ export namespace Prisma {
     email: string | null
     phoneNumber: string | null
     message: string | null
-    leaseId: number | null
   }
 
   export type ApplicationCountAggregateOutputType = {
@@ -6440,7 +6733,6 @@ export namespace Prisma {
     email: number
     phoneNumber: number
     message: number
-    leaseId: number
     _all: number
   }
 
@@ -6448,13 +6740,11 @@ export namespace Prisma {
   export type ApplicationAvgAggregateInputType = {
     id?: true
     propertyId?: true
-    leaseId?: true
   }
 
   export type ApplicationSumAggregateInputType = {
     id?: true
     propertyId?: true
-    leaseId?: true
   }
 
   export type ApplicationMinAggregateInputType = {
@@ -6467,7 +6757,6 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     message?: true
-    leaseId?: true
   }
 
   export type ApplicationMaxAggregateInputType = {
@@ -6480,7 +6769,6 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     message?: true
-    leaseId?: true
   }
 
   export type ApplicationCountAggregateInputType = {
@@ -6493,7 +6781,6 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     message?: true
-    leaseId?: true
     _all?: true
   }
 
@@ -6593,7 +6880,6 @@ export namespace Prisma {
     email: string
     phoneNumber: string
     message: string | null
-    leaseId: number | null
     _count: ApplicationCountAggregateOutputType | null
     _avg: ApplicationAvgAggregateOutputType | null
     _sum: ApplicationSumAggregateOutputType | null
@@ -6625,7 +6911,6 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     message?: boolean
-    leaseId?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     lease?: boolean | Application$leaseArgs<ExtArgs>
@@ -6641,10 +6926,8 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     message?: boolean
-    leaseId?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    lease?: boolean | Application$leaseArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6657,10 +6940,8 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     message?: boolean
-    leaseId?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    lease?: boolean | Application$leaseArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectScalar = {
@@ -6673,10 +6954,9 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     message?: boolean
-    leaseId?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationDate" | "status" | "propertyId" | "tenantCognitoId" | "name" | "email" | "phoneNumber" | "message" | "leaseId", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationDate" | "status" | "propertyId" | "tenantCognitoId" | "name" | "email" | "phoneNumber" | "message", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -6685,12 +6965,10 @@ export namespace Prisma {
   export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    lease?: boolean | Application$leaseArgs<ExtArgs>
   }
   export type ApplicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    lease?: boolean | Application$leaseArgs<ExtArgs>
   }
 
   export type $ApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6710,7 +6988,6 @@ export namespace Prisma {
       email: string
       phoneNumber: string
       message: string | null
-      leaseId: number | null
     }, ExtArgs["result"]["application"]>
     composites: {}
   }
@@ -7146,7 +7423,6 @@ export namespace Prisma {
     readonly email: FieldRef<"Application", 'String'>
     readonly phoneNumber: FieldRef<"Application", 'String'>
     readonly message: FieldRef<"Application", 'String'>
-    readonly leaseId: FieldRef<"Application", 'Int'>
   }
     
 
@@ -7594,92 +7870,134 @@ export namespace Prisma {
 
   export type LeaseAvgAggregateOutputType = {
     id: number | null
-    rent: number | null
-    deposit: number | null
+    annualRent: number | null
+    cautionDeposit: number | null
+    agentFee: number | null
+    platformFee: number | null
     propertyId: number | null
+    applicationId: number | null
   }
 
   export type LeaseSumAggregateOutputType = {
     id: number | null
-    rent: number | null
-    deposit: number | null
+    annualRent: number | null
+    cautionDeposit: number | null
+    agentFee: number | null
+    platformFee: number | null
     propertyId: number | null
+    applicationId: number | null
   }
 
   export type LeaseMinAggregateOutputType = {
     id: number | null
     startDate: Date | null
     endDate: Date | null
-    rent: number | null
-    deposit: number | null
+    annualRent: number | null
+    cautionDeposit: number | null
+    agentFee: number | null
+    platformFee: number | null
+    status: $Enums.LeaseStatus | null
+    paidAt: Date | null
     propertyId: number | null
     tenantCognitoId: string | null
+    applicationId: number | null
   }
 
   export type LeaseMaxAggregateOutputType = {
     id: number | null
     startDate: Date | null
     endDate: Date | null
-    rent: number | null
-    deposit: number | null
+    annualRent: number | null
+    cautionDeposit: number | null
+    agentFee: number | null
+    platformFee: number | null
+    status: $Enums.LeaseStatus | null
+    paidAt: Date | null
     propertyId: number | null
     tenantCognitoId: string | null
+    applicationId: number | null
   }
 
   export type LeaseCountAggregateOutputType = {
     id: number
     startDate: number
     endDate: number
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status: number
+    paidAt: number
     propertyId: number
     tenantCognitoId: number
+    applicationId: number
     _all: number
   }
 
 
   export type LeaseAvgAggregateInputType = {
     id?: true
-    rent?: true
-    deposit?: true
+    annualRent?: true
+    cautionDeposit?: true
+    agentFee?: true
+    platformFee?: true
     propertyId?: true
+    applicationId?: true
   }
 
   export type LeaseSumAggregateInputType = {
     id?: true
-    rent?: true
-    deposit?: true
+    annualRent?: true
+    cautionDeposit?: true
+    agentFee?: true
+    platformFee?: true
     propertyId?: true
+    applicationId?: true
   }
 
   export type LeaseMinAggregateInputType = {
     id?: true
     startDate?: true
     endDate?: true
-    rent?: true
-    deposit?: true
+    annualRent?: true
+    cautionDeposit?: true
+    agentFee?: true
+    platformFee?: true
+    status?: true
+    paidAt?: true
     propertyId?: true
     tenantCognitoId?: true
+    applicationId?: true
   }
 
   export type LeaseMaxAggregateInputType = {
     id?: true
     startDate?: true
     endDate?: true
-    rent?: true
-    deposit?: true
+    annualRent?: true
+    cautionDeposit?: true
+    agentFee?: true
+    platformFee?: true
+    status?: true
+    paidAt?: true
     propertyId?: true
     tenantCognitoId?: true
+    applicationId?: true
   }
 
   export type LeaseCountAggregateInputType = {
     id?: true
     startDate?: true
     endDate?: true
-    rent?: true
-    deposit?: true
+    annualRent?: true
+    cautionDeposit?: true
+    agentFee?: true
+    platformFee?: true
+    status?: true
+    paidAt?: true
     propertyId?: true
     tenantCognitoId?: true
+    applicationId?: true
     _all?: true
   }
 
@@ -7773,10 +8091,15 @@ export namespace Prisma {
     id: number
     startDate: Date
     endDate: Date
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status: $Enums.LeaseStatus
+    paidAt: Date | null
     propertyId: number
     tenantCognitoId: string
+    applicationId: number | null
     _count: LeaseCountAggregateOutputType | null
     _avg: LeaseAvgAggregateOutputType | null
     _sum: LeaseSumAggregateOutputType | null
@@ -7802,13 +8125,20 @@ export namespace Prisma {
     id?: boolean
     startDate?: boolean
     endDate?: boolean
-    rent?: boolean
-    deposit?: boolean
+    annualRent?: boolean
+    cautionDeposit?: boolean
+    agentFee?: boolean
+    platformFee?: boolean
+    status?: boolean
+    paidAt?: boolean
     propertyId?: boolean
     tenantCognitoId?: boolean
+    applicationId?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     application?: boolean | Lease$applicationArgs<ExtArgs>
+    escrowHolds?: boolean | Lease$escrowHoldsArgs<ExtArgs>
+    transactions?: boolean | Lease$transactionsArgs<ExtArgs>
     payments?: boolean | Lease$paymentsArgs<ExtArgs>
     _count?: boolean | LeaseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
@@ -7817,51 +8147,72 @@ export namespace Prisma {
     id?: boolean
     startDate?: boolean
     endDate?: boolean
-    rent?: boolean
-    deposit?: boolean
+    annualRent?: boolean
+    cautionDeposit?: boolean
+    agentFee?: boolean
+    platformFee?: boolean
+    status?: boolean
+    paidAt?: boolean
     propertyId?: boolean
     tenantCognitoId?: boolean
+    applicationId?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    application?: boolean | Lease$applicationArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
 
   export type LeaseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     startDate?: boolean
     endDate?: boolean
-    rent?: boolean
-    deposit?: boolean
+    annualRent?: boolean
+    cautionDeposit?: boolean
+    agentFee?: boolean
+    platformFee?: boolean
+    status?: boolean
+    paidAt?: boolean
     propertyId?: boolean
     tenantCognitoId?: boolean
+    applicationId?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    application?: boolean | Lease$applicationArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
 
   export type LeaseSelectScalar = {
     id?: boolean
     startDate?: boolean
     endDate?: boolean
-    rent?: boolean
-    deposit?: boolean
+    annualRent?: boolean
+    cautionDeposit?: boolean
+    agentFee?: boolean
+    platformFee?: boolean
+    status?: boolean
+    paidAt?: boolean
     propertyId?: boolean
     tenantCognitoId?: boolean
+    applicationId?: boolean
   }
 
-  export type LeaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "rent" | "deposit" | "propertyId" | "tenantCognitoId", ExtArgs["result"]["lease"]>
+  export type LeaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "annualRent" | "cautionDeposit" | "agentFee" | "platformFee" | "status" | "paidAt" | "propertyId" | "tenantCognitoId" | "applicationId", ExtArgs["result"]["lease"]>
   export type LeaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     application?: boolean | Lease$applicationArgs<ExtArgs>
+    escrowHolds?: boolean | Lease$escrowHoldsArgs<ExtArgs>
+    transactions?: boolean | Lease$transactionsArgs<ExtArgs>
     payments?: boolean | Lease$paymentsArgs<ExtArgs>
     _count?: boolean | LeaseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LeaseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    application?: boolean | Lease$applicationArgs<ExtArgs>
   }
   export type LeaseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    application?: boolean | Lease$applicationArgs<ExtArgs>
   }
 
   export type $LeasePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7870,16 +8221,23 @@ export namespace Prisma {
       property: Prisma.$PropertyPayload<ExtArgs>
       tenant: Prisma.$TenantPayload<ExtArgs>
       application: Prisma.$ApplicationPayload<ExtArgs> | null
+      escrowHolds: Prisma.$EscrowHoldPayload<ExtArgs>[]
+      transactions: Prisma.$TransactionPayload<ExtArgs>[]
       payments: Prisma.$PaymentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       startDate: Date
       endDate: Date
-      rent: number
-      deposit: number
+      annualRent: number
+      cautionDeposit: number
+      agentFee: number
+      platformFee: number
+      status: $Enums.LeaseStatus
+      paidAt: Date | null
       propertyId: number
       tenantCognitoId: string
+      applicationId: number | null
     }, ExtArgs["result"]["lease"]>
     composites: {}
   }
@@ -8277,6 +8635,8 @@ export namespace Prisma {
     property<T extends PropertyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PropertyDefaultArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     application<T extends Lease$applicationArgs<ExtArgs> = {}>(args?: Subset<T, Lease$applicationArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    escrowHolds<T extends Lease$escrowHoldsArgs<ExtArgs> = {}>(args?: Subset<T, Lease$escrowHoldsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    transactions<T extends Lease$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Lease$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     payments<T extends Lease$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Lease$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -8310,10 +8670,15 @@ export namespace Prisma {
     readonly id: FieldRef<"Lease", 'Int'>
     readonly startDate: FieldRef<"Lease", 'DateTime'>
     readonly endDate: FieldRef<"Lease", 'DateTime'>
-    readonly rent: FieldRef<"Lease", 'Float'>
-    readonly deposit: FieldRef<"Lease", 'Float'>
+    readonly annualRent: FieldRef<"Lease", 'Float'>
+    readonly cautionDeposit: FieldRef<"Lease", 'Float'>
+    readonly agentFee: FieldRef<"Lease", 'Float'>
+    readonly platformFee: FieldRef<"Lease", 'Float'>
+    readonly status: FieldRef<"Lease", 'LeaseStatus'>
+    readonly paidAt: FieldRef<"Lease", 'DateTime'>
     readonly propertyId: FieldRef<"Lease", 'Int'>
     readonly tenantCognitoId: FieldRef<"Lease", 'String'>
+    readonly applicationId: FieldRef<"Lease", 'Int'>
   }
     
 
@@ -8726,6 +9091,54 @@ export namespace Prisma {
      */
     include?: ApplicationInclude<ExtArgs> | null
     where?: ApplicationWhereInput
+  }
+
+  /**
+   * Lease.escrowHolds
+   */
+  export type Lease$escrowHoldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    where?: EscrowHoldWhereInput
+    orderBy?: EscrowHoldOrderByWithRelationInput | EscrowHoldOrderByWithRelationInput[]
+    cursor?: EscrowHoldWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EscrowHoldScalarFieldEnum | EscrowHoldScalarFieldEnum[]
+  }
+
+  /**
+   * Lease.transactions
+   */
+  export type Lease$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    where?: TransactionWhereInput
+    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
+    cursor?: TransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
   }
 
   /**
@@ -9902,6 +10315,2297 @@ export namespace Prisma {
 
 
   /**
+   * Model EscrowHold
+   */
+
+  export type AggregateEscrowHold = {
+    _count: EscrowHoldCountAggregateOutputType | null
+    _avg: EscrowHoldAvgAggregateOutputType | null
+    _sum: EscrowHoldSumAggregateOutputType | null
+    _min: EscrowHoldMinAggregateOutputType | null
+    _max: EscrowHoldMaxAggregateOutputType | null
+  }
+
+  export type EscrowHoldAvgAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+  }
+
+  export type EscrowHoldSumAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+  }
+
+  export type EscrowHoldMinAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+    status: $Enums.EscrowStatus | null
+    providerReference: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EscrowHoldMaxAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+    status: $Enums.EscrowStatus | null
+    providerReference: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EscrowHoldCountAggregateOutputType = {
+    id: number
+    leaseId: number
+    amount: number
+    status: number
+    providerReference: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type EscrowHoldAvgAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+  }
+
+  export type EscrowHoldSumAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+  }
+
+  export type EscrowHoldMinAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+    status?: true
+    providerReference?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EscrowHoldMaxAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+    status?: true
+    providerReference?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EscrowHoldCountAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+    status?: true
+    providerReference?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type EscrowHoldAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EscrowHold to aggregate.
+     */
+    where?: EscrowHoldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EscrowHolds to fetch.
+     */
+    orderBy?: EscrowHoldOrderByWithRelationInput | EscrowHoldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EscrowHoldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EscrowHolds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EscrowHolds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EscrowHolds
+    **/
+    _count?: true | EscrowHoldCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EscrowHoldAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EscrowHoldSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EscrowHoldMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EscrowHoldMaxAggregateInputType
+  }
+
+  export type GetEscrowHoldAggregateType<T extends EscrowHoldAggregateArgs> = {
+        [P in keyof T & keyof AggregateEscrowHold]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEscrowHold[P]>
+      : GetScalarType<T[P], AggregateEscrowHold[P]>
+  }
+
+
+
+
+  export type EscrowHoldGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EscrowHoldWhereInput
+    orderBy?: EscrowHoldOrderByWithAggregationInput | EscrowHoldOrderByWithAggregationInput[]
+    by: EscrowHoldScalarFieldEnum[] | EscrowHoldScalarFieldEnum
+    having?: EscrowHoldScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EscrowHoldCountAggregateInputType | true
+    _avg?: EscrowHoldAvgAggregateInputType
+    _sum?: EscrowHoldSumAggregateInputType
+    _min?: EscrowHoldMinAggregateInputType
+    _max?: EscrowHoldMaxAggregateInputType
+  }
+
+  export type EscrowHoldGroupByOutputType = {
+    id: number
+    leaseId: number
+    amount: number
+    status: $Enums.EscrowStatus
+    providerReference: string
+    createdAt: Date
+    updatedAt: Date
+    _count: EscrowHoldCountAggregateOutputType | null
+    _avg: EscrowHoldAvgAggregateOutputType | null
+    _sum: EscrowHoldSumAggregateOutputType | null
+    _min: EscrowHoldMinAggregateOutputType | null
+    _max: EscrowHoldMaxAggregateOutputType | null
+  }
+
+  type GetEscrowHoldGroupByPayload<T extends EscrowHoldGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EscrowHoldGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EscrowHoldGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EscrowHoldGroupByOutputType[P]>
+            : GetScalarType<T[P], EscrowHoldGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EscrowHoldSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    status?: boolean
+    providerReference?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["escrowHold"]>
+
+  export type EscrowHoldSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    status?: boolean
+    providerReference?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["escrowHold"]>
+
+  export type EscrowHoldSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    status?: boolean
+    providerReference?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["escrowHold"]>
+
+  export type EscrowHoldSelectScalar = {
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    status?: boolean
+    providerReference?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type EscrowHoldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "amount" | "status" | "providerReference" | "createdAt" | "updatedAt", ExtArgs["result"]["escrowHold"]>
+  export type EscrowHoldInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }
+  export type EscrowHoldIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }
+  export type EscrowHoldIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }
+
+  export type $EscrowHoldPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EscrowHold"
+    objects: {
+      lease: Prisma.$LeasePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      leaseId: number
+      amount: number
+      status: $Enums.EscrowStatus
+      providerReference: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["escrowHold"]>
+    composites: {}
+  }
+
+  type EscrowHoldGetPayload<S extends boolean | null | undefined | EscrowHoldDefaultArgs> = $Result.GetResult<Prisma.$EscrowHoldPayload, S>
+
+  type EscrowHoldCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EscrowHoldFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EscrowHoldCountAggregateInputType | true
+    }
+
+  export interface EscrowHoldDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EscrowHold'], meta: { name: 'EscrowHold' } }
+    /**
+     * Find zero or one EscrowHold that matches the filter.
+     * @param {EscrowHoldFindUniqueArgs} args - Arguments to find a EscrowHold
+     * @example
+     * // Get one EscrowHold
+     * const escrowHold = await prisma.escrowHold.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EscrowHoldFindUniqueArgs>(args: SelectSubset<T, EscrowHoldFindUniqueArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one EscrowHold that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EscrowHoldFindUniqueOrThrowArgs} args - Arguments to find a EscrowHold
+     * @example
+     * // Get one EscrowHold
+     * const escrowHold = await prisma.escrowHold.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EscrowHoldFindUniqueOrThrowArgs>(args: SelectSubset<T, EscrowHoldFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first EscrowHold that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EscrowHoldFindFirstArgs} args - Arguments to find a EscrowHold
+     * @example
+     * // Get one EscrowHold
+     * const escrowHold = await prisma.escrowHold.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EscrowHoldFindFirstArgs>(args?: SelectSubset<T, EscrowHoldFindFirstArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first EscrowHold that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EscrowHoldFindFirstOrThrowArgs} args - Arguments to find a EscrowHold
+     * @example
+     * // Get one EscrowHold
+     * const escrowHold = await prisma.escrowHold.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EscrowHoldFindFirstOrThrowArgs>(args?: SelectSubset<T, EscrowHoldFindFirstOrThrowArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more EscrowHolds that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EscrowHoldFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EscrowHolds
+     * const escrowHolds = await prisma.escrowHold.findMany()
+     * 
+     * // Get first 10 EscrowHolds
+     * const escrowHolds = await prisma.escrowHold.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const escrowHoldWithIdOnly = await prisma.escrowHold.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EscrowHoldFindManyArgs>(args?: SelectSubset<T, EscrowHoldFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a EscrowHold.
+     * @param {EscrowHoldCreateArgs} args - Arguments to create a EscrowHold.
+     * @example
+     * // Create one EscrowHold
+     * const EscrowHold = await prisma.escrowHold.create({
+     *   data: {
+     *     // ... data to create a EscrowHold
+     *   }
+     * })
+     * 
+     */
+    create<T extends EscrowHoldCreateArgs>(args: SelectSubset<T, EscrowHoldCreateArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many EscrowHolds.
+     * @param {EscrowHoldCreateManyArgs} args - Arguments to create many EscrowHolds.
+     * @example
+     * // Create many EscrowHolds
+     * const escrowHold = await prisma.escrowHold.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EscrowHoldCreateManyArgs>(args?: SelectSubset<T, EscrowHoldCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EscrowHolds and returns the data saved in the database.
+     * @param {EscrowHoldCreateManyAndReturnArgs} args - Arguments to create many EscrowHolds.
+     * @example
+     * // Create many EscrowHolds
+     * const escrowHold = await prisma.escrowHold.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EscrowHolds and only return the `id`
+     * const escrowHoldWithIdOnly = await prisma.escrowHold.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EscrowHoldCreateManyAndReturnArgs>(args?: SelectSubset<T, EscrowHoldCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a EscrowHold.
+     * @param {EscrowHoldDeleteArgs} args - Arguments to delete one EscrowHold.
+     * @example
+     * // Delete one EscrowHold
+     * const EscrowHold = await prisma.escrowHold.delete({
+     *   where: {
+     *     // ... filter to delete one EscrowHold
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EscrowHoldDeleteArgs>(args: SelectSubset<T, EscrowHoldDeleteArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one EscrowHold.
+     * @param {EscrowHoldUpdateArgs} args - Arguments to update one EscrowHold.
+     * @example
+     * // Update one EscrowHold
+     * const escrowHold = await prisma.escrowHold.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EscrowHoldUpdateArgs>(args: SelectSubset<T, EscrowHoldUpdateArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more EscrowHolds.
+     * @param {EscrowHoldDeleteManyArgs} args - Arguments to filter EscrowHolds to delete.
+     * @example
+     * // Delete a few EscrowHolds
+     * const { count } = await prisma.escrowHold.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EscrowHoldDeleteManyArgs>(args?: SelectSubset<T, EscrowHoldDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EscrowHolds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EscrowHoldUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EscrowHolds
+     * const escrowHold = await prisma.escrowHold.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EscrowHoldUpdateManyArgs>(args: SelectSubset<T, EscrowHoldUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EscrowHolds and returns the data updated in the database.
+     * @param {EscrowHoldUpdateManyAndReturnArgs} args - Arguments to update many EscrowHolds.
+     * @example
+     * // Update many EscrowHolds
+     * const escrowHold = await prisma.escrowHold.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EscrowHolds and only return the `id`
+     * const escrowHoldWithIdOnly = await prisma.escrowHold.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EscrowHoldUpdateManyAndReturnArgs>(args: SelectSubset<T, EscrowHoldUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one EscrowHold.
+     * @param {EscrowHoldUpsertArgs} args - Arguments to update or create a EscrowHold.
+     * @example
+     * // Update or create a EscrowHold
+     * const escrowHold = await prisma.escrowHold.upsert({
+     *   create: {
+     *     // ... data to create a EscrowHold
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EscrowHold we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EscrowHoldUpsertArgs>(args: SelectSubset<T, EscrowHoldUpsertArgs<ExtArgs>>): Prisma__EscrowHoldClient<$Result.GetResult<Prisma.$EscrowHoldPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of EscrowHolds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EscrowHoldCountArgs} args - Arguments to filter EscrowHolds to count.
+     * @example
+     * // Count the number of EscrowHolds
+     * const count = await prisma.escrowHold.count({
+     *   where: {
+     *     // ... the filter for the EscrowHolds we want to count
+     *   }
+     * })
+    **/
+    count<T extends EscrowHoldCountArgs>(
+      args?: Subset<T, EscrowHoldCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EscrowHoldCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EscrowHold.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EscrowHoldAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EscrowHoldAggregateArgs>(args: Subset<T, EscrowHoldAggregateArgs>): Prisma.PrismaPromise<GetEscrowHoldAggregateType<T>>
+
+    /**
+     * Group by EscrowHold.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EscrowHoldGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EscrowHoldGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EscrowHoldGroupByArgs['orderBy'] }
+        : { orderBy?: EscrowHoldGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EscrowHoldGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEscrowHoldGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EscrowHold model
+   */
+  readonly fields: EscrowHoldFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EscrowHold.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EscrowHoldClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    lease<T extends LeaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeaseDefaultArgs<ExtArgs>>): Prisma__LeaseClient<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EscrowHold model
+   */ 
+  interface EscrowHoldFieldRefs {
+    readonly id: FieldRef<"EscrowHold", 'Int'>
+    readonly leaseId: FieldRef<"EscrowHold", 'Int'>
+    readonly amount: FieldRef<"EscrowHold", 'Float'>
+    readonly status: FieldRef<"EscrowHold", 'EscrowStatus'>
+    readonly providerReference: FieldRef<"EscrowHold", 'String'>
+    readonly createdAt: FieldRef<"EscrowHold", 'DateTime'>
+    readonly updatedAt: FieldRef<"EscrowHold", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EscrowHold findUnique
+   */
+  export type EscrowHoldFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * Filter, which EscrowHold to fetch.
+     */
+    where: EscrowHoldWhereUniqueInput
+  }
+
+  /**
+   * EscrowHold findUniqueOrThrow
+   */
+  export type EscrowHoldFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * Filter, which EscrowHold to fetch.
+     */
+    where: EscrowHoldWhereUniqueInput
+  }
+
+  /**
+   * EscrowHold findFirst
+   */
+  export type EscrowHoldFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * Filter, which EscrowHold to fetch.
+     */
+    where?: EscrowHoldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EscrowHolds to fetch.
+     */
+    orderBy?: EscrowHoldOrderByWithRelationInput | EscrowHoldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EscrowHolds.
+     */
+    cursor?: EscrowHoldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EscrowHolds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EscrowHolds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EscrowHolds.
+     */
+    distinct?: EscrowHoldScalarFieldEnum | EscrowHoldScalarFieldEnum[]
+  }
+
+  /**
+   * EscrowHold findFirstOrThrow
+   */
+  export type EscrowHoldFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * Filter, which EscrowHold to fetch.
+     */
+    where?: EscrowHoldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EscrowHolds to fetch.
+     */
+    orderBy?: EscrowHoldOrderByWithRelationInput | EscrowHoldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EscrowHolds.
+     */
+    cursor?: EscrowHoldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EscrowHolds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EscrowHolds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EscrowHolds.
+     */
+    distinct?: EscrowHoldScalarFieldEnum | EscrowHoldScalarFieldEnum[]
+  }
+
+  /**
+   * EscrowHold findMany
+   */
+  export type EscrowHoldFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * Filter, which EscrowHolds to fetch.
+     */
+    where?: EscrowHoldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EscrowHolds to fetch.
+     */
+    orderBy?: EscrowHoldOrderByWithRelationInput | EscrowHoldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EscrowHolds.
+     */
+    cursor?: EscrowHoldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EscrowHolds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EscrowHolds.
+     */
+    skip?: number
+    distinct?: EscrowHoldScalarFieldEnum | EscrowHoldScalarFieldEnum[]
+  }
+
+  /**
+   * EscrowHold create
+   */
+  export type EscrowHoldCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EscrowHold.
+     */
+    data: XOR<EscrowHoldCreateInput, EscrowHoldUncheckedCreateInput>
+  }
+
+  /**
+   * EscrowHold createMany
+   */
+  export type EscrowHoldCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EscrowHolds.
+     */
+    data: EscrowHoldCreateManyInput | EscrowHoldCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EscrowHold createManyAndReturn
+   */
+  export type EscrowHoldCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * The data used to create many EscrowHolds.
+     */
+    data: EscrowHoldCreateManyInput | EscrowHoldCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EscrowHold update
+   */
+  export type EscrowHoldUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EscrowHold.
+     */
+    data: XOR<EscrowHoldUpdateInput, EscrowHoldUncheckedUpdateInput>
+    /**
+     * Choose, which EscrowHold to update.
+     */
+    where: EscrowHoldWhereUniqueInput
+  }
+
+  /**
+   * EscrowHold updateMany
+   */
+  export type EscrowHoldUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EscrowHolds.
+     */
+    data: XOR<EscrowHoldUpdateManyMutationInput, EscrowHoldUncheckedUpdateManyInput>
+    /**
+     * Filter which EscrowHolds to update
+     */
+    where?: EscrowHoldWhereInput
+    /**
+     * Limit how many EscrowHolds to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EscrowHold updateManyAndReturn
+   */
+  export type EscrowHoldUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * The data used to update EscrowHolds.
+     */
+    data: XOR<EscrowHoldUpdateManyMutationInput, EscrowHoldUncheckedUpdateManyInput>
+    /**
+     * Filter which EscrowHolds to update
+     */
+    where?: EscrowHoldWhereInput
+    /**
+     * Limit how many EscrowHolds to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EscrowHold upsert
+   */
+  export type EscrowHoldUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EscrowHold to update in case it exists.
+     */
+    where: EscrowHoldWhereUniqueInput
+    /**
+     * In case the EscrowHold found by the `where` argument doesn't exist, create a new EscrowHold with this data.
+     */
+    create: XOR<EscrowHoldCreateInput, EscrowHoldUncheckedCreateInput>
+    /**
+     * In case the EscrowHold was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EscrowHoldUpdateInput, EscrowHoldUncheckedUpdateInput>
+  }
+
+  /**
+   * EscrowHold delete
+   */
+  export type EscrowHoldDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+    /**
+     * Filter which EscrowHold to delete.
+     */
+    where: EscrowHoldWhereUniqueInput
+  }
+
+  /**
+   * EscrowHold deleteMany
+   */
+  export type EscrowHoldDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EscrowHolds to delete
+     */
+    where?: EscrowHoldWhereInput
+    /**
+     * Limit how many EscrowHolds to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EscrowHold without action
+   */
+  export type EscrowHoldDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EscrowHold
+     */
+    select?: EscrowHoldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EscrowHold
+     */
+    omit?: EscrowHoldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EscrowHoldInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Transaction
+   */
+
+  export type AggregateTransaction = {
+    _count: TransactionCountAggregateOutputType | null
+    _avg: TransactionAvgAggregateOutputType | null
+    _sum: TransactionSumAggregateOutputType | null
+    _min: TransactionMinAggregateOutputType | null
+    _max: TransactionMaxAggregateOutputType | null
+  }
+
+  export type TransactionAvgAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+  }
+
+  export type TransactionSumAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+  }
+
+  export type TransactionMinAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+    type: $Enums.TransactionType | null
+    status: $Enums.TransactionStatus | null
+    reference: string | null
+    provider: $Enums.PaymentProvider | null
+    paidAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TransactionMaxAggregateOutputType = {
+    id: number | null
+    leaseId: number | null
+    amount: number | null
+    type: $Enums.TransactionType | null
+    status: $Enums.TransactionStatus | null
+    reference: string | null
+    provider: $Enums.PaymentProvider | null
+    paidAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TransactionCountAggregateOutputType = {
+    id: number
+    leaseId: number
+    amount: number
+    type: number
+    status: number
+    reference: number
+    provider: number
+    paidAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TransactionAvgAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+  }
+
+  export type TransactionSumAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+  }
+
+  export type TransactionMinAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+    type?: true
+    status?: true
+    reference?: true
+    provider?: true
+    paidAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TransactionMaxAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+    type?: true
+    status?: true
+    reference?: true
+    provider?: true
+    paidAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TransactionCountAggregateInputType = {
+    id?: true
+    leaseId?: true
+    amount?: true
+    type?: true
+    status?: true
+    reference?: true
+    provider?: true
+    paidAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Transaction to aggregate.
+     */
+    where?: TransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Transactions
+    **/
+    _count?: true | TransactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TransactionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TransactionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TransactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TransactionMaxAggregateInputType
+  }
+
+  export type GetTransactionAggregateType<T extends TransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateTransaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTransaction[P]>
+      : GetScalarType<T[P], AggregateTransaction[P]>
+  }
+
+
+
+
+  export type TransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TransactionWhereInput
+    orderBy?: TransactionOrderByWithAggregationInput | TransactionOrderByWithAggregationInput[]
+    by: TransactionScalarFieldEnum[] | TransactionScalarFieldEnum
+    having?: TransactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TransactionCountAggregateInputType | true
+    _avg?: TransactionAvgAggregateInputType
+    _sum?: TransactionSumAggregateInputType
+    _min?: TransactionMinAggregateInputType
+    _max?: TransactionMaxAggregateInputType
+  }
+
+  export type TransactionGroupByOutputType = {
+    id: number
+    leaseId: number
+    amount: number
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    reference: string
+    provider: $Enums.PaymentProvider
+    paidAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TransactionCountAggregateOutputType | null
+    _avg: TransactionAvgAggregateOutputType | null
+    _sum: TransactionSumAggregateOutputType | null
+    _min: TransactionMinAggregateOutputType | null
+    _max: TransactionMaxAggregateOutputType | null
+  }
+
+  type GetTransactionGroupByPayload<T extends TransactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TransactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TransactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], TransactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    type?: boolean
+    status?: boolean
+    reference?: boolean
+    provider?: boolean
+    paidAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["transaction"]>
+
+  export type TransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    type?: boolean
+    status?: boolean
+    reference?: boolean
+    provider?: boolean
+    paidAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["transaction"]>
+
+  export type TransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    type?: boolean
+    status?: boolean
+    reference?: boolean
+    provider?: boolean
+    paidAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["transaction"]>
+
+  export type TransactionSelectScalar = {
+    id?: boolean
+    leaseId?: boolean
+    amount?: boolean
+    type?: boolean
+    status?: boolean
+    reference?: boolean
+    provider?: boolean
+    paidAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "amount" | "type" | "status" | "reference" | "provider" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
+  export type TransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }
+  export type TransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }
+  export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lease?: boolean | LeaseDefaultArgs<ExtArgs>
+  }
+
+  export type $TransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Transaction"
+    objects: {
+      lease: Prisma.$LeasePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      leaseId: number
+      amount: number
+      type: $Enums.TransactionType
+      status: $Enums.TransactionStatus
+      reference: string
+      provider: $Enums.PaymentProvider
+      paidAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["transaction"]>
+    composites: {}
+  }
+
+  type TransactionGetPayload<S extends boolean | null | undefined | TransactionDefaultArgs> = $Result.GetResult<Prisma.$TransactionPayload, S>
+
+  type TransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TransactionCountAggregateInputType | true
+    }
+
+  export interface TransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Transaction'], meta: { name: 'Transaction' } }
+    /**
+     * Find zero or one Transaction that matches the filter.
+     * @param {TransactionFindUniqueArgs} args - Arguments to find a Transaction
+     * @example
+     * // Get one Transaction
+     * const transaction = await prisma.transaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TransactionFindUniqueArgs>(args: SelectSubset<T, TransactionFindUniqueArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one Transaction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TransactionFindUniqueOrThrowArgs} args - Arguments to find a Transaction
+     * @example
+     * // Get one Transaction
+     * const transaction = await prisma.transaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, TransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first Transaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionFindFirstArgs} args - Arguments to find a Transaction
+     * @example
+     * // Get one Transaction
+     * const transaction = await prisma.transaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TransactionFindFirstArgs>(args?: SelectSubset<T, TransactionFindFirstArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first Transaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionFindFirstOrThrowArgs} args - Arguments to find a Transaction
+     * @example
+     * // Get one Transaction
+     * const transaction = await prisma.transaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, TransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more Transactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Transactions
+     * const transactions = await prisma.transaction.findMany()
+     * 
+     * // Get first 10 Transactions
+     * const transactions = await prisma.transaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const transactionWithIdOnly = await prisma.transaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TransactionFindManyArgs>(args?: SelectSubset<T, TransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a Transaction.
+     * @param {TransactionCreateArgs} args - Arguments to create a Transaction.
+     * @example
+     * // Create one Transaction
+     * const Transaction = await prisma.transaction.create({
+     *   data: {
+     *     // ... data to create a Transaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends TransactionCreateArgs>(args: SelectSubset<T, TransactionCreateArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many Transactions.
+     * @param {TransactionCreateManyArgs} args - Arguments to create many Transactions.
+     * @example
+     * // Create many Transactions
+     * const transaction = await prisma.transaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TransactionCreateManyArgs>(args?: SelectSubset<T, TransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Transactions and returns the data saved in the database.
+     * @param {TransactionCreateManyAndReturnArgs} args - Arguments to create many Transactions.
+     * @example
+     * // Create many Transactions
+     * const transaction = await prisma.transaction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Transactions and only return the `id`
+     * const transactionWithIdOnly = await prisma.transaction.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TransactionCreateManyAndReturnArgs>(args?: SelectSubset<T, TransactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a Transaction.
+     * @param {TransactionDeleteArgs} args - Arguments to delete one Transaction.
+     * @example
+     * // Delete one Transaction
+     * const Transaction = await prisma.transaction.delete({
+     *   where: {
+     *     // ... filter to delete one Transaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TransactionDeleteArgs>(args: SelectSubset<T, TransactionDeleteArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one Transaction.
+     * @param {TransactionUpdateArgs} args - Arguments to update one Transaction.
+     * @example
+     * // Update one Transaction
+     * const transaction = await prisma.transaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TransactionUpdateArgs>(args: SelectSubset<T, TransactionUpdateArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more Transactions.
+     * @param {TransactionDeleteManyArgs} args - Arguments to filter Transactions to delete.
+     * @example
+     * // Delete a few Transactions
+     * const { count } = await prisma.transaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TransactionDeleteManyArgs>(args?: SelectSubset<T, TransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Transactions
+     * const transaction = await prisma.transaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TransactionUpdateManyArgs>(args: SelectSubset<T, TransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Transactions and returns the data updated in the database.
+     * @param {TransactionUpdateManyAndReturnArgs} args - Arguments to update many Transactions.
+     * @example
+     * // Update many Transactions
+     * const transaction = await prisma.transaction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Transactions and only return the `id`
+     * const transactionWithIdOnly = await prisma.transaction.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TransactionUpdateManyAndReturnArgs>(args: SelectSubset<T, TransactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one Transaction.
+     * @param {TransactionUpsertArgs} args - Arguments to update or create a Transaction.
+     * @example
+     * // Update or create a Transaction
+     * const transaction = await prisma.transaction.upsert({
+     *   create: {
+     *     // ... data to create a Transaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Transaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TransactionUpsertArgs>(args: SelectSubset<T, TransactionUpsertArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of Transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionCountArgs} args - Arguments to filter Transactions to count.
+     * @example
+     * // Count the number of Transactions
+     * const count = await prisma.transaction.count({
+     *   where: {
+     *     // ... the filter for the Transactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends TransactionCountArgs>(
+      args?: Subset<T, TransactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TransactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Transaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TransactionAggregateArgs>(args: Subset<T, TransactionAggregateArgs>): Prisma.PrismaPromise<GetTransactionAggregateType<T>>
+
+    /**
+     * Group by Transaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TransactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TransactionGroupByArgs['orderBy'] }
+        : { orderBy?: TransactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Transaction model
+   */
+  readonly fields: TransactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Transaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    lease<T extends LeaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeaseDefaultArgs<ExtArgs>>): Prisma__LeaseClient<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Transaction model
+   */ 
+  interface TransactionFieldRefs {
+    readonly id: FieldRef<"Transaction", 'Int'>
+    readonly leaseId: FieldRef<"Transaction", 'Int'>
+    readonly amount: FieldRef<"Transaction", 'Float'>
+    readonly type: FieldRef<"Transaction", 'TransactionType'>
+    readonly status: FieldRef<"Transaction", 'TransactionStatus'>
+    readonly reference: FieldRef<"Transaction", 'String'>
+    readonly provider: FieldRef<"Transaction", 'PaymentProvider'>
+    readonly paidAt: FieldRef<"Transaction", 'DateTime'>
+    readonly createdAt: FieldRef<"Transaction", 'DateTime'>
+    readonly updatedAt: FieldRef<"Transaction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Transaction findUnique
+   */
+  export type TransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Transaction to fetch.
+     */
+    where: TransactionWhereUniqueInput
+  }
+
+  /**
+   * Transaction findUniqueOrThrow
+   */
+  export type TransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Transaction to fetch.
+     */
+    where: TransactionWhereUniqueInput
+  }
+
+  /**
+   * Transaction findFirst
+   */
+  export type TransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Transaction to fetch.
+     */
+    where?: TransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Transactions.
+     */
+    cursor?: TransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Transactions.
+     */
+    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Transaction findFirstOrThrow
+   */
+  export type TransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Transaction to fetch.
+     */
+    where?: TransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Transactions.
+     */
+    cursor?: TransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Transactions.
+     */
+    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Transaction findMany
+   */
+  export type TransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Transactions to fetch.
+     */
+    where?: TransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Transactions.
+     */
+    cursor?: TransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Transaction create
+   */
+  export type TransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Transaction.
+     */
+    data: XOR<TransactionCreateInput, TransactionUncheckedCreateInput>
+  }
+
+  /**
+   * Transaction createMany
+   */
+  export type TransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Transactions.
+     */
+    data: TransactionCreateManyInput | TransactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Transaction createManyAndReturn
+   */
+  export type TransactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Transactions.
+     */
+    data: TransactionCreateManyInput | TransactionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Transaction update
+   */
+  export type TransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Transaction.
+     */
+    data: XOR<TransactionUpdateInput, TransactionUncheckedUpdateInput>
+    /**
+     * Choose, which Transaction to update.
+     */
+    where: TransactionWhereUniqueInput
+  }
+
+  /**
+   * Transaction updateMany
+   */
+  export type TransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Transactions.
+     */
+    data: XOR<TransactionUpdateManyMutationInput, TransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which Transactions to update
+     */
+    where?: TransactionWhereInput
+    /**
+     * Limit how many Transactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Transaction updateManyAndReturn
+   */
+  export type TransactionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * The data used to update Transactions.
+     */
+    data: XOR<TransactionUpdateManyMutationInput, TransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which Transactions to update
+     */
+    where?: TransactionWhereInput
+    /**
+     * Limit how many Transactions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Transaction upsert
+   */
+  export type TransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Transaction to update in case it exists.
+     */
+    where: TransactionWhereUniqueInput
+    /**
+     * In case the Transaction found by the `where` argument doesn't exist, create a new Transaction with this data.
+     */
+    create: XOR<TransactionCreateInput, TransactionUncheckedCreateInput>
+    /**
+     * In case the Transaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TransactionUpdateInput, TransactionUncheckedUpdateInput>
+  }
+
+  /**
+   * Transaction delete
+   */
+  export type TransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    /**
+     * Filter which Transaction to delete.
+     */
+    where: TransactionWhereUniqueInput
+  }
+
+  /**
+   * Transaction deleteMany
+   */
+  export type TransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Transactions to delete
+     */
+    where?: TransactionWhereInput
+    /**
+     * Limit how many Transactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Transaction without action
+   */
+  export type TransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -9919,17 +12623,18 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
-    pricePerMonth: 'pricePerMonth',
-    securityDeposit: 'securityDeposit',
-    applicationFee: 'applicationFee',
+    annualRent: 'annualRent',
+    agentFee: 'agentFee',
+    cautionDeposit: 'cautionDeposit',
+    platformFee: 'platformFee',
+    campusZone: 'campusZone',
+    landmark: 'landmark',
     photoUrls: 'photoUrls',
     amenities: 'amenities',
     highlights: 'highlights',
-    isPetsAllowed: 'isPetsAllowed',
     isParkingIncluded: 'isParkingIncluded',
     beds: 'beds',
     baths: 'baths',
-    squareFeet: 'squareFeet',
     propertyType: 'propertyType',
     postedDate: 'postedDate',
     averageRating: 'averageRating',
@@ -9984,8 +12689,7 @@ export namespace Prisma {
     name: 'name',
     email: 'email',
     phoneNumber: 'phoneNumber',
-    message: 'message',
-    leaseId: 'leaseId'
+    message: 'message'
   };
 
   export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
@@ -9995,10 +12699,15 @@ export namespace Prisma {
     id: 'id',
     startDate: 'startDate',
     endDate: 'endDate',
-    rent: 'rent',
-    deposit: 'deposit',
+    annualRent: 'annualRent',
+    cautionDeposit: 'cautionDeposit',
+    agentFee: 'agentFee',
+    platformFee: 'platformFee',
+    status: 'status',
+    paidAt: 'paidAt',
     propertyId: 'propertyId',
-    tenantCognitoId: 'tenantCognitoId'
+    tenantCognitoId: 'tenantCognitoId',
+    applicationId: 'applicationId'
   };
 
   export type LeaseScalarFieldEnum = (typeof LeaseScalarFieldEnum)[keyof typeof LeaseScalarFieldEnum]
@@ -10015,6 +12724,35 @@ export namespace Prisma {
   };
 
   export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+  export const EscrowHoldScalarFieldEnum: {
+    id: 'id',
+    leaseId: 'leaseId',
+    amount: 'amount',
+    status: 'status',
+    providerReference: 'providerReference',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type EscrowHoldScalarFieldEnum = (typeof EscrowHoldScalarFieldEnum)[keyof typeof EscrowHoldScalarFieldEnum]
+
+
+  export const TransactionScalarFieldEnum: {
+    id: 'id',
+    leaseId: 'leaseId',
+    amount: 'amount',
+    type: 'type',
+    status: 'status',
+    reference: 'reference',
+    provider: 'provider',
+    paidAt: 'paidAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -10085,6 +12823,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampusZone'
+   */
+  export type EnumCampusZoneFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampusZone'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampusZone[]'
+   */
+  export type ListEnumCampusZoneFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampusZone[]'>
     
 
 
@@ -10166,6 +12918,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'LeaseStatus'
+   */
+  export type EnumLeaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaseStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeaseStatus[]'
+   */
+  export type ListEnumLeaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaseStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'PaymentStatus'
    */
   export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
@@ -10176,6 +12942,62 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentStatus[]'
    */
   export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'EscrowStatus'
+   */
+  export type EnumEscrowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EscrowStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'EscrowStatus[]'
+   */
+  export type ListEnumEscrowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EscrowStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TransactionType'
+   */
+  export type EnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionType'>
+    
+
+
+  /**
+   * Reference to a field of type 'TransactionType[]'
+   */
+  export type ListEnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TransactionStatus'
+   */
+  export type EnumTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'TransactionStatus[]'
+   */
+  export type ListEnumTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentProvider'
+   */
+  export type EnumPaymentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentProvider'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentProvider[]'
+   */
+  export type ListEnumPaymentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentProvider[]'>
     
   /**
    * Deep Input Types
@@ -10189,17 +13011,18 @@ export namespace Prisma {
     id?: IntFilter<"Property"> | number
     name?: StringFilter<"Property"> | string
     description?: StringFilter<"Property"> | string
-    pricePerMonth?: FloatFilter<"Property"> | number
-    securityDeposit?: FloatFilter<"Property"> | number
-    applicationFee?: FloatFilter<"Property"> | number
+    annualRent?: FloatFilter<"Property"> | number
+    agentFee?: FloatFilter<"Property"> | number
+    cautionDeposit?: FloatFilter<"Property"> | number
+    platformFee?: FloatFilter<"Property"> | number
+    campusZone?: EnumCampusZoneFilter<"Property"> | $Enums.CampusZone
+    landmark?: StringFilter<"Property"> | string
     photoUrls?: StringNullableListFilter<"Property">
     amenities?: EnumAmenityNullableListFilter<"Property">
     highlights?: EnumHighlightNullableListFilter<"Property">
-    isPetsAllowed?: BoolFilter<"Property"> | boolean
     isParkingIncluded?: BoolFilter<"Property"> | boolean
     beds?: IntFilter<"Property"> | number
     baths?: FloatFilter<"Property"> | number
-    squareFeet?: IntFilter<"Property"> | number
     propertyType?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
     postedDate?: DateTimeFilter<"Property"> | Date | string
     averageRating?: FloatNullableFilter<"Property"> | number | null
@@ -10218,17 +13041,18 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    pricePerMonth?: SortOrder
-    securityDeposit?: SortOrder
-    applicationFee?: SortOrder
+    annualRent?: SortOrder
+    agentFee?: SortOrder
+    cautionDeposit?: SortOrder
+    platformFee?: SortOrder
+    campusZone?: SortOrder
+    landmark?: SortOrder
     photoUrls?: SortOrder
     amenities?: SortOrder
     highlights?: SortOrder
-    isPetsAllowed?: SortOrder
     isParkingIncluded?: SortOrder
     beds?: SortOrder
     baths?: SortOrder
-    squareFeet?: SortOrder
     propertyType?: SortOrder
     postedDate?: SortOrder
     averageRating?: SortOrderInput | SortOrder
@@ -10250,17 +13074,18 @@ export namespace Prisma {
     NOT?: PropertyWhereInput | PropertyWhereInput[]
     name?: StringFilter<"Property"> | string
     description?: StringFilter<"Property"> | string
-    pricePerMonth?: FloatFilter<"Property"> | number
-    securityDeposit?: FloatFilter<"Property"> | number
-    applicationFee?: FloatFilter<"Property"> | number
+    annualRent?: FloatFilter<"Property"> | number
+    agentFee?: FloatFilter<"Property"> | number
+    cautionDeposit?: FloatFilter<"Property"> | number
+    platformFee?: FloatFilter<"Property"> | number
+    campusZone?: EnumCampusZoneFilter<"Property"> | $Enums.CampusZone
+    landmark?: StringFilter<"Property"> | string
     photoUrls?: StringNullableListFilter<"Property">
     amenities?: EnumAmenityNullableListFilter<"Property">
     highlights?: EnumHighlightNullableListFilter<"Property">
-    isPetsAllowed?: BoolFilter<"Property"> | boolean
     isParkingIncluded?: BoolFilter<"Property"> | boolean
     beds?: IntFilter<"Property"> | number
     baths?: FloatFilter<"Property"> | number
-    squareFeet?: IntFilter<"Property"> | number
     propertyType?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
     postedDate?: DateTimeFilter<"Property"> | Date | string
     averageRating?: FloatNullableFilter<"Property"> | number | null
@@ -10279,17 +13104,18 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    pricePerMonth?: SortOrder
-    securityDeposit?: SortOrder
-    applicationFee?: SortOrder
+    annualRent?: SortOrder
+    agentFee?: SortOrder
+    cautionDeposit?: SortOrder
+    platformFee?: SortOrder
+    campusZone?: SortOrder
+    landmark?: SortOrder
     photoUrls?: SortOrder
     amenities?: SortOrder
     highlights?: SortOrder
-    isPetsAllowed?: SortOrder
     isParkingIncluded?: SortOrder
     beds?: SortOrder
     baths?: SortOrder
-    squareFeet?: SortOrder
     propertyType?: SortOrder
     postedDate?: SortOrder
     averageRating?: SortOrderInput | SortOrder
@@ -10310,17 +13136,18 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Property"> | number
     name?: StringWithAggregatesFilter<"Property"> | string
     description?: StringWithAggregatesFilter<"Property"> | string
-    pricePerMonth?: FloatWithAggregatesFilter<"Property"> | number
-    securityDeposit?: FloatWithAggregatesFilter<"Property"> | number
-    applicationFee?: FloatWithAggregatesFilter<"Property"> | number
+    annualRent?: FloatWithAggregatesFilter<"Property"> | number
+    agentFee?: FloatWithAggregatesFilter<"Property"> | number
+    cautionDeposit?: FloatWithAggregatesFilter<"Property"> | number
+    platformFee?: FloatWithAggregatesFilter<"Property"> | number
+    campusZone?: EnumCampusZoneWithAggregatesFilter<"Property"> | $Enums.CampusZone
+    landmark?: StringWithAggregatesFilter<"Property"> | string
     photoUrls?: StringNullableListFilter<"Property">
     amenities?: EnumAmenityNullableListFilter<"Property">
     highlights?: EnumHighlightNullableListFilter<"Property">
-    isPetsAllowed?: BoolWithAggregatesFilter<"Property"> | boolean
     isParkingIncluded?: BoolWithAggregatesFilter<"Property"> | boolean
     beds?: IntWithAggregatesFilter<"Property"> | number
     baths?: FloatWithAggregatesFilter<"Property"> | number
-    squareFeet?: IntWithAggregatesFilter<"Property"> | number
     propertyType?: EnumPropertyTypeWithAggregatesFilter<"Property"> | $Enums.PropertyType
     postedDate?: DateTimeWithAggregatesFilter<"Property"> | Date | string
     averageRating?: FloatNullableWithAggregatesFilter<"Property"> | number | null
@@ -10527,7 +13354,6 @@ export namespace Prisma {
     email?: StringFilter<"Application"> | string
     phoneNumber?: StringFilter<"Application"> | string
     message?: StringNullableFilter<"Application"> | string | null
-    leaseId?: IntNullableFilter<"Application"> | number | null
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     lease?: XOR<LeaseNullableScalarRelationFilter, LeaseWhereInput> | null
@@ -10543,7 +13369,6 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     message?: SortOrderInput | SortOrder
-    leaseId?: SortOrderInput | SortOrder
     property?: PropertyOrderByWithRelationInput
     tenant?: TenantOrderByWithRelationInput
     lease?: LeaseOrderByWithRelationInput
@@ -10551,7 +13376,6 @@ export namespace Prisma {
 
   export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    leaseId?: number
     AND?: ApplicationWhereInput | ApplicationWhereInput[]
     OR?: ApplicationWhereInput[]
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
@@ -10566,7 +13390,7 @@ export namespace Prisma {
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     lease?: XOR<LeaseNullableScalarRelationFilter, LeaseWhereInput> | null
-  }, "id" | "leaseId">
+  }, "id">
 
   export type ApplicationOrderByWithAggregationInput = {
     id?: SortOrder
@@ -10578,7 +13402,6 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     message?: SortOrderInput | SortOrder
-    leaseId?: SortOrderInput | SortOrder
     _count?: ApplicationCountOrderByAggregateInput
     _avg?: ApplicationAvgOrderByAggregateInput
     _max?: ApplicationMaxOrderByAggregateInput
@@ -10599,7 +13422,6 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"Application"> | string
     phoneNumber?: StringWithAggregatesFilter<"Application"> | string
     message?: StringNullableWithAggregatesFilter<"Application"> | string | null
-    leaseId?: IntNullableWithAggregatesFilter<"Application"> | number | null
   }
 
   export type LeaseWhereInput = {
@@ -10609,13 +13431,20 @@ export namespace Prisma {
     id?: IntFilter<"Lease"> | number
     startDate?: DateTimeFilter<"Lease"> | Date | string
     endDate?: DateTimeFilter<"Lease"> | Date | string
-    rent?: FloatFilter<"Lease"> | number
-    deposit?: FloatFilter<"Lease"> | number
+    annualRent?: FloatFilter<"Lease"> | number
+    cautionDeposit?: FloatFilter<"Lease"> | number
+    agentFee?: FloatFilter<"Lease"> | number
+    platformFee?: FloatFilter<"Lease"> | number
+    status?: EnumLeaseStatusFilter<"Lease"> | $Enums.LeaseStatus
+    paidAt?: DateTimeNullableFilter<"Lease"> | Date | string | null
     propertyId?: IntFilter<"Lease"> | number
     tenantCognitoId?: StringFilter<"Lease"> | string
+    applicationId?: IntNullableFilter<"Lease"> | number | null
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+    escrowHolds?: EscrowHoldListRelationFilter
+    transactions?: TransactionListRelationFilter
     payments?: PaymentListRelationFilter
   }
 
@@ -10623,41 +13452,60 @@ export namespace Prisma {
     id?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
-    rent?: SortOrder
-    deposit?: SortOrder
+    annualRent?: SortOrder
+    cautionDeposit?: SortOrder
+    agentFee?: SortOrder
+    platformFee?: SortOrder
+    status?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
     propertyId?: SortOrder
     tenantCognitoId?: SortOrder
+    applicationId?: SortOrderInput | SortOrder
     property?: PropertyOrderByWithRelationInput
     tenant?: TenantOrderByWithRelationInput
     application?: ApplicationOrderByWithRelationInput
+    escrowHolds?: EscrowHoldOrderByRelationAggregateInput
+    transactions?: TransactionOrderByRelationAggregateInput
     payments?: PaymentOrderByRelationAggregateInput
   }
 
   export type LeaseWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    applicationId?: number
     AND?: LeaseWhereInput | LeaseWhereInput[]
     OR?: LeaseWhereInput[]
     NOT?: LeaseWhereInput | LeaseWhereInput[]
     startDate?: DateTimeFilter<"Lease"> | Date | string
     endDate?: DateTimeFilter<"Lease"> | Date | string
-    rent?: FloatFilter<"Lease"> | number
-    deposit?: FloatFilter<"Lease"> | number
+    annualRent?: FloatFilter<"Lease"> | number
+    cautionDeposit?: FloatFilter<"Lease"> | number
+    agentFee?: FloatFilter<"Lease"> | number
+    platformFee?: FloatFilter<"Lease"> | number
+    status?: EnumLeaseStatusFilter<"Lease"> | $Enums.LeaseStatus
+    paidAt?: DateTimeNullableFilter<"Lease"> | Date | string | null
     propertyId?: IntFilter<"Lease"> | number
     tenantCognitoId?: StringFilter<"Lease"> | string
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+    escrowHolds?: EscrowHoldListRelationFilter
+    transactions?: TransactionListRelationFilter
     payments?: PaymentListRelationFilter
-  }, "id">
+  }, "id" | "applicationId">
 
   export type LeaseOrderByWithAggregationInput = {
     id?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
-    rent?: SortOrder
-    deposit?: SortOrder
+    annualRent?: SortOrder
+    cautionDeposit?: SortOrder
+    agentFee?: SortOrder
+    platformFee?: SortOrder
+    status?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
     propertyId?: SortOrder
     tenantCognitoId?: SortOrder
+    applicationId?: SortOrderInput | SortOrder
     _count?: LeaseCountOrderByAggregateInput
     _avg?: LeaseAvgOrderByAggregateInput
     _max?: LeaseMaxOrderByAggregateInput
@@ -10672,10 +13520,15 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Lease"> | number
     startDate?: DateTimeWithAggregatesFilter<"Lease"> | Date | string
     endDate?: DateTimeWithAggregatesFilter<"Lease"> | Date | string
-    rent?: FloatWithAggregatesFilter<"Lease"> | number
-    deposit?: FloatWithAggregatesFilter<"Lease"> | number
+    annualRent?: FloatWithAggregatesFilter<"Lease"> | number
+    cautionDeposit?: FloatWithAggregatesFilter<"Lease"> | number
+    agentFee?: FloatWithAggregatesFilter<"Lease"> | number
+    platformFee?: FloatWithAggregatesFilter<"Lease"> | number
+    status?: EnumLeaseStatusWithAggregatesFilter<"Lease"> | $Enums.LeaseStatus
+    paidAt?: DateTimeNullableWithAggregatesFilter<"Lease"> | Date | string | null
     propertyId?: IntWithAggregatesFilter<"Lease"> | number
     tenantCognitoId?: StringWithAggregatesFilter<"Lease"> | string
+    applicationId?: IntNullableWithAggregatesFilter<"Lease"> | number | null
   }
 
   export type PaymentWhereInput = {
@@ -10745,20 +13598,170 @@ export namespace Prisma {
     leaseId?: IntWithAggregatesFilter<"Payment"> | number
   }
 
+  export type EscrowHoldWhereInput = {
+    AND?: EscrowHoldWhereInput | EscrowHoldWhereInput[]
+    OR?: EscrowHoldWhereInput[]
+    NOT?: EscrowHoldWhereInput | EscrowHoldWhereInput[]
+    id?: IntFilter<"EscrowHold"> | number
+    leaseId?: IntFilter<"EscrowHold"> | number
+    amount?: FloatFilter<"EscrowHold"> | number
+    status?: EnumEscrowStatusFilter<"EscrowHold"> | $Enums.EscrowStatus
+    providerReference?: StringFilter<"EscrowHold"> | string
+    createdAt?: DateTimeFilter<"EscrowHold"> | Date | string
+    updatedAt?: DateTimeFilter<"EscrowHold"> | Date | string
+    lease?: XOR<LeaseScalarRelationFilter, LeaseWhereInput>
+  }
+
+  export type EscrowHoldOrderByWithRelationInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    providerReference?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lease?: LeaseOrderByWithRelationInput
+  }
+
+  export type EscrowHoldWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: EscrowHoldWhereInput | EscrowHoldWhereInput[]
+    OR?: EscrowHoldWhereInput[]
+    NOT?: EscrowHoldWhereInput | EscrowHoldWhereInput[]
+    leaseId?: IntFilter<"EscrowHold"> | number
+    amount?: FloatFilter<"EscrowHold"> | number
+    status?: EnumEscrowStatusFilter<"EscrowHold"> | $Enums.EscrowStatus
+    providerReference?: StringFilter<"EscrowHold"> | string
+    createdAt?: DateTimeFilter<"EscrowHold"> | Date | string
+    updatedAt?: DateTimeFilter<"EscrowHold"> | Date | string
+    lease?: XOR<LeaseScalarRelationFilter, LeaseWhereInput>
+  }, "id">
+
+  export type EscrowHoldOrderByWithAggregationInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    providerReference?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: EscrowHoldCountOrderByAggregateInput
+    _avg?: EscrowHoldAvgOrderByAggregateInput
+    _max?: EscrowHoldMaxOrderByAggregateInput
+    _min?: EscrowHoldMinOrderByAggregateInput
+    _sum?: EscrowHoldSumOrderByAggregateInput
+  }
+
+  export type EscrowHoldScalarWhereWithAggregatesInput = {
+    AND?: EscrowHoldScalarWhereWithAggregatesInput | EscrowHoldScalarWhereWithAggregatesInput[]
+    OR?: EscrowHoldScalarWhereWithAggregatesInput[]
+    NOT?: EscrowHoldScalarWhereWithAggregatesInput | EscrowHoldScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"EscrowHold"> | number
+    leaseId?: IntWithAggregatesFilter<"EscrowHold"> | number
+    amount?: FloatWithAggregatesFilter<"EscrowHold"> | number
+    status?: EnumEscrowStatusWithAggregatesFilter<"EscrowHold"> | $Enums.EscrowStatus
+    providerReference?: StringWithAggregatesFilter<"EscrowHold"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"EscrowHold"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"EscrowHold"> | Date | string
+  }
+
+  export type TransactionWhereInput = {
+    AND?: TransactionWhereInput | TransactionWhereInput[]
+    OR?: TransactionWhereInput[]
+    NOT?: TransactionWhereInput | TransactionWhereInput[]
+    id?: IntFilter<"Transaction"> | number
+    leaseId?: IntFilter<"Transaction"> | number
+    amount?: FloatFilter<"Transaction"> | number
+    type?: EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
+    status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
+    reference?: StringFilter<"Transaction"> | string
+    provider?: EnumPaymentProviderFilter<"Transaction"> | $Enums.PaymentProvider
+    paidAt?: DateTimeNullableFilter<"Transaction"> | Date | string | null
+    createdAt?: DateTimeFilter<"Transaction"> | Date | string
+    updatedAt?: DateTimeFilter<"Transaction"> | Date | string
+    lease?: XOR<LeaseScalarRelationFilter, LeaseWhereInput>
+  }
+
+  export type TransactionOrderByWithRelationInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    provider?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lease?: LeaseOrderByWithRelationInput
+  }
+
+  export type TransactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    reference?: string
+    AND?: TransactionWhereInput | TransactionWhereInput[]
+    OR?: TransactionWhereInput[]
+    NOT?: TransactionWhereInput | TransactionWhereInput[]
+    leaseId?: IntFilter<"Transaction"> | number
+    amount?: FloatFilter<"Transaction"> | number
+    type?: EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
+    status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
+    provider?: EnumPaymentProviderFilter<"Transaction"> | $Enums.PaymentProvider
+    paidAt?: DateTimeNullableFilter<"Transaction"> | Date | string | null
+    createdAt?: DateTimeFilter<"Transaction"> | Date | string
+    updatedAt?: DateTimeFilter<"Transaction"> | Date | string
+    lease?: XOR<LeaseScalarRelationFilter, LeaseWhereInput>
+  }, "id" | "reference">
+
+  export type TransactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    provider?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TransactionCountOrderByAggregateInput
+    _avg?: TransactionAvgOrderByAggregateInput
+    _max?: TransactionMaxOrderByAggregateInput
+    _min?: TransactionMinOrderByAggregateInput
+    _sum?: TransactionSumOrderByAggregateInput
+  }
+
+  export type TransactionScalarWhereWithAggregatesInput = {
+    AND?: TransactionScalarWhereWithAggregatesInput | TransactionScalarWhereWithAggregatesInput[]
+    OR?: TransactionScalarWhereWithAggregatesInput[]
+    NOT?: TransactionScalarWhereWithAggregatesInput | TransactionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Transaction"> | number
+    leaseId?: IntWithAggregatesFilter<"Transaction"> | number
+    amount?: FloatWithAggregatesFilter<"Transaction"> | number
+    type?: EnumTransactionTypeWithAggregatesFilter<"Transaction"> | $Enums.TransactionType
+    status?: EnumTransactionStatusWithAggregatesFilter<"Transaction"> | $Enums.TransactionStatus
+    reference?: StringWithAggregatesFilter<"Transaction"> | string
+    provider?: EnumPaymentProviderWithAggregatesFilter<"Transaction"> | $Enums.PaymentProvider
+    paidAt?: DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Transaction"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Transaction"> | Date | string
+  }
+
   export type PropertyCreateInput = {
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -10775,17 +13778,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -10801,17 +13805,18 @@ export namespace Prisma {
   export type PropertyUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -10828,17 +13833,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -10855,17 +13861,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -10877,17 +13884,18 @@ export namespace Prisma {
   export type PropertyUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -10898,17 +13906,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -11080,8 +14089,8 @@ export namespace Prisma {
   }
 
   export type ApplicationCreateInput = {
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     name: string
     email: string
     phoneNumber: string
@@ -11093,15 +14102,15 @@ export namespace Prisma {
 
   export type ApplicationUncheckedCreateInput = {
     id?: number
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     propertyId: number
     tenantCognitoId: string
     name: string
     email: string
     phoneNumber: string
     message?: string | null
-    leaseId?: number | null
+    lease?: LeaseUncheckedCreateNestedOneWithoutApplicationInput
   }
 
   export type ApplicationUpdateInput = {
@@ -11126,20 +14135,19 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
-    leaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    lease?: LeaseUncheckedUpdateOneWithoutApplicationNestedInput
   }
 
   export type ApplicationCreateManyInput = {
     id?: number
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     propertyId: number
     tenantCognitoId: string
     name: string
     email: string
     phoneNumber: string
     message?: string | null
-    leaseId?: number | null
   }
 
   export type ApplicationUpdateManyMutationInput = {
@@ -11161,17 +14169,22 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
-    leaseId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type LeaseCreateInput = {
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     property: PropertyCreateNestedOneWithoutLeasesInput
     tenant: TenantCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
+    escrowHolds?: EscrowHoldCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionCreateNestedManyWithoutLeaseInput
     payments?: PaymentCreateNestedManyWithoutLeaseInput
   }
 
@@ -11179,22 +14192,34 @@ export namespace Prisma {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     propertyId: number
     tenantCognitoId: string
-    application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
+    applicationId?: number | null
+    escrowHolds?: EscrowHoldUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutLeaseInput
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUpdateInput = {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
+    escrowHolds?: EscrowHoldUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUpdateManyWithoutLeaseNestedInput
   }
 
@@ -11202,11 +14227,17 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantCognitoId?: StringFieldUpdateOperationsInput | string
-    application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    escrowHolds?: EscrowHoldUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
@@ -11214,27 +14245,41 @@ export namespace Prisma {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     propertyId: number
     tenantCognitoId: string
+    applicationId?: number | null
   }
 
   export type LeaseUpdateManyMutationInput = {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type LeaseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantCognitoId?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PaymentCreateInput = {
@@ -11303,6 +14348,159 @@ export namespace Prisma {
     leaseId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type EscrowHoldCreateInput = {
+    amount: number
+    status?: $Enums.EscrowStatus
+    providerReference: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lease: LeaseCreateNestedOneWithoutEscrowHoldsInput
+  }
+
+  export type EscrowHoldUncheckedCreateInput = {
+    id?: number
+    leaseId: number
+    amount: number
+    status?: $Enums.EscrowStatus
+    providerReference: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EscrowHoldUpdateInput = {
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumEscrowStatusFieldUpdateOperationsInput | $Enums.EscrowStatus
+    providerReference?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lease?: LeaseUpdateOneRequiredWithoutEscrowHoldsNestedInput
+  }
+
+  export type EscrowHoldUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    leaseId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumEscrowStatusFieldUpdateOperationsInput | $Enums.EscrowStatus
+    providerReference?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EscrowHoldCreateManyInput = {
+    id?: number
+    leaseId: number
+    amount: number
+    status?: $Enums.EscrowStatus
+    providerReference: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EscrowHoldUpdateManyMutationInput = {
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumEscrowStatusFieldUpdateOperationsInput | $Enums.EscrowStatus
+    providerReference?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EscrowHoldUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    leaseId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumEscrowStatusFieldUpdateOperationsInput | $Enums.EscrowStatus
+    providerReference?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionCreateInput = {
+    amount: number
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    reference: string
+    provider?: $Enums.PaymentProvider
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lease: LeaseCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type TransactionUncheckedCreateInput = {
+    id?: number
+    leaseId: number
+    amount: number
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    reference: string
+    provider?: $Enums.PaymentProvider
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TransactionUpdateInput = {
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    reference?: StringFieldUpdateOperationsInput | string
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lease?: LeaseUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type TransactionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    leaseId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    reference?: StringFieldUpdateOperationsInput | string
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionCreateManyInput = {
+    id?: number
+    leaseId: number
+    amount: number
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    reference: string
+    provider?: $Enums.PaymentProvider
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TransactionUpdateManyMutationInput = {
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    reference?: StringFieldUpdateOperationsInput | string
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    leaseId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    reference?: StringFieldUpdateOperationsInput | string
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -11338,6 +14536,13 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type EnumCampusZoneFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampusZone | EnumCampusZoneFieldRefInput<$PrismaModel>
+    in?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampusZoneFilter<$PrismaModel> | $Enums.CampusZone
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -11458,17 +14663,18 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    pricePerMonth?: SortOrder
-    securityDeposit?: SortOrder
-    applicationFee?: SortOrder
+    annualRent?: SortOrder
+    agentFee?: SortOrder
+    cautionDeposit?: SortOrder
+    platformFee?: SortOrder
+    campusZone?: SortOrder
+    landmark?: SortOrder
     photoUrls?: SortOrder
     amenities?: SortOrder
     highlights?: SortOrder
-    isPetsAllowed?: SortOrder
     isParkingIncluded?: SortOrder
     beds?: SortOrder
     baths?: SortOrder
-    squareFeet?: SortOrder
     propertyType?: SortOrder
     postedDate?: SortOrder
     averageRating?: SortOrder
@@ -11479,12 +14685,12 @@ export namespace Prisma {
 
   export type PropertyAvgOrderByAggregateInput = {
     id?: SortOrder
-    pricePerMonth?: SortOrder
-    securityDeposit?: SortOrder
-    applicationFee?: SortOrder
+    annualRent?: SortOrder
+    agentFee?: SortOrder
+    cautionDeposit?: SortOrder
+    platformFee?: SortOrder
     beds?: SortOrder
     baths?: SortOrder
-    squareFeet?: SortOrder
     averageRating?: SortOrder
     numberOfReviews?: SortOrder
     locationId?: SortOrder
@@ -11494,14 +14700,15 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    pricePerMonth?: SortOrder
-    securityDeposit?: SortOrder
-    applicationFee?: SortOrder
-    isPetsAllowed?: SortOrder
+    annualRent?: SortOrder
+    agentFee?: SortOrder
+    cautionDeposit?: SortOrder
+    platformFee?: SortOrder
+    campusZone?: SortOrder
+    landmark?: SortOrder
     isParkingIncluded?: SortOrder
     beds?: SortOrder
     baths?: SortOrder
-    squareFeet?: SortOrder
     propertyType?: SortOrder
     postedDate?: SortOrder
     averageRating?: SortOrder
@@ -11514,14 +14721,15 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    pricePerMonth?: SortOrder
-    securityDeposit?: SortOrder
-    applicationFee?: SortOrder
-    isPetsAllowed?: SortOrder
+    annualRent?: SortOrder
+    agentFee?: SortOrder
+    cautionDeposit?: SortOrder
+    platformFee?: SortOrder
+    campusZone?: SortOrder
+    landmark?: SortOrder
     isParkingIncluded?: SortOrder
     beds?: SortOrder
     baths?: SortOrder
-    squareFeet?: SortOrder
     propertyType?: SortOrder
     postedDate?: SortOrder
     averageRating?: SortOrder
@@ -11532,12 +14740,12 @@ export namespace Prisma {
 
   export type PropertySumOrderByAggregateInput = {
     id?: SortOrder
-    pricePerMonth?: SortOrder
-    securityDeposit?: SortOrder
-    applicationFee?: SortOrder
+    annualRent?: SortOrder
+    agentFee?: SortOrder
+    cautionDeposit?: SortOrder
+    platformFee?: SortOrder
     beds?: SortOrder
     baths?: SortOrder
-    squareFeet?: SortOrder
     averageRating?: SortOrder
     numberOfReviews?: SortOrder
     locationId?: SortOrder
@@ -11591,6 +14799,16 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type EnumCampusZoneWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampusZone | EnumCampusZoneFieldRefInput<$PrismaModel>
+    in?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampusZoneWithAggregatesFilter<$PrismaModel> | $Enums.CampusZone
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampusZoneFilter<$PrismaModel>
+    _max?: NestedEnumCampusZoneFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -11813,13 +15031,11 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     message?: SortOrder
-    leaseId?: SortOrder
   }
 
   export type ApplicationAvgOrderByAggregateInput = {
     id?: SortOrder
     propertyId?: SortOrder
-    leaseId?: SortOrder
   }
 
   export type ApplicationMaxOrderByAggregateInput = {
@@ -11832,7 +15048,6 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     message?: SortOrder
-    leaseId?: SortOrder
   }
 
   export type ApplicationMinOrderByAggregateInput = {
@@ -11845,13 +15060,11 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     message?: SortOrder
-    leaseId?: SortOrder
   }
 
   export type ApplicationSumOrderByAggregateInput = {
     id?: SortOrder
     propertyId?: SortOrder
-    leaseId?: SortOrder
   }
 
   export type EnumApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -11882,15 +15095,53 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type EnumLeaseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaseStatus | EnumLeaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaseStatusFilter<$PrismaModel> | $Enums.LeaseStatus
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type ApplicationNullableScalarRelationFilter = {
     is?: ApplicationWhereInput | null
     isNot?: ApplicationWhereInput | null
+  }
+
+  export type EscrowHoldListRelationFilter = {
+    every?: EscrowHoldWhereInput
+    some?: EscrowHoldWhereInput
+    none?: EscrowHoldWhereInput
+  }
+
+  export type TransactionListRelationFilter = {
+    every?: TransactionWhereInput
+    some?: TransactionWhereInput
+    none?: TransactionWhereInput
   }
 
   export type PaymentListRelationFilter = {
     every?: PaymentWhereInput
     some?: PaymentWhereInput
     none?: PaymentWhereInput
+  }
+
+  export type EscrowHoldOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type PaymentOrderByRelationAggregateInput = {
@@ -11901,44 +15152,89 @@ export namespace Prisma {
     id?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
-    rent?: SortOrder
-    deposit?: SortOrder
+    annualRent?: SortOrder
+    cautionDeposit?: SortOrder
+    agentFee?: SortOrder
+    platformFee?: SortOrder
+    status?: SortOrder
+    paidAt?: SortOrder
     propertyId?: SortOrder
     tenantCognitoId?: SortOrder
+    applicationId?: SortOrder
   }
 
   export type LeaseAvgOrderByAggregateInput = {
     id?: SortOrder
-    rent?: SortOrder
-    deposit?: SortOrder
+    annualRent?: SortOrder
+    cautionDeposit?: SortOrder
+    agentFee?: SortOrder
+    platformFee?: SortOrder
     propertyId?: SortOrder
+    applicationId?: SortOrder
   }
 
   export type LeaseMaxOrderByAggregateInput = {
     id?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
-    rent?: SortOrder
-    deposit?: SortOrder
+    annualRent?: SortOrder
+    cautionDeposit?: SortOrder
+    agentFee?: SortOrder
+    platformFee?: SortOrder
+    status?: SortOrder
+    paidAt?: SortOrder
     propertyId?: SortOrder
     tenantCognitoId?: SortOrder
+    applicationId?: SortOrder
   }
 
   export type LeaseMinOrderByAggregateInput = {
     id?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
-    rent?: SortOrder
-    deposit?: SortOrder
+    annualRent?: SortOrder
+    cautionDeposit?: SortOrder
+    agentFee?: SortOrder
+    platformFee?: SortOrder
+    status?: SortOrder
+    paidAt?: SortOrder
     propertyId?: SortOrder
     tenantCognitoId?: SortOrder
+    applicationId?: SortOrder
   }
 
   export type LeaseSumOrderByAggregateInput = {
     id?: SortOrder
-    rent?: SortOrder
-    deposit?: SortOrder
+    annualRent?: SortOrder
+    cautionDeposit?: SortOrder
+    agentFee?: SortOrder
+    platformFee?: SortOrder
     propertyId?: SortOrder
+    applicationId?: SortOrder
+  }
+
+  export type EnumLeaseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaseStatus | EnumLeaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaseStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeaseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaseStatusFilter<$PrismaModel>
+    _max?: NestedEnumLeaseStatusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumPaymentStatusFilter<$PrismaModel = never> = {
@@ -12005,6 +15301,167 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type EnumEscrowStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.EscrowStatus | EnumEscrowStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEscrowStatusFilter<$PrismaModel> | $Enums.EscrowStatus
+  }
+
+  export type EscrowHoldCountOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    providerReference?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EscrowHoldAvgOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EscrowHoldMaxOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    providerReference?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EscrowHoldMinOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    providerReference?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EscrowHoldSumOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EnumEscrowStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EscrowStatus | EnumEscrowStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEscrowStatusWithAggregatesFilter<$PrismaModel> | $Enums.EscrowStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEscrowStatusFilter<$PrismaModel>
+    _max?: NestedEnumEscrowStatusFilter<$PrismaModel>
+  }
+
+  export type EnumTransactionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionTypeFilter<$PrismaModel> | $Enums.TransactionType
+  }
+
+  export type EnumTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionStatusFilter<$PrismaModel> | $Enums.TransactionStatus
+  }
+
+  export type EnumPaymentProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderFilter<$PrismaModel> | $Enums.PaymentProvider
+  }
+
+  export type TransactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    provider?: SortOrder
+    paidAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TransactionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type TransactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    provider?: SortOrder
+    paidAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TransactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    provider?: SortOrder
+    paidAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TransactionSumOrderByAggregateInput = {
+    id?: SortOrder
+    leaseId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EnumTransactionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionTypeWithAggregatesFilter<$PrismaModel> | $Enums.TransactionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionTypeFilter<$PrismaModel>
+    _max?: NestedEnumTransactionTypeFilter<$PrismaModel>
+  }
+
+  export type EnumTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPaymentProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel> | $Enums.PaymentProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentProviderFilter<$PrismaModel>
+    _max?: NestedEnumPaymentProviderFilter<$PrismaModel>
   }
 
   export type PropertyCreatephotoUrlsInput = {
@@ -12091,6 +15548,10 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type EnumCampusZoneFieldUpdateOperationsInput = {
+    set?: $Enums.CampusZone
   }
 
   export type PropertyUpdatephotoUrlsInput = {
@@ -12513,6 +15974,12 @@ export namespace Prisma {
     connect?: LeaseWhereUniqueInput
   }
 
+  export type LeaseUncheckedCreateNestedOneWithoutApplicationInput = {
+    create?: XOR<LeaseCreateWithoutApplicationInput, LeaseUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: LeaseCreateOrConnectWithoutApplicationInput
+    connect?: LeaseWhereUniqueInput
+  }
+
   export type EnumApplicationStatusFieldUpdateOperationsInput = {
     set?: $Enums.ApplicationStatus
   }
@@ -12547,6 +16014,16 @@ export namespace Prisma {
     update?: XOR<XOR<LeaseUpdateToOneWithWhereWithoutApplicationInput, LeaseUpdateWithoutApplicationInput>, LeaseUncheckedUpdateWithoutApplicationInput>
   }
 
+  export type LeaseUncheckedUpdateOneWithoutApplicationNestedInput = {
+    create?: XOR<LeaseCreateWithoutApplicationInput, LeaseUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: LeaseCreateOrConnectWithoutApplicationInput
+    upsert?: LeaseUpsertWithoutApplicationInput
+    disconnect?: LeaseWhereInput | boolean
+    delete?: LeaseWhereInput | boolean
+    connect?: LeaseWhereUniqueInput
+    update?: XOR<XOR<LeaseUpdateToOneWithWhereWithoutApplicationInput, LeaseUpdateWithoutApplicationInput>, LeaseUncheckedUpdateWithoutApplicationInput>
+  }
+
   export type PropertyCreateNestedOneWithoutLeasesInput = {
     create?: XOR<PropertyCreateWithoutLeasesInput, PropertyUncheckedCreateWithoutLeasesInput>
     connectOrCreate?: PropertyCreateOrConnectWithoutLeasesInput
@@ -12565,6 +16042,20 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput
   }
 
+  export type EscrowHoldCreateNestedManyWithoutLeaseInput = {
+    create?: XOR<EscrowHoldCreateWithoutLeaseInput, EscrowHoldUncheckedCreateWithoutLeaseInput> | EscrowHoldCreateWithoutLeaseInput[] | EscrowHoldUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: EscrowHoldCreateOrConnectWithoutLeaseInput | EscrowHoldCreateOrConnectWithoutLeaseInput[]
+    createMany?: EscrowHoldCreateManyLeaseInputEnvelope
+    connect?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+  }
+
+  export type TransactionCreateNestedManyWithoutLeaseInput = {
+    create?: XOR<TransactionCreateWithoutLeaseInput, TransactionUncheckedCreateWithoutLeaseInput> | TransactionCreateWithoutLeaseInput[] | TransactionUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutLeaseInput | TransactionCreateOrConnectWithoutLeaseInput[]
+    createMany?: TransactionCreateManyLeaseInputEnvelope
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+  }
+
   export type PaymentCreateNestedManyWithoutLeaseInput = {
     create?: XOR<PaymentCreateWithoutLeaseInput, PaymentUncheckedCreateWithoutLeaseInput> | PaymentCreateWithoutLeaseInput[] | PaymentUncheckedCreateWithoutLeaseInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutLeaseInput | PaymentCreateOrConnectWithoutLeaseInput[]
@@ -12572,10 +16063,18 @@ export namespace Prisma {
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
-  export type ApplicationUncheckedCreateNestedOneWithoutLeaseInput = {
-    create?: XOR<ApplicationCreateWithoutLeaseInput, ApplicationUncheckedCreateWithoutLeaseInput>
-    connectOrCreate?: ApplicationCreateOrConnectWithoutLeaseInput
-    connect?: ApplicationWhereUniqueInput
+  export type EscrowHoldUncheckedCreateNestedManyWithoutLeaseInput = {
+    create?: XOR<EscrowHoldCreateWithoutLeaseInput, EscrowHoldUncheckedCreateWithoutLeaseInput> | EscrowHoldCreateWithoutLeaseInput[] | EscrowHoldUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: EscrowHoldCreateOrConnectWithoutLeaseInput | EscrowHoldCreateOrConnectWithoutLeaseInput[]
+    createMany?: EscrowHoldCreateManyLeaseInputEnvelope
+    connect?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+  }
+
+  export type TransactionUncheckedCreateNestedManyWithoutLeaseInput = {
+    create?: XOR<TransactionCreateWithoutLeaseInput, TransactionUncheckedCreateWithoutLeaseInput> | TransactionCreateWithoutLeaseInput[] | TransactionUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutLeaseInput | TransactionCreateOrConnectWithoutLeaseInput[]
+    createMany?: TransactionCreateManyLeaseInputEnvelope
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
   }
 
   export type PaymentUncheckedCreateNestedManyWithoutLeaseInput = {
@@ -12583,6 +16082,14 @@ export namespace Prisma {
     connectOrCreate?: PaymentCreateOrConnectWithoutLeaseInput | PaymentCreateOrConnectWithoutLeaseInput[]
     createMany?: PaymentCreateManyLeaseInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type EnumLeaseStatusFieldUpdateOperationsInput = {
+    set?: $Enums.LeaseStatus
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type PropertyUpdateOneRequiredWithoutLeasesNestedInput = {
@@ -12611,6 +16118,34 @@ export namespace Prisma {
     update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutLeaseInput, ApplicationUpdateWithoutLeaseInput>, ApplicationUncheckedUpdateWithoutLeaseInput>
   }
 
+  export type EscrowHoldUpdateManyWithoutLeaseNestedInput = {
+    create?: XOR<EscrowHoldCreateWithoutLeaseInput, EscrowHoldUncheckedCreateWithoutLeaseInput> | EscrowHoldCreateWithoutLeaseInput[] | EscrowHoldUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: EscrowHoldCreateOrConnectWithoutLeaseInput | EscrowHoldCreateOrConnectWithoutLeaseInput[]
+    upsert?: EscrowHoldUpsertWithWhereUniqueWithoutLeaseInput | EscrowHoldUpsertWithWhereUniqueWithoutLeaseInput[]
+    createMany?: EscrowHoldCreateManyLeaseInputEnvelope
+    set?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    disconnect?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    delete?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    connect?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    update?: EscrowHoldUpdateWithWhereUniqueWithoutLeaseInput | EscrowHoldUpdateWithWhereUniqueWithoutLeaseInput[]
+    updateMany?: EscrowHoldUpdateManyWithWhereWithoutLeaseInput | EscrowHoldUpdateManyWithWhereWithoutLeaseInput[]
+    deleteMany?: EscrowHoldScalarWhereInput | EscrowHoldScalarWhereInput[]
+  }
+
+  export type TransactionUpdateManyWithoutLeaseNestedInput = {
+    create?: XOR<TransactionCreateWithoutLeaseInput, TransactionUncheckedCreateWithoutLeaseInput> | TransactionCreateWithoutLeaseInput[] | TransactionUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutLeaseInput | TransactionCreateOrConnectWithoutLeaseInput[]
+    upsert?: TransactionUpsertWithWhereUniqueWithoutLeaseInput | TransactionUpsertWithWhereUniqueWithoutLeaseInput[]
+    createMany?: TransactionCreateManyLeaseInputEnvelope
+    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    update?: TransactionUpdateWithWhereUniqueWithoutLeaseInput | TransactionUpdateWithWhereUniqueWithoutLeaseInput[]
+    updateMany?: TransactionUpdateManyWithWhereWithoutLeaseInput | TransactionUpdateManyWithWhereWithoutLeaseInput[]
+    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
+  }
+
   export type PaymentUpdateManyWithoutLeaseNestedInput = {
     create?: XOR<PaymentCreateWithoutLeaseInput, PaymentUncheckedCreateWithoutLeaseInput> | PaymentCreateWithoutLeaseInput[] | PaymentUncheckedCreateWithoutLeaseInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutLeaseInput | PaymentCreateOrConnectWithoutLeaseInput[]
@@ -12625,14 +16160,32 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
-  export type ApplicationUncheckedUpdateOneWithoutLeaseNestedInput = {
-    create?: XOR<ApplicationCreateWithoutLeaseInput, ApplicationUncheckedCreateWithoutLeaseInput>
-    connectOrCreate?: ApplicationCreateOrConnectWithoutLeaseInput
-    upsert?: ApplicationUpsertWithoutLeaseInput
-    disconnect?: ApplicationWhereInput | boolean
-    delete?: ApplicationWhereInput | boolean
-    connect?: ApplicationWhereUniqueInput
-    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutLeaseInput, ApplicationUpdateWithoutLeaseInput>, ApplicationUncheckedUpdateWithoutLeaseInput>
+  export type EscrowHoldUncheckedUpdateManyWithoutLeaseNestedInput = {
+    create?: XOR<EscrowHoldCreateWithoutLeaseInput, EscrowHoldUncheckedCreateWithoutLeaseInput> | EscrowHoldCreateWithoutLeaseInput[] | EscrowHoldUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: EscrowHoldCreateOrConnectWithoutLeaseInput | EscrowHoldCreateOrConnectWithoutLeaseInput[]
+    upsert?: EscrowHoldUpsertWithWhereUniqueWithoutLeaseInput | EscrowHoldUpsertWithWhereUniqueWithoutLeaseInput[]
+    createMany?: EscrowHoldCreateManyLeaseInputEnvelope
+    set?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    disconnect?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    delete?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    connect?: EscrowHoldWhereUniqueInput | EscrowHoldWhereUniqueInput[]
+    update?: EscrowHoldUpdateWithWhereUniqueWithoutLeaseInput | EscrowHoldUpdateWithWhereUniqueWithoutLeaseInput[]
+    updateMany?: EscrowHoldUpdateManyWithWhereWithoutLeaseInput | EscrowHoldUpdateManyWithWhereWithoutLeaseInput[]
+    deleteMany?: EscrowHoldScalarWhereInput | EscrowHoldScalarWhereInput[]
+  }
+
+  export type TransactionUncheckedUpdateManyWithoutLeaseNestedInput = {
+    create?: XOR<TransactionCreateWithoutLeaseInput, TransactionUncheckedCreateWithoutLeaseInput> | TransactionCreateWithoutLeaseInput[] | TransactionUncheckedCreateWithoutLeaseInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutLeaseInput | TransactionCreateOrConnectWithoutLeaseInput[]
+    upsert?: TransactionUpsertWithWhereUniqueWithoutLeaseInput | TransactionUpsertWithWhereUniqueWithoutLeaseInput[]
+    createMany?: TransactionCreateManyLeaseInputEnvelope
+    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    update?: TransactionUpdateWithWhereUniqueWithoutLeaseInput | TransactionUpdateWithWhereUniqueWithoutLeaseInput[]
+    updateMany?: TransactionUpdateManyWithWhereWithoutLeaseInput | TransactionUpdateManyWithWhereWithoutLeaseInput[]
+    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
   }
 
   export type PaymentUncheckedUpdateManyWithoutLeaseNestedInput = {
@@ -12665,6 +16218,50 @@ export namespace Prisma {
     upsert?: LeaseUpsertWithoutPaymentsInput
     connect?: LeaseWhereUniqueInput
     update?: XOR<XOR<LeaseUpdateToOneWithWhereWithoutPaymentsInput, LeaseUpdateWithoutPaymentsInput>, LeaseUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type LeaseCreateNestedOneWithoutEscrowHoldsInput = {
+    create?: XOR<LeaseCreateWithoutEscrowHoldsInput, LeaseUncheckedCreateWithoutEscrowHoldsInput>
+    connectOrCreate?: LeaseCreateOrConnectWithoutEscrowHoldsInput
+    connect?: LeaseWhereUniqueInput
+  }
+
+  export type EnumEscrowStatusFieldUpdateOperationsInput = {
+    set?: $Enums.EscrowStatus
+  }
+
+  export type LeaseUpdateOneRequiredWithoutEscrowHoldsNestedInput = {
+    create?: XOR<LeaseCreateWithoutEscrowHoldsInput, LeaseUncheckedCreateWithoutEscrowHoldsInput>
+    connectOrCreate?: LeaseCreateOrConnectWithoutEscrowHoldsInput
+    upsert?: LeaseUpsertWithoutEscrowHoldsInput
+    connect?: LeaseWhereUniqueInput
+    update?: XOR<XOR<LeaseUpdateToOneWithWhereWithoutEscrowHoldsInput, LeaseUpdateWithoutEscrowHoldsInput>, LeaseUncheckedUpdateWithoutEscrowHoldsInput>
+  }
+
+  export type LeaseCreateNestedOneWithoutTransactionsInput = {
+    create?: XOR<LeaseCreateWithoutTransactionsInput, LeaseUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: LeaseCreateOrConnectWithoutTransactionsInput
+    connect?: LeaseWhereUniqueInput
+  }
+
+  export type EnumTransactionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TransactionType
+  }
+
+  export type EnumTransactionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TransactionStatus
+  }
+
+  export type EnumPaymentProviderFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentProvider
+  }
+
+  export type LeaseUpdateOneRequiredWithoutTransactionsNestedInput = {
+    create?: XOR<LeaseCreateWithoutTransactionsInput, LeaseUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: LeaseCreateOrConnectWithoutTransactionsInput
+    upsert?: LeaseUpsertWithoutTransactionsInput
+    connect?: LeaseWhereUniqueInput
+    update?: XOR<XOR<LeaseUpdateToOneWithWhereWithoutTransactionsInput, LeaseUpdateWithoutTransactionsInput>, LeaseUncheckedUpdateWithoutTransactionsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -12701,6 +16298,13 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumCampusZoneFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampusZone | EnumCampusZoneFieldRefInput<$PrismaModel>
+    in?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampusZoneFilter<$PrismaModel> | $Enums.CampusZone
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -12795,6 +16399,16 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCampusZoneWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampusZone | EnumCampusZoneFieldRefInput<$PrismaModel>
+    in?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampusZone[] | ListEnumCampusZoneFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampusZoneWithAggregatesFilter<$PrismaModel> | $Enums.CampusZone
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampusZoneFilter<$PrismaModel>
+    _max?: NestedEnumCampusZoneFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -12909,6 +16523,48 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumLeaseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaseStatus | EnumLeaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaseStatusFilter<$PrismaModel> | $Enums.LeaseStatus
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedEnumLeaseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaseStatus | EnumLeaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaseStatus[] | ListEnumLeaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaseStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeaseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaseStatusFilter<$PrismaModel>
+    _max?: NestedEnumLeaseStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumPaymentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
@@ -12924,6 +16580,74 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumEscrowStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.EscrowStatus | EnumEscrowStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEscrowStatusFilter<$PrismaModel> | $Enums.EscrowStatus
+  }
+
+  export type NestedEnumEscrowStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EscrowStatus | EnumEscrowStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EscrowStatus[] | ListEnumEscrowStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEscrowStatusWithAggregatesFilter<$PrismaModel> | $Enums.EscrowStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEscrowStatusFilter<$PrismaModel>
+    _max?: NestedEnumEscrowStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTransactionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionTypeFilter<$PrismaModel> | $Enums.TransactionType
+  }
+
+  export type NestedEnumTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionStatusFilter<$PrismaModel> | $Enums.TransactionStatus
+  }
+
+  export type NestedEnumPaymentProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderFilter<$PrismaModel> | $Enums.PaymentProvider
+  }
+
+  export type NestedEnumTransactionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionType[] | ListEnumTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionTypeWithAggregatesFilter<$PrismaModel> | $Enums.TransactionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionTypeFilter<$PrismaModel>
+    _max?: NestedEnumTransactionTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel> | $Enums.PaymentProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentProviderFilter<$PrismaModel>
+    _max?: NestedEnumPaymentProviderFilter<$PrismaModel>
   }
 
   export type ManagerCreateWithoutManagedPropertiesInput = {
@@ -12949,10 +16673,16 @@ export namespace Prisma {
   export type LeaseCreateWithoutPropertyInput = {
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     tenant: TenantCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
+    escrowHolds?: EscrowHoldCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionCreateNestedManyWithoutLeaseInput
     payments?: PaymentCreateNestedManyWithoutLeaseInput
   }
 
@@ -12960,10 +16690,16 @@ export namespace Prisma {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     tenantCognitoId: string
-    application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
+    applicationId?: number | null
+    escrowHolds?: EscrowHoldUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutLeaseInput
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
@@ -12978,8 +16714,8 @@ export namespace Prisma {
   }
 
   export type ApplicationCreateWithoutPropertyInput = {
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     name: string
     email: string
     phoneNumber: string
@@ -12990,14 +16726,14 @@ export namespace Prisma {
 
   export type ApplicationUncheckedCreateWithoutPropertyInput = {
     id?: number
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     tenantCognitoId: string
     name: string
     email: string
     phoneNumber: string
     message?: string | null
-    leaseId?: number | null
+    lease?: LeaseUncheckedCreateNestedOneWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutPropertyInput = {
@@ -13133,10 +16869,15 @@ export namespace Prisma {
     id?: IntFilter<"Lease"> | number
     startDate?: DateTimeFilter<"Lease"> | Date | string
     endDate?: DateTimeFilter<"Lease"> | Date | string
-    rent?: FloatFilter<"Lease"> | number
-    deposit?: FloatFilter<"Lease"> | number
+    annualRent?: FloatFilter<"Lease"> | number
+    cautionDeposit?: FloatFilter<"Lease"> | number
+    agentFee?: FloatFilter<"Lease"> | number
+    platformFee?: FloatFilter<"Lease"> | number
+    status?: EnumLeaseStatusFilter<"Lease"> | $Enums.LeaseStatus
+    paidAt?: DateTimeNullableFilter<"Lease"> | Date | string | null
     propertyId?: IntFilter<"Lease"> | number
     tenantCognitoId?: StringFilter<"Lease"> | string
+    applicationId?: IntNullableFilter<"Lease"> | number | null
   }
 
   export type ApplicationUpsertWithWhereUniqueWithoutPropertyInput = {
@@ -13168,7 +16909,6 @@ export namespace Prisma {
     email?: StringFilter<"Application"> | string
     phoneNumber?: StringFilter<"Application"> | string
     message?: StringNullableFilter<"Application"> | string | null
-    leaseId?: IntNullableFilter<"Application"> | number | null
   }
 
   export type TenantUpsertWithWhereUniqueWithoutFavoritesInput = {
@@ -13217,17 +16957,18 @@ export namespace Prisma {
   export type PropertyCreateWithoutManagerInput = {
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13243,17 +16984,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13298,17 +17040,18 @@ export namespace Prisma {
     id?: IntFilter<"Property"> | number
     name?: StringFilter<"Property"> | string
     description?: StringFilter<"Property"> | string
-    pricePerMonth?: FloatFilter<"Property"> | number
-    securityDeposit?: FloatFilter<"Property"> | number
-    applicationFee?: FloatFilter<"Property"> | number
+    annualRent?: FloatFilter<"Property"> | number
+    agentFee?: FloatFilter<"Property"> | number
+    cautionDeposit?: FloatFilter<"Property"> | number
+    platformFee?: FloatFilter<"Property"> | number
+    campusZone?: EnumCampusZoneFilter<"Property"> | $Enums.CampusZone
+    landmark?: StringFilter<"Property"> | string
     photoUrls?: StringNullableListFilter<"Property">
     amenities?: EnumAmenityNullableListFilter<"Property">
     highlights?: EnumHighlightNullableListFilter<"Property">
-    isPetsAllowed?: BoolFilter<"Property"> | boolean
     isParkingIncluded?: BoolFilter<"Property"> | boolean
     beds?: IntFilter<"Property"> | number
     baths?: FloatFilter<"Property"> | number
-    squareFeet?: IntFilter<"Property"> | number
     propertyType?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
     postedDate?: DateTimeFilter<"Property"> | Date | string
     averageRating?: FloatNullableFilter<"Property"> | number | null
@@ -13320,17 +17063,18 @@ export namespace Prisma {
   export type PropertyCreateWithoutTenantsInput = {
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13346,17 +17090,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13376,17 +17121,18 @@ export namespace Prisma {
   export type PropertyCreateWithoutFavoritedByInput = {
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13402,17 +17148,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13430,8 +17177,8 @@ export namespace Prisma {
   }
 
   export type ApplicationCreateWithoutTenantInput = {
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     name: string
     email: string
     phoneNumber: string
@@ -13442,14 +17189,14 @@ export namespace Prisma {
 
   export type ApplicationUncheckedCreateWithoutTenantInput = {
     id?: number
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     propertyId: number
     name: string
     email: string
     phoneNumber: string
     message?: string | null
-    leaseId?: number | null
+    lease?: LeaseUncheckedCreateNestedOneWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutTenantInput = {
@@ -13465,10 +17212,16 @@ export namespace Prisma {
   export type LeaseCreateWithoutTenantInput = {
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     property: PropertyCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
+    escrowHolds?: EscrowHoldCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionCreateNestedManyWithoutLeaseInput
     payments?: PaymentCreateNestedManyWithoutLeaseInput
   }
 
@@ -13476,10 +17229,16 @@ export namespace Prisma {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     propertyId: number
-    application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
+    applicationId?: number | null
+    escrowHolds?: EscrowHoldUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutLeaseInput
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
@@ -13560,17 +17319,18 @@ export namespace Prisma {
   export type PropertyCreateWithoutLocationInput = {
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13586,17 +17346,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13637,17 +17398,18 @@ export namespace Prisma {
   export type PropertyCreateWithoutApplicationsInput = {
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13663,17 +17425,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13719,10 +17482,16 @@ export namespace Prisma {
   export type LeaseCreateWithoutApplicationInput = {
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     property: PropertyCreateNestedOneWithoutLeasesInput
     tenant: TenantCreateNestedOneWithoutLeasesInput
+    escrowHolds?: EscrowHoldCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionCreateNestedManyWithoutLeaseInput
     payments?: PaymentCreateNestedManyWithoutLeaseInput
   }
 
@@ -13730,10 +17499,16 @@ export namespace Prisma {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     propertyId: number
     tenantCognitoId: string
+    escrowHolds?: EscrowHoldUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutLeaseInput
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
@@ -13756,17 +17531,18 @@ export namespace Prisma {
   export type PropertyUpdateWithoutApplicationsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -13782,17 +17558,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -13850,10 +17627,16 @@ export namespace Prisma {
   export type LeaseUpdateWithoutApplicationInput = {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeasesNestedInput
+    escrowHolds?: EscrowHoldUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUpdateManyWithoutLeaseNestedInput
   }
 
@@ -13861,27 +17644,34 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantCognitoId?: StringFieldUpdateOperationsInput | string
+    escrowHolds?: EscrowHoldUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type PropertyCreateWithoutLeasesInput = {
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13897,17 +17687,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -13951,8 +17742,8 @@ export namespace Prisma {
   }
 
   export type ApplicationCreateWithoutLeaseInput = {
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     name: string
     email: string
     phoneNumber: string
@@ -13963,8 +17754,8 @@ export namespace Prisma {
 
   export type ApplicationUncheckedCreateWithoutLeaseInput = {
     id?: number
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     propertyId: number
     tenantCognitoId: string
     name: string
@@ -13976,6 +17767,66 @@ export namespace Prisma {
   export type ApplicationCreateOrConnectWithoutLeaseInput = {
     where: ApplicationWhereUniqueInput
     create: XOR<ApplicationCreateWithoutLeaseInput, ApplicationUncheckedCreateWithoutLeaseInput>
+  }
+
+  export type EscrowHoldCreateWithoutLeaseInput = {
+    amount: number
+    status?: $Enums.EscrowStatus
+    providerReference: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EscrowHoldUncheckedCreateWithoutLeaseInput = {
+    id?: number
+    amount: number
+    status?: $Enums.EscrowStatus
+    providerReference: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EscrowHoldCreateOrConnectWithoutLeaseInput = {
+    where: EscrowHoldWhereUniqueInput
+    create: XOR<EscrowHoldCreateWithoutLeaseInput, EscrowHoldUncheckedCreateWithoutLeaseInput>
+  }
+
+  export type EscrowHoldCreateManyLeaseInputEnvelope = {
+    data: EscrowHoldCreateManyLeaseInput | EscrowHoldCreateManyLeaseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TransactionCreateWithoutLeaseInput = {
+    amount: number
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    reference: string
+    provider?: $Enums.PaymentProvider
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TransactionUncheckedCreateWithoutLeaseInput = {
+    id?: number
+    amount: number
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    reference: string
+    provider?: $Enums.PaymentProvider
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TransactionCreateOrConnectWithoutLeaseInput = {
+    where: TransactionWhereUniqueInput
+    create: XOR<TransactionCreateWithoutLeaseInput, TransactionUncheckedCreateWithoutLeaseInput>
+  }
+
+  export type TransactionCreateManyLeaseInputEnvelope = {
+    data: TransactionCreateManyLeaseInput | TransactionCreateManyLeaseInput[]
+    skipDuplicates?: boolean
   }
 
   export type PaymentCreateWithoutLeaseInput = {
@@ -14019,17 +17870,18 @@ export namespace Prisma {
   export type PropertyUpdateWithoutLeasesInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14045,17 +17897,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14133,6 +17986,67 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type EscrowHoldUpsertWithWhereUniqueWithoutLeaseInput = {
+    where: EscrowHoldWhereUniqueInput
+    update: XOR<EscrowHoldUpdateWithoutLeaseInput, EscrowHoldUncheckedUpdateWithoutLeaseInput>
+    create: XOR<EscrowHoldCreateWithoutLeaseInput, EscrowHoldUncheckedCreateWithoutLeaseInput>
+  }
+
+  export type EscrowHoldUpdateWithWhereUniqueWithoutLeaseInput = {
+    where: EscrowHoldWhereUniqueInput
+    data: XOR<EscrowHoldUpdateWithoutLeaseInput, EscrowHoldUncheckedUpdateWithoutLeaseInput>
+  }
+
+  export type EscrowHoldUpdateManyWithWhereWithoutLeaseInput = {
+    where: EscrowHoldScalarWhereInput
+    data: XOR<EscrowHoldUpdateManyMutationInput, EscrowHoldUncheckedUpdateManyWithoutLeaseInput>
+  }
+
+  export type EscrowHoldScalarWhereInput = {
+    AND?: EscrowHoldScalarWhereInput | EscrowHoldScalarWhereInput[]
+    OR?: EscrowHoldScalarWhereInput[]
+    NOT?: EscrowHoldScalarWhereInput | EscrowHoldScalarWhereInput[]
+    id?: IntFilter<"EscrowHold"> | number
+    leaseId?: IntFilter<"EscrowHold"> | number
+    amount?: FloatFilter<"EscrowHold"> | number
+    status?: EnumEscrowStatusFilter<"EscrowHold"> | $Enums.EscrowStatus
+    providerReference?: StringFilter<"EscrowHold"> | string
+    createdAt?: DateTimeFilter<"EscrowHold"> | Date | string
+    updatedAt?: DateTimeFilter<"EscrowHold"> | Date | string
+  }
+
+  export type TransactionUpsertWithWhereUniqueWithoutLeaseInput = {
+    where: TransactionWhereUniqueInput
+    update: XOR<TransactionUpdateWithoutLeaseInput, TransactionUncheckedUpdateWithoutLeaseInput>
+    create: XOR<TransactionCreateWithoutLeaseInput, TransactionUncheckedCreateWithoutLeaseInput>
+  }
+
+  export type TransactionUpdateWithWhereUniqueWithoutLeaseInput = {
+    where: TransactionWhereUniqueInput
+    data: XOR<TransactionUpdateWithoutLeaseInput, TransactionUncheckedUpdateWithoutLeaseInput>
+  }
+
+  export type TransactionUpdateManyWithWhereWithoutLeaseInput = {
+    where: TransactionScalarWhereInput
+    data: XOR<TransactionUpdateManyMutationInput, TransactionUncheckedUpdateManyWithoutLeaseInput>
+  }
+
+  export type TransactionScalarWhereInput = {
+    AND?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
+    OR?: TransactionScalarWhereInput[]
+    NOT?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
+    id?: IntFilter<"Transaction"> | number
+    leaseId?: IntFilter<"Transaction"> | number
+    amount?: FloatFilter<"Transaction"> | number
+    type?: EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
+    status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
+    reference?: StringFilter<"Transaction"> | string
+    provider?: EnumPaymentProviderFilter<"Transaction"> | $Enums.PaymentProvider
+    paidAt?: DateTimeNullableFilter<"Transaction"> | Date | string | null
+    createdAt?: DateTimeFilter<"Transaction"> | Date | string
+    updatedAt?: DateTimeFilter<"Transaction"> | Date | string
+  }
+
   export type PaymentUpsertWithWhereUniqueWithoutLeaseInput = {
     where: PaymentWhereUniqueInput
     update: XOR<PaymentUpdateWithoutLeaseInput, PaymentUncheckedUpdateWithoutLeaseInput>
@@ -14165,22 +18079,34 @@ export namespace Prisma {
   export type LeaseCreateWithoutPaymentsInput = {
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     property: PropertyCreateNestedOneWithoutLeasesInput
     tenant: TenantCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
+    escrowHolds?: EscrowHoldCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutPaymentsInput = {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     propertyId: number
     tenantCognitoId: string
-    application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
+    applicationId?: number | null
+    escrowHolds?: EscrowHoldUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutPaymentsInput = {
@@ -14202,52 +18128,238 @@ export namespace Prisma {
   export type LeaseUpdateWithoutPaymentsInput = {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
+    escrowHolds?: EscrowHoldUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutPaymentsInput = {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantCognitoId?: StringFieldUpdateOperationsInput | string
-    application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    escrowHolds?: EscrowHoldUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutLeaseNestedInput
+  }
+
+  export type LeaseCreateWithoutEscrowHoldsInput = {
+    startDate: Date | string
+    endDate: Date | string
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
+    property: PropertyCreateNestedOneWithoutLeasesInput
+    tenant: TenantCreateNestedOneWithoutLeasesInput
+    application?: ApplicationCreateNestedOneWithoutLeaseInput
+    transactions?: TransactionCreateNestedManyWithoutLeaseInput
+    payments?: PaymentCreateNestedManyWithoutLeaseInput
+  }
+
+  export type LeaseUncheckedCreateWithoutEscrowHoldsInput = {
+    id?: number
+    startDate: Date | string
+    endDate: Date | string
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
+    propertyId: number
+    tenantCognitoId: string
+    applicationId?: number | null
+    transactions?: TransactionUncheckedCreateNestedManyWithoutLeaseInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
+  }
+
+  export type LeaseCreateOrConnectWithoutEscrowHoldsInput = {
+    where: LeaseWhereUniqueInput
+    create: XOR<LeaseCreateWithoutEscrowHoldsInput, LeaseUncheckedCreateWithoutEscrowHoldsInput>
+  }
+
+  export type LeaseUpsertWithoutEscrowHoldsInput = {
+    update: XOR<LeaseUpdateWithoutEscrowHoldsInput, LeaseUncheckedUpdateWithoutEscrowHoldsInput>
+    create: XOR<LeaseCreateWithoutEscrowHoldsInput, LeaseUncheckedCreateWithoutEscrowHoldsInput>
+    where?: LeaseWhereInput
+  }
+
+  export type LeaseUpdateToOneWithWhereWithoutEscrowHoldsInput = {
+    where?: LeaseWhereInput
+    data: XOR<LeaseUpdateWithoutEscrowHoldsInput, LeaseUncheckedUpdateWithoutEscrowHoldsInput>
+  }
+
+  export type LeaseUpdateWithoutEscrowHoldsInput = {
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutLeasesNestedInput
+    application?: ApplicationUpdateOneWithoutLeaseNestedInput
+    transactions?: TransactionUpdateManyWithoutLeaseNestedInput
+    payments?: PaymentUpdateManyWithoutLeaseNestedInput
+  }
+
+  export type LeaseUncheckedUpdateWithoutEscrowHoldsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    propertyId?: IntFieldUpdateOperationsInput | number
+    tenantCognitoId?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    transactions?: TransactionUncheckedUpdateManyWithoutLeaseNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
+  }
+
+  export type LeaseCreateWithoutTransactionsInput = {
+    startDate: Date | string
+    endDate: Date | string
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
+    property: PropertyCreateNestedOneWithoutLeasesInput
+    tenant: TenantCreateNestedOneWithoutLeasesInput
+    application?: ApplicationCreateNestedOneWithoutLeaseInput
+    escrowHolds?: EscrowHoldCreateNestedManyWithoutLeaseInput
+    payments?: PaymentCreateNestedManyWithoutLeaseInput
+  }
+
+  export type LeaseUncheckedCreateWithoutTransactionsInput = {
+    id?: number
+    startDate: Date | string
+    endDate: Date | string
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
+    propertyId: number
+    tenantCognitoId: string
+    applicationId?: number | null
+    escrowHolds?: EscrowHoldUncheckedCreateNestedManyWithoutLeaseInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
+  }
+
+  export type LeaseCreateOrConnectWithoutTransactionsInput = {
+    where: LeaseWhereUniqueInput
+    create: XOR<LeaseCreateWithoutTransactionsInput, LeaseUncheckedCreateWithoutTransactionsInput>
+  }
+
+  export type LeaseUpsertWithoutTransactionsInput = {
+    update: XOR<LeaseUpdateWithoutTransactionsInput, LeaseUncheckedUpdateWithoutTransactionsInput>
+    create: XOR<LeaseCreateWithoutTransactionsInput, LeaseUncheckedCreateWithoutTransactionsInput>
+    where?: LeaseWhereInput
+  }
+
+  export type LeaseUpdateToOneWithWhereWithoutTransactionsInput = {
+    where?: LeaseWhereInput
+    data: XOR<LeaseUpdateWithoutTransactionsInput, LeaseUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type LeaseUpdateWithoutTransactionsInput = {
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutLeasesNestedInput
+    application?: ApplicationUpdateOneWithoutLeaseNestedInput
+    escrowHolds?: EscrowHoldUpdateManyWithoutLeaseNestedInput
+    payments?: PaymentUpdateManyWithoutLeaseNestedInput
+  }
+
+  export type LeaseUncheckedUpdateWithoutTransactionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    propertyId?: IntFieldUpdateOperationsInput | number
+    tenantCognitoId?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    escrowHolds?: EscrowHoldUncheckedUpdateManyWithoutLeaseNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseCreateManyPropertyInput = {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     tenantCognitoId: string
+    applicationId?: number | null
   }
 
   export type ApplicationCreateManyPropertyInput = {
     id?: number
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     tenantCognitoId: string
     name: string
     email: string
     phoneNumber: string
     message?: string | null
-    leaseId?: number | null
   }
 
   export type LeaseUpdateWithoutPropertyInput = {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tenant?: TenantUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
+    escrowHolds?: EscrowHoldUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUpdateManyWithoutLeaseNestedInput
   }
 
@@ -14255,10 +18367,16 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tenantCognitoId?: StringFieldUpdateOperationsInput | string
-    application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    escrowHolds?: EscrowHoldUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
@@ -14266,9 +18384,14 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tenantCognitoId?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ApplicationUpdateWithoutPropertyInput = {
@@ -14291,7 +18414,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
-    leaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    lease?: LeaseUncheckedUpdateOneWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutPropertyInput = {
@@ -14303,7 +18426,6 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
-    leaseId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type TenantUpdateWithoutFavoritesInput = {
@@ -14368,17 +18490,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -14389,17 +18512,18 @@ export namespace Prisma {
   export type PropertyUpdateWithoutManagerInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14415,17 +18539,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14441,17 +18566,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14461,39 +18587,44 @@ export namespace Prisma {
 
   export type ApplicationCreateManyTenantInput = {
     id?: number
-    applicationDate: Date | string
-    status: $Enums.ApplicationStatus
+    applicationDate?: Date | string
+    status?: $Enums.ApplicationStatus
     propertyId: number
     name: string
     email: string
     phoneNumber: string
     message?: string | null
-    leaseId?: number | null
   }
 
   export type LeaseCreateManyTenantInput = {
     id?: number
     startDate: Date | string
     endDate: Date | string
-    rent: number
-    deposit: number
+    annualRent: number
+    cautionDeposit: number
+    agentFee: number
+    platformFee: number
+    status?: $Enums.LeaseStatus
+    paidAt?: Date | string | null
     propertyId: number
+    applicationId?: number | null
   }
 
   export type PropertyUpdateWithoutTenantsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14509,17 +18640,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14535,17 +18667,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14557,17 +18690,18 @@ export namespace Prisma {
   export type PropertyUpdateWithoutFavoritedByInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14583,17 +18717,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14609,17 +18744,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14648,7 +18784,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
-    leaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    lease?: LeaseUncheckedUpdateOneWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutTenantInput = {
@@ -14660,16 +18796,21 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
-    leaseId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type LeaseUpdateWithoutTenantInput = {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
+    escrowHolds?: EscrowHoldUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUpdateManyWithoutLeaseNestedInput
   }
 
@@ -14677,10 +18818,16 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     propertyId?: IntFieldUpdateOperationsInput | number
-    application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    escrowHolds?: EscrowHoldUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutLeaseNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
@@ -14688,25 +18835,31 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     propertyId?: IntFieldUpdateOperationsInput | number
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PropertyUpdateWithoutLocationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14722,17 +18875,18 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -14748,17 +18902,18 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
-    pricePerMonth: number
-    securityDeposit: number
-    applicationFee: number
+    annualRent: number
+    agentFee: number
+    cautionDeposit: number
+    platformFee: number
+    campusZone: $Enums.CampusZone
+    landmark: string
     photoUrls?: PropertyCreatephotoUrlsInput | string[]
     amenities?: PropertyCreateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyCreatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: boolean
     isParkingIncluded?: boolean
     beds: number
     baths: number
-    squareFeet: number
     propertyType: $Enums.PropertyType
     postedDate?: Date | string
     averageRating?: number | null
@@ -14770,22 +18925,44 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: FloatFieldUpdateOperationsInput | number
-    securityDeposit?: FloatFieldUpdateOperationsInput | number
-    applicationFee?: FloatFieldUpdateOperationsInput | number
+    annualRent?: FloatFieldUpdateOperationsInput | number
+    agentFee?: FloatFieldUpdateOperationsInput | number
+    cautionDeposit?: FloatFieldUpdateOperationsInput | number
+    platformFee?: FloatFieldUpdateOperationsInput | number
+    campusZone?: EnumCampusZoneFieldUpdateOperationsInput | $Enums.CampusZone
+    landmark?: StringFieldUpdateOperationsInput | string
     photoUrls?: PropertyUpdatephotoUrlsInput | string[]
     amenities?: PropertyUpdateamenitiesInput | $Enums.Amenity[]
     highlights?: PropertyUpdatehighlightsInput | $Enums.Highlight[]
-    isPetsAllowed?: BoolFieldUpdateOperationsInput | boolean
     isParkingIncluded?: BoolFieldUpdateOperationsInput | boolean
     beds?: IntFieldUpdateOperationsInput | number
     baths?: FloatFieldUpdateOperationsInput | number
-    squareFeet?: IntFieldUpdateOperationsInput | number
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     postedDate?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     numberOfReviews?: NullableIntFieldUpdateOperationsInput | number | null
     managerCognitoId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type EscrowHoldCreateManyLeaseInput = {
+    id?: number
+    amount: number
+    status?: $Enums.EscrowStatus
+    providerReference: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TransactionCreateManyLeaseInput = {
+    id?: number
+    amount: number
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    reference: string
+    provider?: $Enums.PaymentProvider
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PaymentCreateManyLeaseInput = {
@@ -14795,6 +18972,67 @@ export namespace Prisma {
     dueDate: Date | string
     paymentDate: Date | string
     paymentStatus: $Enums.PaymentStatus
+  }
+
+  export type EscrowHoldUpdateWithoutLeaseInput = {
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumEscrowStatusFieldUpdateOperationsInput | $Enums.EscrowStatus
+    providerReference?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EscrowHoldUncheckedUpdateWithoutLeaseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumEscrowStatusFieldUpdateOperationsInput | $Enums.EscrowStatus
+    providerReference?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EscrowHoldUncheckedUpdateManyWithoutLeaseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumEscrowStatusFieldUpdateOperationsInput | $Enums.EscrowStatus
+    providerReference?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionUpdateWithoutLeaseInput = {
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    reference?: StringFieldUpdateOperationsInput | string
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionUncheckedUpdateWithoutLeaseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    reference?: StringFieldUpdateOperationsInput | string
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionUncheckedUpdateManyWithoutLeaseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    reference?: StringFieldUpdateOperationsInput | string
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUpdateWithoutLeaseInput = {

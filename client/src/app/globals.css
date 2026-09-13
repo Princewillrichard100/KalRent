@@ -21,14 +21,14 @@ body,
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 210 40% 98%;
+    --foreground: 222.2 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222.2 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    --popover-foreground: 222.2 47% 11%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
@@ -38,17 +38,17 @@ body,
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 88%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 160 84% 39%;
+    --radius: 0.75rem;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 47% 11%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 222.2 47% 11%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 160 84% 39%;
   }
 
   .dark {
@@ -86,27 +86,80 @@ body,
   @apply pt-8 pb-5 px-8;
 }
 
+/* Airbnb-style Map Price Pill Markers */
+.airbnb-marker-pill {
+  @apply bg-white text-slate-900 font-bold text-xs px-2.5 py-1 rounded-full shadow-md border border-slate-300 transition-all duration-150 cursor-pointer select-none flex items-center justify-center whitespace-nowrap;
+}
+
+.airbnb-marker-pill:hover,
+.airbnb-marker-pill.is-hovered,
+.airbnb-marker-pill.is-selected {
+  @apply bg-slate-900 text-white border-slate-900 scale-110 shadow-lg z-30;
+}
+
+/* Micro-card popup styling */
+.mapboxgl-popup {
+  @apply z-40;
+}
+
 .mapboxgl-popup-content {
-  @apply !bg-primary-700;
-  @apply !rounded-lg;
-  @apply !py-2;
-  @apply !px-3;
+  @apply !bg-white !text-slate-900 !rounded-2xl !p-0 !shadow-xl !border !border-slate-200/80 !overflow-hidden max-w-[260px];
+}
+
+.mapboxgl-popup-close-button {
+  @apply !text-slate-700 !bg-white/80 !rounded-full !w-6 !h-6 !top-2 !right-2 !flex !items-center !justify-center !shadow-sm hover:!bg-white !z-10;
 }
 
 .mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
-  @apply !border-b-primary-700;
+  @apply !border-b-white;
 }
 
 .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-  @apply !border-t-primary-700;
+  @apply !border-t-white;
 }
 
 .mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-  @apply !border-r-primary-700;
+  @apply !border-r-white;
 }
 
 .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-  @apply !border-l-primary-700;
+  @apply !border-l-white;
+}
+
+.airbnb-popup-card {
+  @apply flex flex-col w-[240px];
+}
+
+.airbnb-popup-img-wrap {
+  @apply relative w-full h-28 bg-slate-100 overflow-hidden;
+}
+
+.airbnb-popup-img {
+  @apply w-full h-full object-cover;
+}
+
+.airbnb-popup-distance {
+  @apply absolute bottom-2 left-2 bg-emerald-700/90 backdrop-blur-sm text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md;
+}
+
+.airbnb-popup-info {
+  @apply p-3 flex flex-col gap-1 text-left;
+}
+
+.airbnb-popup-zone {
+  @apply text-[10px] uppercase font-bold text-emerald-700 tracking-wider;
+}
+
+.airbnb-popup-title {
+  @apply font-bold text-xs text-slate-900 hover:text-emerald-700 hover:underline truncate block;
+}
+
+.airbnb-popup-price {
+  @apply text-sm font-extrabold text-slate-900;
+}
+
+.airbnb-popup-meta {
+  @apply text-[11px] text-slate-500 font-medium;
 }
 
 .marker-popup {
