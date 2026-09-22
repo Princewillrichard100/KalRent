@@ -55,7 +55,7 @@ export default function Home() {
 
       <main className="h-full w-full">
         {isLoading ? (
-          <Container className="pt-24 sm:pt-28 pb-20">
+          <Container className="pt-28 md:pt-44 pb-20">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 min-[2200px]:grid-cols-5 gap-8">
               {Array.from({ length: 8 }).map((_, index) => (
                 <div key={index} className="flex flex-col gap-3 w-full animate-pulse">
@@ -72,11 +72,11 @@ export default function Home() {
             </div>
           </Container>
         ) : isError || !properties || properties.length === 0 ? (
-          <div className="pt-24 sm:pt-28">
+          <div className="pt-28 md:pt-44">
             <EmptyState showReset />
           </div>
         ) : (
-          <Container className="pt-24 sm:pt-28 pb-20">
+          <Container className="pt-28 md:pt-44 pb-20">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 min-[2200px]:grid-cols-5 gap-8">
               {properties.map((property) => (
                 <ListingCard

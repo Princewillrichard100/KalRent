@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, Home } from "lucide-react";
 import { useSearchModal } from "@/hooks/useSearchModal";
 import { differenceInDays } from "date-fns";
 
@@ -47,7 +47,8 @@ export const SearchPill = () => {
         border-slate-200 
         w-full 
         md:w-auto 
-        py-2 
+        py-1.5
+        px-1
         rounded-full 
         shadow-xs 
         hover:shadow-md 
@@ -57,8 +58,9 @@ export const SearchPill = () => {
       "
     >
       <div className="flex flex-row items-center justify-between">
-        <div className="text-sm font-semibold px-4 text-neutral-900 truncate max-w-[160px]">
-          {locationLabel}
+        <div className="text-sm font-semibold pl-3 pr-4 text-neutral-900 truncate max-w-[170px] flex items-center gap-2">
+          <Home className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+          <span className="truncate">{locationLabel}</span>
         </div>
         <div className="hidden sm:block text-sm font-semibold px-4 border-x border-neutral-200 flex-1 text-center text-neutral-800">
           {durationLabel}
