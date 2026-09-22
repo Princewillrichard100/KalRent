@@ -65,18 +65,14 @@ export function ListingFeed({
       <div className="relative flex-1">
         {/* Smooth Semi-Transparent Skeleton Layer with CSS Fade */}
         <div
-          className={`absolute inset-0 z-20 bg-white/50 backdrop-blur-[1.5px] grid grid-cols-1 sm:grid-cols-2 gap-5 xl:gap-6 pointer-events-none transition-all duration-300 ease-out ${
+          className={`absolute inset-0 z-20 bg-white/50 backdrop-blur-[1px] grid grid-cols-1 sm:grid-cols-2 gap-5 xl:gap-6 pointer-events-none transition-all duration-200 ease-out ${
             isSmoothLoading
-              ? "opacity-100 visible scale-100"
-              : "opacity-0 invisible scale-[0.99]"
+              ? "opacity-100 visible"
+              : "opacity-0 invisible"
           }`}
         >
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex flex-col gap-3">
-              <div className="aspect-square w-full bg-neutral-200/80 animate-pulse rounded-2xl" />
-              <div className="h-4 w-3/4 bg-neutral-200/80 animate-pulse rounded-md" />
-              <div className="h-3 w-1/2 bg-neutral-200/60 animate-pulse rounded-md" />
-            </div>
+            <ListingCard key={i} isLoading={true} />
           ))}
         </div>
 
