@@ -182,13 +182,33 @@ export const updateApplicationStatus = async (
           where: { applicationId: Number(id) },
         });
 
+        const requestedStartDate = new Date();
+        const requestedEndDate = new Date(
+          new Date().setFullYear(new Date().getFullYear() + 1)
+        );
+
+        // Check date-range conflict against existing ACTIVE or PENDING_PAYMENT leases
+        const hasConflict = await tx.lease.findFirst({
+          where: {
+            propertyId: application.propertyId,
+            status: { in: ["ACTIVE", "PENDING_PAYMENT"] },
+            id: { not: existingLease?.id || 0 },
+            AND: [
+              { startDate: { lte: requestedEndDate } },
+              { endDate: { gte: requestedStartDate } },
+            ],
+          },
+        });
+
+        if (hasConflict) {
+          throw new Error("Date conflict: An active or pending lease already covers this period for this property.");
+        }
+
         if (!existingLease) {
           await tx.lease.create({
             data: {
-              startDate: new Date(),
-              endDate: new Date(
-                new Date().setFullYear(new Date().getFullYear() + 1)
-              ),
+              startDate: requestedStartDate,
+              endDate: requestedEndDate,
               annualRent: application.property.annualRent,
               cautionDeposit: application.property.cautionDeposit,
               agentFee: application.property.agentFee,

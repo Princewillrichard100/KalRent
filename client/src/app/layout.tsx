@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner";
+import ModalsProvider from "@/components/modals/ModalsProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -25,7 +26,10 @@ export default function RootLayout({
       <body
         className="font-sans antialiased text-slate-900 bg-slate-50 [text-rendering:optimizeLegibility] min-h-screen"
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <ModalsProvider />
+          {children}
+        </Providers>
         <Toaster closeButton position="top-right" />
       </body>
     </html>
