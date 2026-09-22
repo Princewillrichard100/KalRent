@@ -7,10 +7,12 @@ import Navbar from "@/components/Navbar";
 import { useGetAuthUserQuery, useGetPropertiesQuery } from "@/state/api";
 import { useSearchParams } from "next/navigation";
 import React, { useMemo } from "react";
+import { useUserLocation } from "@/hooks/useUserLocation";
 
 export default function Home() {
   const searchParams = useSearchParams();
   const { data: authUser } = useGetAuthUserQuery();
+  const userCoords = useUserLocation();
 
   const queryFilters = useMemo(() => {
     const category = searchParams?.get("category") || searchParams?.get("propertyType");
@@ -33,8 +35,12 @@ export default function Home() {
       beds: beds || undefined,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
+      userLat: userCoords?.lat,
+      userLng: userCoords?.lng,
+      lat: userCoords?.lat,
+      lng: userCoords?.lng,
     };
-  }, [searchParams]);
+  }, [searchParams, userCoords]);
 
   const { data: properties, isLoading, isError } = useGetPropertiesQuery(queryFilters as any);
 

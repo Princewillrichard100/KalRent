@@ -130,16 +130,19 @@ export const getProperties = async (
       sortBy,
     } = req.query;
 
-    const hasUserCoords =
-      userLat !== undefined &&
-      userLng !== undefined &&
-      userLat !== "" &&
-      userLng !== "" &&
-      !isNaN(parseFloat(userLat as string)) &&
-      !isNaN(parseFloat(userLng as string));
+    const effectiveLat = userLat || req.query.lat;
+    const effectiveLng = userLng || req.query.lng;
 
-    const parsedUserLat = hasUserCoords ? parseFloat(userLat as string) : 0;
-    const parsedUserLng = hasUserCoords ? parseFloat(userLng as string) : 0;
+    const hasUserCoords =
+      effectiveLat !== undefined &&
+      effectiveLng !== undefined &&
+      effectiveLat !== "" &&
+      effectiveLng !== "" &&
+      !isNaN(parseFloat(effectiveLat as string)) &&
+      !isNaN(parseFloat(effectiveLng as string));
+
+    const parsedUserLat = hasUserCoords ? parseFloat(effectiveLat as string) : 0;
+    const parsedUserLng = hasUserCoords ? parseFloat(effectiveLng as string) : 0;
 
     let whereConditions: Prisma.Sql[] = [];
 
@@ -282,7 +285,7 @@ export const getProperties = async (
           : Prisma.empty
       }
       ${
-        hasUserCoords && (sortBy === "distance" || sortBy === "proximity")
+        hasUserCoords && sortBy !== "newest"
           ? Prisma.sql`ORDER BY "distanceMeters" ASC`
           : Prisma.sql`ORDER BY p."postedDate" DESC`
       }
@@ -298,6 +301,7 @@ export const getProperties = async (
       return {
         ...p,
         distanceKm,
+        distance_km: distanceKm,
         photoUrls: normalizePhotoUrls(p.photoUrls),
       };
     });
@@ -307,6 +311,72 @@ export const getProperties = async (
     res
       .status(500)
       .json({ message: `Error retrieving properties: ${error.message}` });
+  }
+};
+
+export const getNearbyProperties = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const lat = parseFloat((req.query.lat || req.query.userLat) as string);
+  const lng = parseFloat((req.query.lng || req.query.userLng) as string);
+  const radiusMeters = parseFloat(req.query.radius as string) || 25000;
+  const limit = parseInt(req.query.limit as string) || 30;
+
+  if (isNaN(lat) || isNaN(lng)) {
+    res.status(400).json({ error: "Valid lat and lng query params are required" });
+    return;
+  }
+
+  try {
+    const properties = await prisma.$queryRaw<any[]>`
+      SELECT 
+        p.*,
+        json_build_object(
+          'id', l.id,
+          'address', l.address,
+          'city', l.city,
+          'state', l.state,
+          'country', l.country,
+          'postalCode', l."postalCode",
+          'coordinates', json_build_object(
+            'longitude', ST_X(l."coordinates"::geometry),
+            'latitude', ST_Y(l."coordinates"::geometry)
+          )
+        ) as location,
+        ROUND((ST_Distance(
+          l.coordinates, 
+          ST_SetSRID(ST_Point(${lng}, ${lat}), 4326)::geography
+        ) / 1000)::numeric, 1) AS "distanceKm"
+      FROM "Property" p
+      JOIN "Location" l ON p."locationId" = l.id
+      WHERE ST_DWithin(
+        l.coordinates,
+        ST_SetSRID(ST_Point(${lng}, ${lat}), 4326)::geography,
+        ${radiusMeters}
+      )
+      ORDER BY "distanceKm" ASC
+      LIMIT ${limit};
+    `;
+
+    const normalized = properties.map((p) => {
+      const distanceKm =
+        p.distanceKm !== undefined && p.distanceKm !== null
+          ? Number(p.distanceKm)
+          : undefined;
+
+      return {
+        ...p,
+        distanceKm,
+        distance_km: distanceKm,
+        photoUrls: normalizePhotoUrls(p.photoUrls),
+      };
+    });
+
+    res.json({ listings: normalized, properties: normalized });
+  } catch (error: any) {
+    console.error("Failed to query nearby listings:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 

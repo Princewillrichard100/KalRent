@@ -11,7 +11,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
 
-export type PropertyWithDistance = Property & { distanceKm?: number };
+export type PropertyWithDistance = Property & {
+  distanceKm?: number;
+  distance_km?: number;
+};
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -104,8 +107,10 @@ export const api = createApi({
           favoriteIds: filters.favoriteIds?.join(","),
           latitude: filters.coordinates?.[1],
           longitude: filters.coordinates?.[0],
-          userLat: filters.userLat,
-          userLng: filters.userLng,
+          userLat: filters.userLat ?? filters.lat,
+          userLng: filters.userLng ?? filters.lng,
+          lat: filters.lat ?? filters.userLat,
+          lng: filters.lng ?? filters.userLng,
           sortBy: filters.sortBy,
         });
 
@@ -123,6 +128,31 @@ export const api = createApi({
           error: "Failed to fetch properties.",
         });
       },
+    }),
+
+    getNearbyListings: build.query<
+      PropertyWithDistance[],
+      { lat: number; lng: number; radius?: number; limit?: number }
+    >({
+      query: (params) => ({
+        url: "properties/nearby",
+        params: cleanParams(params),
+      }),
+      transformResponse: (
+        response:
+          | { listings?: PropertyWithDistance[]; properties?: PropertyWithDistance[] }
+          | PropertyWithDistance[]
+      ) => {
+        if (Array.isArray(response)) return response;
+        return response.listings || response.properties || [];
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+              { type: "Properties", id: "NEARBY" },
+            ]
+          : [{ type: "Properties", id: "NEARBY" }],
     }),
 
     getProperty: build.query<Property, number>({
@@ -433,6 +463,7 @@ export const {
   useUpdateTenantSettingsMutation,
   useUpdateManagerSettingsMutation,
   useGetPropertiesQuery,
+  useGetNearbyListingsQuery,
   useGetPropertyQuery,
   useGetCurrentResidencesQuery,
   useGetManagerPropertiesQuery,

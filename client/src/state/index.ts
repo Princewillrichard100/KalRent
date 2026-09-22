@@ -19,6 +19,8 @@ export interface FiltersState {
   coordinates: [number, number];
   userLat?: number | null;
   userLng?: number | null;
+  lat?: number | null;
+  lng?: number | null;
   sortBy?: string | null;
 }
 
@@ -32,7 +34,7 @@ interface InitialStateTypes {
 
 export const initialState: InitialStateTypes = {
   filters: {
-    location: "Ilorin",
+    location: "Anywhere in Nigeria",
     beds: "any",
     baths: "any",
     propertyType: "any",
@@ -40,9 +42,11 @@ export const initialState: InitialStateTypes = {
     availableFrom: "any",
     priceRange: [null, null],
     squareFeet: [null, null],
-    coordinates: [4.5901, 8.4799],
+    coordinates: [8.6753, 9.0820],
     userLat: null,
     userLng: null,
+    lat: null,
+    lng: null,
     sortBy: null,
   },
   isFiltersFullOpen: false,

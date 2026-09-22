@@ -39,6 +39,7 @@ app.get("/", (req, res) => {
 app.get("/photos/*", getPropertyPhoto);
 app.use("/applications", applicationRoutes);
 app.use("/properties", propertyRoutes);
+app.use("/api/listings", propertyRoutes);
 app.use("/leases", leaseRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/webhooks", webhookRoutes);
