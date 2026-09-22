@@ -85,11 +85,18 @@ export const api = createApi({
       query: (filters) => {
         const params = cleanParams({
           location: filters.location,
+          locationValue: filters.locationValue,
           priceMin: filters.priceRange?.[0],
           priceMax: filters.priceRange?.[1],
           beds: filters.beds,
           baths: filters.baths,
           propertyType: filters.propertyType,
+          category: filters.category,
+          guestCount: filters.guestCount,
+          roomCount: filters.roomCount,
+          bathroomCount: filters.bathroomCount,
+          startDate: filters.startDate,
+          endDate: filters.endDate,
           squareFeetMin: filters.squareFeet?.[0],
           squareFeetMax: filters.squareFeet?.[1],
           amenities: filters.amenities?.join(","),

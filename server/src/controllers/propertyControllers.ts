@@ -113,6 +113,13 @@ export const getProperties = async (
       beds,
       baths,
       propertyType,
+      category,
+      locationValue,
+      guestCount,
+      roomCount,
+      bathroomCount,
+      startDate,
+      endDate,
       campusZone,
       amenities,
       availableFrom,
@@ -155,12 +162,14 @@ export const getProperties = async (
       );
     }
 
-    if (beds && beds !== "any") {
-      whereConditions.push(Prisma.sql`p.beds >= ${Number(beds)}`);
+    const effectiveBeds = roomCount || guestCount || beds;
+    if (effectiveBeds && effectiveBeds !== "any") {
+      whereConditions.push(Prisma.sql`p.beds >= ${Number(effectiveBeds)}`);
     }
 
-    if (baths && baths !== "any") {
-      whereConditions.push(Prisma.sql`p.baths >= ${Number(baths)}`);
+    const effectiveBaths = bathroomCount || baths;
+    if (effectiveBaths && effectiveBaths !== "any") {
+      whereConditions.push(Prisma.sql`p.baths >= ${Number(effectiveBaths)}`);
     }
 
     if (campusZone && campusZone !== "any") {
@@ -169,10 +178,43 @@ export const getProperties = async (
       );
     }
 
-    if (propertyType && propertyType !== "any") {
+    const categoryParam = category || propertyType;
+    if (categoryParam && categoryParam !== "any") {
       whereConditions.push(
-        Prisma.sql`p."propertyType" = ${propertyType}::"PropertyType"`
+        Prisma.sql`(
+          p."propertyType"::text ILIKE ${"%" + categoryParam + "%"} 
+          OR p.name ILIKE ${"%" + categoryParam + "%"} 
+          OR p.description ILIKE ${"%" + categoryParam + "%"}
+          OR p.amenities::text ILIKE ${"%" + categoryParam + "%"}
+        )`
       );
+    }
+
+    if (locationValue && locationValue !== "any") {
+      whereConditions.push(
+        Prisma.sql`(
+          l.address ILIKE ${"%" + locationValue + "%"} 
+          OR l.city ILIKE ${"%" + locationValue + "%"} 
+          OR p.landmark ILIKE ${"%" + locationValue + "%"} 
+          OR p."campusZone"::text ILIKE ${"%" + locationValue + "%"}
+        )`
+      );
+    }
+
+    if (startDate && endDate) {
+      const sDate = new Date(startDate as string);
+      const eDate = new Date(endDate as string);
+      if (!isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
+        whereConditions.push(
+          Prisma.sql`NOT EXISTS (
+            SELECT 1 FROM "Lease" lease 
+            WHERE lease."propertyId" = p.id 
+            AND lease.status IN ('ACTIVE', 'PENDING_PAYMENT')
+            AND lease."startDate" <= ${eDate.toISOString()}
+            AND lease."endDate" >= ${sDate.toISOString()}
+          )`
+        );
+      }
     }
 
     if (amenities && amenities !== "any") {

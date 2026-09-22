@@ -5,6 +5,13 @@ export interface FiltersState {
   beds: string;
   baths: string;
   propertyType: string;
+  category?: string | null;
+  locationValue?: string | null;
+  guestCount?: number | string | null;
+  roomCount?: number | string | null;
+  bathroomCount?: number | string | null;
+  startDate?: string | null;
+  endDate?: string | null;
   amenities: string[];
   availableFrom: string;
   priceRange: [number, number] | [null, null];
