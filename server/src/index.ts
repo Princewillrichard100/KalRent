@@ -43,8 +43,8 @@ app.use("/leases", leaseRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/webhooks", webhookRoutes);
 app.use("/api/webhooks", webhookRoutes);
-app.use("/tenants", authMiddleware(["tenant"]), tenantRoutes);
-app.use("/managers", authMiddleware(["manager"]), managerRoutes);
+app.use("/tenants", authMiddleware(["tenant", "manager", "admin"]), tenantRoutes);
+app.use("/managers", authMiddleware(["manager", "admin"]), managerRoutes);
 
 /* SERVER */
 const port = Number(process.env.PORT) || 3002;
