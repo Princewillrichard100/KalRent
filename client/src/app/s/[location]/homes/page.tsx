@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import FilterBar, { ActiveFilters } from "@/components/FilterBar";
 import ListingCard from "@/components/listings/ListingCard";
 import ListingFeed from "@/components/listings/ListingFeed";
 import InteractiveSearchMap, { BoundingBox, ViewportBounds } from "@/components/map/InteractiveSearchMap";
@@ -26,6 +27,8 @@ export default function SearchHomesPage() {
   const [showMapMobile, setShowMapMobile] = useState(false);
   const [showMapDesktop, setShowMapDesktop] = useState(true);
   const [viewportBounds, setViewportBounds] = useState<ViewportBounds | null>(null);
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Search parameters
   const paramLat = searchParams?.get("lat");
@@ -55,8 +58,24 @@ export default function SearchHomesPage() {
       ne_lng: viewportBounds?.ne_lng,
       sw_lat: viewportBounds?.sw_lat,
       sw_lng: viewportBounds?.sw_lng,
+      isParkingIncluded: activeFilters.isParkingIncluded,
+      amenities: activeFilters.amenities,
+      baths: activeFilters.baths,
+      beds: activeFilters.beds,
+      priceMin: activeFilters.priceMin,
+      priceMax: activeFilters.priceMax,
     };
-  }, [location, paramLat, paramLng, guestCount, startDate, endDate, userCoords, viewportBounds]);
+  }, [
+    location,
+    paramLat,
+    paramLng,
+    guestCount,
+    startDate,
+    endDate,
+    userCoords,
+    viewportBounds,
+    activeFilters,
+  ]);
 
   const {
     data: properties,
@@ -64,6 +83,30 @@ export default function SearchHomesPage() {
     isError,
     isFetching,
   } = useGetPropertiesQuery(queryFilters as any);
+
+  // Pagination calculation
+  const ITEMS_PER_PAGE = 12;
+  const totalCount = properties?.length || 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
+  const paginatedListings = useMemo(() => {
+    if (!properties) return [];
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return properties.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [properties, currentPage]);
+
+  const handleFilterChange = (newFilters: ActiveFilters) => {
+    setActiveFilters(newFilters);
+    setCurrentPage(1);
+  };
+
+  const handlePriceChange = (min?: number, max?: number) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      priceMin: min,
+      priceMax: max,
+    }));
+    setCurrentPage(1);
+  };
 
   // Auto-select listing on map if selectedListing query param was passed from Hop 1
   useEffect(() => {
@@ -111,172 +154,205 @@ export default function SearchHomesPage() {
     return `Stays in ${location}`;
   }, [location]);
 
+  // Location Focus Anchor Marker (Airbnb speech-bubble badge with spring bounce)
+  const locationAnchor = useMemo(() => {
+    const isNearMe = location.toLowerCase() === "near-me";
+    const isAll = location.toLowerCase() === "all" || !location;
+    if (isNearMe || isAll) return null;
+
+    const lat = paramLat ? parseFloat(paramLat) : mapCenter[0];
+    const lng = paramLng ? parseFloat(paramLng) : mapCenter[1];
+
+    if (!lat || !lng) return null;
+
+    const cleanName = location.split(",")[0].trim();
+
+    return {
+      name: cleanName,
+      lat,
+      lng,
+    };
+  }, [location, paramLat, paramLng, mapCenter]);
+
   return (
-    <div className="h-full w-full min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
 
-      <main className="h-full w-full pt-20 md:pt-36">
-        <div className="relative w-full h-[calc(100vh-80px)] overflow-hidden bg-white">
-          {isLoading ? (
-            <div className="w-full h-full p-6 md:p-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <ListingCard key={i} isLoading={true} />
-                ))}
-              </div>
-            </div>
-          ) : isError ? (
-            <div className="w-full h-full flex items-center justify-center p-8">
-              <EmptyState
-                title="Could not load properties"
-                subtitle="There was an issue fetching listings for this location. Please try again."
-                showReset
-              />
-            </div>
-          ) : (
-            <>
-              {/* ========================================================================= */}
-              {/* 1. DESKTOP VIEW (58% List / 42% Sticky Interactive Map) */}
-              {/* ========================================================================= */}
-              <div className="hidden lg:flex w-full h-full overflow-hidden">
-                {showMapDesktop ? (
-                  <>
-                    {/* Left Column: Scrollable Feed */}
-                    <div className="w-[58%] h-full overflow-y-auto px-6 xl:px-8 py-5 border-r border-neutral-200/80">
-                      {/* Back link & breadcrumbs */}
-                      <div className="flex items-center gap-2 mb-3">
-                        <Link
-                          href="/"
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-black transition"
-                        >
-                          <ArrowLeft className="w-3.5 h-3.5" />
-                          <span>All collections</span>
-                        </Link>
-                      </div>
+      {/* Dedicated Sub-Header Filter Bar (Sticky directly beneath Navbar) */}
+      <div className="pt-20 sticky top-0 z-20 bg-white">
+        <FilterBar
+          activeFilters={activeFilters}
+          onFilterChange={handleFilterChange}
+        />
+      </div>
 
-                      <ListingFeed
-                        listings={properties || []}
-                        totalCount={properties?.length || 0}
-                        isFetching={isFetching}
-                        currentUser={authUser}
-                        onListingClick={(item) => router.push(`/listings/${item.id}`)}
-                      />
-                    </div>
+      <main className="flex-1 w-full max-w-[2520px] mx-auto px-4 md:px-8 py-6">
+        {isError ? (
+          <div className="w-full flex items-center justify-center py-20">
+            <EmptyState
+              title="Could not load properties"
+              subtitle="There was an issue fetching listings for this location. Please try again."
+              showReset
+            />
+          </div>
+        ) : (
+          <>
+            {/* ========================================================================= */}
+            {/* 1. DESKTOP VIEW (Natural flow on left, Sticky Floating Map on right) */}
+            {/* ========================================================================= */}
+            <div className="hidden lg:flex flex-row gap-8 items-start relative w-full">
+              {/* Left Column: Natural Height Flow (Never leaves arbitrary empty whitespace) */}
+              <div
+                className={`${
+                  showMapDesktop ? "w-[55%] xl:w-[58%]" : "w-full"
+                } flex flex-col transition-all duration-200`}
+              >
+                {/* Back link & breadcrumbs */}
+                <div className="flex items-center gap-2 mb-3">
+                  <Link
+                    href="/"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-black transition"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>All collections</span>
+                  </Link>
+                </div>
 
-                    {/* Right Column: Sticky Map */}
-                    <div className="w-[42%] h-full relative">
-                      <InteractiveSearchMap
-                        listings={properties || []}
-                        selectedListing={selectedListing}
-                        onSelectListing={setSelectedListing}
-                        center={mapCenter}
-                        onBoundsChange={setViewportBounds}
-                        isSearchingArea={isFetching}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  // Full-width grid when map is toggled off
-                  <div className="w-full h-full overflow-y-auto px-6 md:px-12 py-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Link
-                        href="/"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-black transition"
-                      >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        <span>All collections</span>
-                      </Link>
-                    </div>
-
-                    <ListingFeed
-                      listings={properties || []}
-                      totalCount={properties?.length || 0}
-                      isFetching={isFetching}
-                      currentUser={authUser}
-                      onListingClick={(item) => router.push(`/listings/${item.id}`)}
-                    />
-                  </div>
-                )}
+                <ListingFeed
+                  listings={paginatedListings}
+                  totalCount={totalCount}
+                  isFetching={isLoading || isFetching}
+                  currentUser={authUser}
+                  onListingClick={(item) => router.push(`/listings/${item.id}`)}
+                  currentMinPrice={activeFilters.priceMin}
+                  currentMaxPrice={activeFilters.priceMax}
+                  onPriceChange={handlePriceChange}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={(page) => {
+                    setCurrentPage(page);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                />
               </div>
 
-              {/* ========================================================================= */}
-              {/* 2. MOBILE VIEW (< lg) */}
-              {/* ========================================================================= */}
-              <div className="lg:hidden w-full h-full overflow-hidden">
-                {showMapMobile ? (
-                  <div className="w-full h-full relative">
+              {/* Right Column: Sticky Floating Map Card */}
+              {showMapDesktop && (
+                <div className="hidden lg:block lg:w-[45%] xl:w-[42%] sticky top-[140px] self-start">
+                  <div className="
+                    w-full 
+                    h-[calc(100vh-160px)] 
+                    rounded-3xl 
+                    overflow-hidden 
+                    border border-neutral-200/90 
+                    shadow-[0_4px_20px_rgba(0,0,0,0.08)]
+                    relative
+                  ">
                     <InteractiveSearchMap
                       listings={properties || []}
                       selectedListing={selectedListing}
                       onSelectListing={setSelectedListing}
                       center={mapCenter}
                       onBoundsChange={setViewportBounds}
-                      isSearchingArea={isFetching}
+                      isSearchingArea={isLoading || isFetching}
+                      locationAnchor={locationAnchor}
                     />
                   </div>
-                ) : (
-                  <div className="w-full h-full overflow-y-auto px-4 sm:px-6 py-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Link
-                        href="/"
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-neutral-500"
-                      >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        <span>All</span>
-                      </Link>
-                    </div>
+                </div>
+              )}
+            </div>
 
-                    <ListingFeed
+            {/* ========================================================================= */}
+            {/* 2. MOBILE VIEW (< lg) */}
+            {/* ========================================================================= */}
+            <div className="lg:hidden w-full">
+              {showMapMobile ? (
+                <div className="fixed inset-0 top-[140px] z-30 bg-white p-3">
+                  <div className="w-full h-full rounded-3xl overflow-hidden border border-neutral-200/90 shadow-md relative">
+                    <InteractiveSearchMap
                       listings={properties || []}
-                      totalCount={properties?.length || 0}
-                      isFetching={isFetching}
-                      currentUser={authUser}
-                      onListingClick={(item) => router.push(`/listings/${item.id}`)}
+                      selectedListing={selectedListing}
+                      onSelectListing={setSelectedListing}
+                      center={mapCenter}
+                      onBoundsChange={setViewportBounds}
+                      isSearchingArea={isLoading || isFetching}
+                      locationAnchor={locationAnchor}
                     />
                   </div>
+                </div>
+              ) : (
+                <div className="w-full flex flex-col">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Link
+                      href="/"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-neutral-500"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>All</span>
+                    </Link>
+                  </div>
+
+                  <ListingFeed
+                    listings={paginatedListings}
+                    totalCount={totalCount}
+                    isFetching={isLoading || isFetching}
+                    currentUser={authUser}
+                    onListingClick={(item) => router.push(`/listings/${item.id}`)}
+                    currentMinPrice={activeFilters.priceMin}
+                    currentMaxPrice={activeFilters.priceMax}
+                    onPriceChange={handlePriceChange}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page) => {
+                      setCurrentPage(page);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* ========================================================================= */}
+            {/* 3. FLOATING TOGGLE PILL BUTTON (Mobile & Desktop) */}
+            {/* ========================================================================= */}
+            <div className="fixed bottom-7 left-1/2 -translate-x-1/2 z-40">
+              {/* Mobile Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setShowMapMobile((prev) => !prev)}
+                className="
+                  lg:hidden
+                  flex items-center gap-2 
+                  bg-neutral-900 hover:bg-black 
+                  text-white 
+                  font-semibold 
+                  text-sm 
+                  px-5 py-3 
+                  rounded-full 
+                  shadow-[0_8px_24px_rgba(0,0,0,0.3)] 
+                  hover:scale-105 active:scale-95 
+                  transition-all duration-200 
+                  cursor-pointer
+                "
+              >
+                {showMapMobile ? (
+                  <>
+                    <span>Show list</span>
+                    <List className="w-4 h-4 stroke-[2.2]" />
+                  </>
+                ) : (
+                  <>
+                    <span>Show map</span>
+                    <Map className="w-4 h-4 stroke-[2.2]" />
+                  </>
                 )}
-              </div>
+              </button>
 
-              {/* ========================================================================= */}
-              {/* 3. FLOATING TOGGLE PILL BUTTON (Mobile & Desktop) */}
-              {/* ========================================================================= */}
-              <div className="fixed bottom-7 left-1/2 -translate-x-1/2 z-40">
-                {/* Mobile Toggle Button */}
+              {/* Desktop Toggle Button (Shown when map is hidden to bring back map, like Airbnb) */}
+              {!showMapDesktop && (
                 <button
                   type="button"
-                  onClick={() => setShowMapMobile((prev) => !prev)}
-                  className="
-                    lg:hidden
-                    flex items-center gap-2 
-                    bg-neutral-900 hover:bg-black 
-                    text-white 
-                    font-semibold 
-                    text-sm 
-                    px-5 py-3 
-                    rounded-full 
-                    shadow-[0_8px_24px_rgba(0,0,0,0.3)] 
-                    hover:scale-105 active:scale-95 
-                    transition-all duration-200 
-                    cursor-pointer
-                  "
-                >
-                  {showMapMobile ? (
-                    <>
-                      <span>Show list</span>
-                      <List className="w-4 h-4 stroke-[2.2]" />
-                    </>
-                  ) : (
-                    <>
-                      <span>Show map</span>
-                      <Map className="w-4 h-4 stroke-[2.2]" />
-                    </>
-                  )}
-                </button>
-
-                {/* Desktop Toggle Button */}
-                <button
-                  type="button"
-                  onClick={() => setShowMapDesktop((prev) => !prev)}
+                  onClick={() => setShowMapDesktop(true)}
                   className="
                     hidden lg:flex 
                     items-center gap-2 
@@ -292,22 +368,13 @@ export default function SearchHomesPage() {
                     cursor-pointer
                   "
                 >
-                  {showMapDesktop ? (
-                    <>
-                      <span>Show list</span>
-                      <List className="w-4 h-4 stroke-[2.2]" />
-                    </>
-                  ) : (
-                    <>
-                      <span>Show map</span>
-                      <Map className="w-4 h-4 stroke-[2.2]" />
-                    </>
-                  )}
+                  <span>Show map</span>
+                  <Map className="w-4 h-4 stroke-[2.2]" />
                 </button>
-              </div>
-            </>
-          )}
-        </div>
+              )}
+            </div>
+          </>
+        )}
       </main>
     </div>
   );

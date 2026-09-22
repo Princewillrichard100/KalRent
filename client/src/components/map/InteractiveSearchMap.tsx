@@ -44,6 +44,7 @@ interface InteractiveSearchMapProps {
   onBoundsChange?: (bounds: ViewportBounds) => void;
   onSearchArea?: (bbox: BoundingBox) => void;
   isSearchingArea?: boolean;
+  locationAnchor?: { name: string; lat: number; lng: number } | null;
 }
 
 export const formatPricePill = (rent?: number) => {
@@ -66,11 +67,13 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
   onBoundsChange,
   onSearchArea,
   isSearchingArea = false,
+  locationAnchor,
 }) => {
   const router = useRouter();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [id: number]: { marker: mapboxgl.Marker; el: HTMLElement; wrapper: HTMLElement } }>({});
+  const anchorMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const moveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const hasInitialFitRef = useRef(false);
   const isUserInteractingRef = useRef(false);
@@ -168,9 +171,17 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
 
     map.on("moveend", handleMoveEnd);
 
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+    if (mapContainerRef.current) {
+      resizeObserver.observe(mapContainerRef.current);
+    }
+
     const timer = setTimeout(() => map.resize(), 300);
 
     return () => {
+      resizeObserver.disconnect();
       clearTimeout(timer);
       if (moveTimerRef.current) clearTimeout(moveTimerRef.current);
       map.remove();
@@ -301,6 +312,52 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
       }
     });
   }, [selectedListing]);
+
+  // 4. Synchronize Location Focus Anchor Marker (Airbnb speech-bubble badge with spring bounce)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (!locationAnchor || !locationAnchor.name || !locationAnchor.lat || !locationAnchor.lng) {
+      if (anchorMarkerRef.current) {
+        anchorMarkerRef.current.remove();
+        anchorMarkerRef.current = null;
+      }
+      return;
+    }
+
+    if (anchorMarkerRef.current) {
+      anchorMarkerRef.current.remove();
+      anchorMarkerRef.current = null;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "location-anchor-marker pointer-events-none select-none";
+    wrapper.innerHTML = `
+      <div class="flex flex-col items-center">
+        <div class="animate-airbnb-bounce flex items-center gap-1.5 bg-white text-neutral-900 px-3 py-1.5 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-neutral-200/90 whitespace-nowrap">
+          <svg class="w-3.5 h-3.5 text-neutral-900 fill-current shrink-0" viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
+          </svg>
+          <span class="font-bold text-xs tracking-tight text-neutral-900">${locationAnchor.name}</span>
+        </div>
+        <div class="-mt-[1px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white filter drop-shadow-[0_2px_1px_rgba(0,0,0,0.08)]"></div>
+      </div>
+    `;
+
+    const marker = new mapboxgl.Marker({ element: wrapper, anchor: "bottom" })
+      .setLngLat([locationAnchor.lng, locationAnchor.lat])
+      .addTo(map);
+
+    anchorMarkerRef.current = marker;
+
+    return () => {
+      if (anchorMarkerRef.current) {
+        anchorMarkerRef.current.remove();
+        anchorMarkerRef.current = null;
+      }
+    };
+  }, [locationAnchor]);
 
   const handleTriggerSearchArea = useCallback(() => {
     if (currentBbox && onSearchArea) {
@@ -520,7 +577,10 @@ export const InteractiveSearchMap = React.memo(
       prev.listings.length === next.listings.length &&
       prev.listings[0]?.id === next.listings[0]?.id &&
       prev.selectedListing?.id === next.selectedListing?.id &&
-      prev.isSearchingArea === next.isSearchingArea
+      prev.isSearchingArea === next.isSearchingArea &&
+      prev.locationAnchor?.name === next.locationAnchor?.name &&
+      prev.locationAnchor?.lat === next.locationAnchor?.lat &&
+      prev.locationAnchor?.lng === next.locationAnchor?.lng
     );
   }
 );

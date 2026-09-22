@@ -108,6 +108,17 @@ const ListingCard: React.FC<ListingCardProps> = ({
     return `${propertyType} in ${city}`;
   }, [data]);
 
+  const subtitleSpecs = useMemo(() => {
+    if (!data) return "";
+    const parts: string[] = [];
+    if (data.beds) parts.push(`${data.beds} ${data.beds === 1 ? "bedroom" : "bedrooms"}`);
+    if (data.baths) parts.push(`${data.baths} ${data.baths === 1 ? "bath" : "baths"}`);
+    if (distanceKm !== undefined && distanceKm !== null && !isNaN(distanceKm)) {
+      parts.push(distanceKm < 1 ? "Under 1 km away" : `${distanceKm} km away`);
+    }
+    return parts.join(" · ") || distanceLabel;
+  }, [data, distanceKm, distanceLabel]);
+
   return (
     <div
       id={data?.id ? `listing-card-${data.id}` : undefined}
@@ -126,8 +137,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
       } ${isHovered ? "is-hovered" : ""}`}
     >
       <div className="flex flex-col gap-2 w-full">
-        {/* 1. Exact locked aspect-square container */}
-        <div className="aspect-square w-full relative overflow-hidden rounded-2xl bg-neutral-200/80">
+        {/* 1. Exact locked aspect-[20/19] container */}
+        <div className="aspect-[20/19] w-full relative overflow-hidden rounded-2xl bg-neutral-200/80">
           {isSkeleton ? (
             <div className="w-full h-full animate-pulse bg-neutral-200" />
           ) : (
@@ -153,58 +164,59 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
 
         {/* 2. Unified Text rows with locked line-height bounds */}
-        <div className="flex flex-col gap-1 pt-0.5">
-          {/* Row 1: Title & Rating (Locked h-5) */}
-          <div className="flex justify-between items-center text-[15px] sm:text-base font-semibold h-5 mt-0.5">
+        <div className="flex flex-col gap-0.5 pt-0.5">
+          {/* Row 1: Title & Rating on one baseline (Locked h-5) */}
+          <div className="flex justify-between items-center h-5">
             {isSkeleton ? (
               <>
-                <div className="h-4 w-3/5 bg-neutral-200 animate-pulse rounded-md" />
-                <div className="h-3.5 w-10 bg-neutral-200 animate-pulse rounded-md" />
+                <div className="h-3.5 w-3/5 bg-neutral-200 animate-pulse rounded" />
+                <div className="h-3.5 w-10 bg-neutral-200 animate-pulse rounded" />
               </>
             ) : (
               <>
-                <span className="truncate text-neutral-900 leading-none">{titleHeader}</span>
-                <span className="flex items-center gap-1 font-normal text-xs text-neutral-800 shrink-0 leading-none ml-2">
-                  ★ {data.averageRating ? data.averageRating.toFixed(2) : "4.95"}
+                <span className="font-semibold text-neutral-900 text-sm truncate">{titleHeader}</span>
+                <span className="text-xs text-neutral-800 shrink-0 ml-2 font-normal flex items-center gap-0.5">
+                  ★ {data.averageRating ? Number(data.averageRating).toFixed(2) : "4.84"}{" "}
+                  <span className="text-neutral-500 font-normal">
+                    ({data.numberOfReviews || 18})
+                  </span>
                 </span>
               </>
             )}
           </div>
 
-          {/* Row 2: Distance subtitle (Locked h-4) */}
-          <div className="h-4 text-[14px] sm:text-[15px] text-neutral-500 font-normal flex items-center leading-none">
+          {/* Row 2: Subtitle 1 - Specs / Distance (Locked h-4) */}
+          <div className="h-4 text-xs text-neutral-500 font-normal flex items-center leading-none">
             {isSkeleton ? (
-              <div className="h-3.5 w-2/5 bg-neutral-200 animate-pulse rounded-md" />
+              <div className="h-3 w-2/5 bg-neutral-200 animate-pulse rounded" />
             ) : (
-              <span className="truncate">{distanceLabel}</span>
+              <span className="truncate">{subtitleSpecs}</span>
             )}
           </div>
 
-          {/* Row 3: Dates / Category subtitle (Locked h-4) */}
-          <div className="h-4 text-[14px] sm:text-[15px] text-neutral-500 font-normal flex items-center leading-none">
+          {/* Row 3: Subtitle 2 - Dates window / Availability (Locked h-4) */}
+          <div className="h-4 text-xs text-neutral-500 font-normal flex items-center leading-none">
             {isSkeleton ? (
-              <div className="h-3 w-1/3 bg-neutral-200 animate-pulse rounded-md" />
+              <div className="h-3 w-1/3 bg-neutral-200 animate-pulse rounded" />
             ) : (
               <span className="truncate">
-                {reservationDate || data.category || "Entire Place"}
+                {reservationDate || "Flexible move-in"}
               </span>
             )}
           </div>
 
-          {/* Row 4: Price line (Locked h-5) */}
-          <div className="h-5 text-[15px] sm:text-base flex items-baseline gap-1.5 mt-0.5">
+          {/* Row 4: Bold Price line (Locked h-5) */}
+          <div className="h-5 text-sm flex items-center gap-1 pt-0.5">
             {isSkeleton ? (
-              <div className="h-4 w-1/4 bg-neutral-200 animate-pulse rounded-md" />
+              <div className="h-3.5 w-1/4 bg-neutral-200 animate-pulse rounded" />
             ) : (
               <>
                 <span className="font-semibold text-neutral-900 leading-none">
-                  ₦ {price?.toLocaleString()}
+                  ₦{price?.toLocaleString()}
                 </span>
-                {!reservation && (
-                  <span className="font-normal text-neutral-600 text-xs sm:text-sm leading-none">
-                    / year
-                  </span>
-                )}
+                <span className="text-xs text-neutral-600 font-normal leading-none">
+                  {reservation ? "total" : "/ year"}
+                </span>
               </>
             )}
           </div>

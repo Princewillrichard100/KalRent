@@ -23,13 +23,15 @@ export interface SectionData {
 }
 
 interface ListingSectionRowProps {
-  section: SectionData;
+  section?: SectionData;
   currentUser?: any;
+  isLoading?: boolean;
 }
 
 export const ListingSectionRow: React.FC<ListingSectionRowProps> = ({
   section,
   currentUser,
+  isLoading = false,
 }) => {
   const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -55,7 +57,7 @@ export const ListingSectionRow: React.FC<ListingSectionRowProps> = ({
       el.removeEventListener("scroll", checkScrollability);
       window.removeEventListener("resize", checkScrollability);
     };
-  }, [checkScrollability, section.listings]);
+  }, [checkScrollability, section?.listings]);
 
   const handleScroll = (direction: "left" | "right") => {
     const el = scrollRef.current;
@@ -66,6 +68,39 @@ export const ListingSectionRow: React.FC<ListingSectionRowProps> = ({
       behavior: "smooth",
     });
   };
+
+  if (isLoading || !section) {
+    return (
+      <section className="w-full py-6 md:py-8 border-b border-neutral-100 last:border-b-0">
+        {/* Header with skeleton Title and Chevrons */}
+        <div className="flex items-center justify-between gap-4 mb-4 px-1">
+          <div>
+            <div className="h-7 w-64 bg-neutral-200 animate-pulse rounded-md" />
+            <div className="h-4 w-44 bg-neutral-100 animate-pulse rounded-md mt-1" />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full border border-neutral-200 bg-neutral-100 animate-pulse" />
+            <div className="w-8 h-8 rounded-full border border-neutral-200 bg-neutral-100 animate-pulse" />
+          </div>
+        </div>
+
+        {/* Scrollable Row with skeleton ListingCards */}
+        <div
+          className="flex gap-5 md:gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth pb-3 px-1"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {Array.from({ length: 4 }).map((_, cardIdx) => (
+            <div
+              key={cardIdx}
+              className="min-w-[270px] sm:min-w-[290px] md:min-w-[310px] max-w-[320px] shrink-0 snap-start"
+            >
+              <ListingCard isLoading={true} />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   const sectionSearchHref = `/s/${encodeURIComponent(
     section.location

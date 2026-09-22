@@ -75,6 +75,13 @@ export const Navbar = () => {
   const isDashboardPage =
     pathname.includes("/managers") || pathname.includes("/tenants");
 
+  const isSearchPage =
+    pathname.startsWith("/s/") ||
+    pathname.startsWith("/search") ||
+    pathname.startsWith("/listings");
+
+  const isCompactNavbar = isDashboardPage || isSearchPage || isScrolled;
+
   // Track scroll position for Airbnb swift ease transition
   useEffect(() => {
     const handleScroll = () => {
@@ -372,7 +379,7 @@ export const Navbar = () => {
       <header className="fixed top-0 left-0 w-full z-40 bg-white border-b border-slate-200/80 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-2xs">
         <div
           className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isScrolled || isDashboardPage ? "py-3" : "py-3.5"
+            isCompactNavbar ? "py-3" : "py-3.5"
           }`}
         >
           <Container>
@@ -406,7 +413,7 @@ export const Navbar = () => {
                       flex items-center gap-6 
                       transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
                       ${
-                        isScrolled
+                        isCompactNavbar
                           ? "opacity-0 scale-90 -translate-y-2 pointer-events-none absolute"
                           : "opacity-100 scale-100 translate-y-0 pointer-events-auto"
                       }
@@ -465,12 +472,12 @@ export const Navbar = () => {
                     </button>
                   </div>
 
-                  {/* 2. Compact Search Pill (Active when scrolled) */}
+                  {/* 2. Compact Search Pill (Active when scrolled or on search/dashboard) */}
                   <div
                     className={`
                       transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
                       ${
-                        isScrolled
+                        isCompactNavbar
                           ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
                           : "opacity-0 scale-90 translate-y-2 pointer-events-none absolute"
                       }
@@ -512,7 +519,7 @@ export const Navbar = () => {
             )}
 
             {/* Second Row: Large Expanded Search Bar with Distinct Inline Dropdowns */}
-            {!isDashboardPage && (
+            {!isDashboardPage && !isSearchPage && (
               <div
                 className={`
                   hidden md:block relative

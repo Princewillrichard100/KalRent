@@ -132,22 +132,9 @@ export default function Home() {
       <main className="h-full w-full pt-28 md:pt-44 pb-20">
         <Container>
           {isLoading ? (
-            <div className="space-y-12">
-              {[1, 2, 3].map((sectionIdx) => (
-                <div key={sectionIdx} className="space-y-4 animate-pulse">
-                  <div className="h-7 bg-neutral-200 rounded w-1/4"></div>
-                  <div className="h-4 bg-neutral-100 rounded w-1/3 mb-4"></div>
-                  <div className="flex gap-6 overflow-hidden">
-                    {[1, 2, 3, 4].map((cardIdx) => (
-                      <div
-                        key={cardIdx}
-                        className="min-w-[280px] max-w-[320px] flex-1"
-                      >
-                        <ListingCard isLoading={true} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            <div className="flex flex-col space-y-4">
+              {[1, 2, 3].map((idx) => (
+                <ListingSectionRow key={idx} isLoading={true} />
               ))}
             </div>
           ) : isError || !properties || properties.length === 0 ? (
