@@ -57,16 +57,16 @@ export const SearchPill = () => {
       "
     >
       <div className="flex flex-row items-center justify-between">
-        <div className="text-xs font-bold px-4 text-slate-800 truncate max-w-[130px]">
+        <div className="text-sm font-semibold px-4 text-neutral-900 truncate max-w-[160px]">
           {locationLabel}
         </div>
-        <div className="hidden sm:block text-xs font-semibold px-4 border-x border-slate-200 flex-1 text-center text-slate-600">
+        <div className="hidden sm:block text-sm font-semibold px-4 border-x border-neutral-200 flex-1 text-center text-neutral-800">
           {durationLabel}
         </div>
-        <div className="text-xs pl-4 pr-2 text-slate-500 flex flex-row items-center gap-3">
-          <div className="hidden sm:block text-slate-600 font-medium">{guestsLabel}</div>
-          <div className="p-2 bg-rose-500 rounded-full text-white shadow-xs">
-            <Search className="w-3.5 h-3.5" strokeWidth={2.5} />
+        <div className="text-sm pl-4 pr-2 text-neutral-500 flex flex-row items-center gap-3">
+          <div className="hidden sm:block text-neutral-500 font-normal">{guestsLabel}</div>
+          <div className="p-2.5 bg-rose-500 rounded-full text-white shadow-xs">
+            <Search className="w-4 h-4" strokeWidth={2.5} />
           </div>
         </div>
       </div>

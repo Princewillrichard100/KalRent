@@ -137,8 +137,8 @@ export const Categories = () => {
                   }
                 `}
               >
-                <Icon className={`w-6 h-6 ${isSelected ? "text-neutral-800" : "text-neutral-500"}`} />
-                <span className="text-xs">{item.label}</span>
+                <Icon className={`w-6 h-6 ${isSelected ? "text-neutral-900" : "text-neutral-500"}`} />
+                <span className="text-[13px] font-medium tracking-tight">{item.label}</span>
               </button>
             );
           })}

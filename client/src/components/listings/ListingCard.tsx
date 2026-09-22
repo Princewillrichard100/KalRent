@@ -139,27 +139,27 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
 
         {/* 2. Title / City bold header */}
-        <div className="font-bold text-sm text-neutral-900 truncate mt-1">
+        <div className="font-semibold text-[15px] sm:text-base text-neutral-900 truncate mt-1">
           {titleHeader}
         </div>
 
         {/* 3. Distance subtitle */}
-        <div className="text-neutral-500 text-sm font-normal">
+        <div className="text-neutral-500 text-[14px] sm:text-[15px] font-normal leading-tight">
           {distanceLabel}
         </div>
 
         {/* 4. Available dates / category subtitle */}
-        <div className="text-neutral-500 text-xs font-light truncate">
+        <div className="text-neutral-500 text-[14px] sm:text-[15px] font-normal truncate leading-tight">
           {reservationDate || data.category || "Entire Place"}
         </div>
 
         {/* 5. Price line */}
-        <div className="flex flex-row items-baseline gap-1 mt-0.5">
-          <span className="font-bold text-sm text-neutral-900">
+        <div className="flex flex-row items-baseline gap-1.5 mt-1">
+          <span className="font-semibold text-[15px] sm:text-base text-neutral-900">
             ₦ {price?.toLocaleString()}
           </span>
           {!reservation && (
-            <span className="font-light text-neutral-500 text-xs">/ year</span>
+            <span className="font-normal text-neutral-600 text-sm">/ year</span>
           )}
         </div>
 
