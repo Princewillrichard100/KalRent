@@ -300,3 +300,95 @@ body,
 [data-close-button="true"] {
   @apply bg-background border-border text-foreground hover:bg-muted;
 }
+
+/* ==========================================================================
+   Airbnb Custom Interactive Price Pill Markers & Map Card Styles
+   ========================================================================== */
+
+.airbnb-marker-wrapper {
+  padding: 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transform: translateZ(0);
+}
+
+.airbnb-price-pill {
+  background-color: #ffffff;
+  color: #111827;
+  font-weight: 700;
+  padding: 6px 11px;
+  border-radius: 9999px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none !important;
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s, color 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, background-color;
+  transform: translate3d(0, 0, 0);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.airbnb-price-pill * {
+  pointer-events: none !important;
+  user-select: none;
+}
+
+.airbnb-price-pill:hover,
+.airbnb-price-pill.is-hovered {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  transform: scale(1.15) translate3d(0, 0, 0) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35) !important;
+}
+
+.airbnb-price-pill.is-selected {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  transform: scale(1.18) translate3d(0, 0, 0) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Off-thread containment for listing feed items */
+.listing-card-item {
+  contain: paint layout;
+  will-change: transform;
+}
+
+.listing-card-item.is-hovered {
+  background-color: rgba(245, 245, 245, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Mapbox Popup Overrides for Floating Preview Card */
+.mapboxgl-popup {
+  z-index: 70 !important;
+}
+
+.mapboxgl-popup-content {
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.mapboxgl-popup-tip {
+  display: none !important;
+}
+
+.mapboxgl-popup-close-button {
+  display: none !important;
+}
+

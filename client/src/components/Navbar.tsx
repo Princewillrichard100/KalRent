@@ -16,6 +16,10 @@ import {
   Loader2,
   Calendar as CalendarIcon,
   Users,
+  Navigation,
+  Palmtree,
+  Landmark,
+  GlassWater,
 } from "lucide-react";
 import Container from "./Container";
 import SearchPill from "./navbar/SearchPill";
@@ -28,22 +32,16 @@ import Calendar, { Range } from "@/components/inputs/Calendar";
 import Counter from "@/components/inputs/Counter";
 import { LocationSuggestion } from "@/types/location";
 import { differenceInDays, format } from "date-fns";
+import { useUserLocation } from "@/hooks/useUserLocation";
 
 const NIGERIAN_POPULAR_HUBS = [
-  { name: "Lekki, Lagos", state: "Lagos", lat: 6.4474, lng: 3.4844 },
-  { name: "Victoria Island", state: "Lagos", lat: 6.4281, lng: 3.4219 },
-  { name: "Ikeja, Lagos", state: "Lagos", lat: 6.6018, lng: 3.3515 },
-  { name: "Ikoyi, Lagos", state: "Lagos", lat: 6.4549, lng: 3.4357 },
-  { name: "Maitama, Abuja", state: "Abuja", lat: 9.0882, lng: 7.4934 },
-  { name: "Wuse 2, Abuja", state: "Abuja", lat: 9.0765, lng: 7.4722 },
-  { name: "Jabi, Abuja", state: "Abuja", lat: 9.0708, lng: 7.4278 },
-  { name: "Port Harcourt", state: "Rivers", lat: 4.8156, lng: 7.0498 },
-  { name: "Ibadan", state: "Oyo", lat: 7.3775, lng: 3.947 },
-  { name: "Enugu", state: "Enugu", lat: 6.4584, lng: 7.5464 },
-  { name: "Calabar", state: "Cross River", lat: 4.9757, lng: 8.3417 },
-  { name: "Asaba", state: "Delta", lat: 6.1984, lng: 6.7329 },
-  { name: "Benin City", state: "Edo", lat: 6.335, lng: 5.6037 },
-  { name: "Ilorin", state: "Kwara", lat: 8.483, lng: 4.6015 },
+  { name: "Near me", state: "Find what's around you", lat: null, lng: null, icon: "Navigation" },
+  { name: "Lekki, Nigeria", state: "Great for summer getaways", lat: 6.4474, lng: 3.4844, icon: "Palmtree" },
+  { name: "Ikeja, Nigeria", state: "Near you", lat: 6.6018, lng: 3.3515, icon: "Home" },
+  { name: "Abuja, Nigeria", state: "For a trip abroad", lat: 9.0765, lng: 7.4722, icon: "Building2" },
+  { name: "Ibadan, Nigeria", state: "Cultural hub", lat: 7.3775, lng: 3.9470, icon: "Landmark" },
+  { name: "Victoria Island", state: "Bustling nightlife", lat: 6.4281, lng: 3.4219, icon: "GlassWater" },
+  { name: "Anywhere", state: "Browse all locations", lat: null, lng: null, icon: "Globe" },
 ];
 
 export const Navbar = () => {
@@ -58,6 +56,8 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const [activeDropdown, setActiveDropdown] = useState<"where" | "when" | "who" | null>(null);
+
+  const userCoords = useUserLocation();
 
   // Search filter states
   const [whereInput, setWhereInput] = useState("");
@@ -111,6 +111,8 @@ export const Navbar = () => {
   const suggestions = autocompleteData?.autocomplete_terms || [];
 
   // Compute search labels
+  const paramLat = searchParams?.get("lat");
+  const paramLng = searchParams?.get("lng");
   const paramLocation =
     searchParams?.get("location") ||
     searchParams?.get("locationValue") ||
@@ -120,11 +122,18 @@ export const Navbar = () => {
   const paramGuestCount = searchParams?.get("guestCount") || searchParams?.get("beds");
 
   const displayLocation = useMemo(() => {
+    if (selectedLocation?.place_id === "near_me" || whereInput === "Homes near you" || whereInput === "Near me") {
+      return "Homes near you";
+    }
+    if (selectedLocation?.place_id === "anywhere" || whereInput === "Anywhere") {
+      return "Anywhere";
+    }
     if (selectedLocation?.display_name) return selectedLocation.display_name;
     if (whereInput.trim()) return whereInput.trim();
-    if (paramLocation) return paramLocation;
+    if (paramLocation && paramLocation !== "Near me" && paramLocation !== "Homes near you") return paramLocation;
+    if (paramLat && paramLng && !paramLocation) return "Homes near you";
     return "Search destinations";
-  }, [selectedLocation, whereInput, paramLocation]);
+  }, [selectedLocation, whereInput, paramLocation, paramLat, paramLng]);
 
   const displayDates = useMemo(() => {
     if (dateRange.startDate && dateRange.endDate) {
@@ -177,6 +186,62 @@ export const Navbar = () => {
   }, []);
 
   const handleSelectPopularHub = useCallback((hub: typeof NIGERIAN_POPULAR_HUBS[0]) => {
+    if (hub.name === "Near me") {
+      const applyCoords = (lat: number, lng: number) => {
+        setSelectedCoords({ lat, lng });
+        setSelectedLocation({
+          id: "near_me",
+          place_id: "near_me",
+          display_name: "Homes near you",
+          secondary_text: "Based on your location",
+          types: ["locality"],
+          terms: [{ offset: 0, value: "Near you" }],
+          query: "Near you",
+          lat,
+          lng,
+        });
+        setWhereInput("Homes near you");
+        setActiveDropdown("when");
+      };
+
+      if (userCoords?.lat && userCoords?.lng) {
+        applyCoords(userCoords.lat, userCoords.lng);
+        return;
+      }
+
+      if (typeof window !== "undefined" && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            applyCoords(pos.coords.latitude, pos.coords.longitude);
+          },
+          (err) => {
+            console.warn("Geolocation fallback:", err);
+            applyCoords(6.5244, 3.3792);
+          },
+          { enableHighAccuracy: true, timeout: 6000 }
+        );
+      } else {
+        applyCoords(6.5244, 3.3792);
+      }
+      return;
+    }
+
+    if (hub.name === "Anywhere") {
+      setSelectedCoords(null);
+      setSelectedLocation({
+        id: "anywhere",
+        place_id: "anywhere",
+        display_name: "Anywhere",
+        secondary_text: "Browse all locations",
+        types: ["locality"],
+        terms: [{ offset: 0, value: "Anywhere" }],
+        query: "Anywhere",
+      });
+      setWhereInput("Anywhere");
+      setActiveDropdown("when");
+      return;
+    }
+
     const suggestion: LocationSuggestion = {
       id: `hub_${hub.name}`,
       place_id: `hub_${hub.name}`,
@@ -185,34 +250,67 @@ export const Navbar = () => {
       types: ["locality"],
       terms: [{ offset: 0, value: hub.name }],
       query: hub.name,
-      lat: hub.lat,
-      lng: hub.lng,
+      lat: hub.lat ?? undefined,
+      lng: hub.lng ?? undefined,
     };
     setSelectedLocation(suggestion);
     setWhereInput(hub.name);
-    setSelectedCoords({ lat: hub.lat, lng: hub.lng });
+    if (hub.lat && hub.lng) {
+      setSelectedCoords({ lat: hub.lat, lng: hub.lng });
+    } else {
+      setSelectedCoords(null);
+    }
     setActiveDropdown("when");
-  }, []);
+  }, [userCoords]);
 
   const handleExecuteSearch = useCallback(() => {
     const currentParams = new URLSearchParams(searchParams ? searchParams.toString() : "");
 
-    const finalLocation = selectedLocation?.display_name || whereInput.trim() || paramLocation;
-    if (finalLocation) {
-      currentParams.set("location", finalLocation);
-      currentParams.set("locationValue", finalLocation);
-    } else {
+    const isNearMe =
+      selectedLocation?.place_id === "near_me" ||
+      whereInput === "Homes near you" ||
+      whereInput === "Near me";
+
+    const isAnywhere =
+      selectedLocation?.place_id === "anywhere" ||
+      whereInput === "Anywhere";
+
+    if (isNearMe) {
+      // Pass coordinates ONLY - DO NOT pass location text
       currentParams.delete("location");
       currentParams.delete("locationValue");
-    }
+      currentParams.delete("placeId");
 
-    if (selectedCoords?.lat && selectedCoords?.lng) {
-      currentParams.set("lat", selectedCoords.lat.toString());
-      currentParams.set("lng", selectedCoords.lng.toString());
-    }
+      const targetLat = selectedCoords?.lat ?? userCoords?.lat;
+      const targetLng = selectedCoords?.lng ?? userCoords?.lng;
+      if (targetLat && targetLng) {
+        currentParams.set("lat", targetLat.toString());
+        currentParams.set("lng", targetLng.toString());
+      }
+    } else if (isAnywhere) {
+      currentParams.delete("location");
+      currentParams.delete("locationValue");
+      currentParams.delete("placeId");
+      currentParams.delete("lat");
+      currentParams.delete("lng");
+    } else {
+      const finalLocation = selectedLocation?.display_name || whereInput.trim() || paramLocation;
+      if (finalLocation) {
+        currentParams.set("location", finalLocation);
+        currentParams.set("locationValue", finalLocation);
+      } else {
+        currentParams.delete("location");
+        currentParams.delete("locationValue");
+      }
 
-    if (selectedLocation?.place_id) {
-      currentParams.set("placeId", selectedLocation.place_id);
+      if (selectedCoords?.lat && selectedCoords?.lng) {
+        currentParams.set("lat", selectedCoords.lat.toString());
+        currentParams.set("lng", selectedCoords.lng.toString());
+      }
+
+      if (selectedLocation?.place_id) {
+        currentParams.set("placeId", selectedLocation.place_id);
+      }
     }
 
     if (dateRange.startDate) {
@@ -230,14 +328,25 @@ export const Navbar = () => {
       currentParams.delete("beds");
     }
 
+    let destLocation = "all";
+    if (isNearMe) {
+      destLocation = "near-me";
+    } else if (!isAnywhere) {
+      const loc = selectedLocation?.display_name || whereInput.trim() || paramLocation;
+      if (loc && loc !== "Search destinations") {
+        destLocation = loc.split(",")[0].trim();
+      }
+    }
+
     setActiveDropdown(null);
-    router.push(`/?${currentParams.toString()}`);
+    router.push(`/s/${encodeURIComponent(destLocation)}/homes?${currentParams.toString()}`);
   }, [
     searchParams,
     selectedLocation,
     whereInput,
     paramLocation,
     selectedCoords,
+    userCoords,
     dateRange,
     totalGuests,
     router,
@@ -423,7 +532,7 @@ export const Navbar = () => {
                       rounded-full 
                       border border-neutral-200/90 
                       transition-all duration-200
-                      max-w-3xl w-full
+                      max-w-[880px] w-full
                       ${
                         activeDropdown
                           ? "bg-neutral-100 shadow-md"
@@ -438,7 +547,7 @@ export const Navbar = () => {
                         setActiveDropdown((prev) => (prev === "where" ? null : "where"))
                       }
                       className={`
-                        flex-1 text-left pl-7 pr-4 py-3 rounded-full transition cursor-pointer relative z-10
+                        flex-[1.3] text-left pl-8 pr-5 py-3.5 rounded-full transition cursor-pointer relative z-10
                         ${
                           activeDropdown === "where"
                             ? "bg-white shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-neutral-900"
@@ -446,8 +555,12 @@ export const Navbar = () => {
                         }
                       `}
                     >
-                      <div className="text-[12px] font-bold tracking-wide">Where</div>
-                      <div className="text-sm text-neutral-500 font-normal truncate max-w-[200px]">
+                      <div className="text-[13px] font-bold text-neutral-900 tracking-tight">Where</div>
+                      <div className={`text-[15px] leading-5 truncate max-w-[260px] ${
+                        selectedLocation || (whereInput.trim() && whereInput.trim() !== "Search destinations") || paramLocation
+                          ? "text-neutral-900 font-semibold"
+                          : "text-neutral-500 font-normal"
+                      }`}>
                         {displayLocation}
                       </div>
                     </button>
@@ -459,7 +572,7 @@ export const Navbar = () => {
                         setActiveDropdown((prev) => (prev === "when" ? null : "when"))
                       }
                       className={`
-                        flex-1 text-left pl-6 pr-4 py-3 rounded-full transition cursor-pointer relative z-10
+                        flex-1 text-left pl-7 pr-4 py-3.5 rounded-full transition cursor-pointer relative z-10
                         ${
                           activeDropdown === "when"
                             ? "bg-white shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-neutral-900"
@@ -467,8 +580,12 @@ export const Navbar = () => {
                         }
                       `}
                     >
-                      <div className="text-[12px] font-bold tracking-wide">When</div>
-                      <div className="text-sm text-neutral-500 font-normal truncate max-w-[180px]">
+                      <div className="text-[13px] font-bold text-neutral-900 tracking-tight">When</div>
+                      <div className={`text-[15px] leading-5 truncate max-w-[200px] ${
+                        displayDates !== "Add dates"
+                          ? "text-neutral-900 font-semibold"
+                          : "text-neutral-500 font-normal"
+                      }`}>
                         {displayDates}
                       </div>
                     </button>
@@ -480,7 +597,7 @@ export const Navbar = () => {
                         setActiveDropdown((prev) => (prev === "who" ? null : "who"))
                       }
                       className={`
-                        flex-1 text-left pl-6 pr-3 py-3 rounded-full transition cursor-pointer relative z-10
+                        flex-1 text-left pl-7 pr-4 py-3.5 rounded-full transition cursor-pointer relative z-10
                         ${
                           activeDropdown === "who"
                             ? "bg-white shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-neutral-900"
@@ -488,37 +605,41 @@ export const Navbar = () => {
                         }
                       `}
                     >
-                      <div className="text-[12px] font-bold tracking-wide">Who</div>
-                      <div className="text-sm text-neutral-500 font-normal truncate max-w-[130px]">
+                      <div className="text-[13px] font-bold text-neutral-900 tracking-tight">Who</div>
+                      <div className={`text-[15px] leading-5 truncate max-w-[160px] ${
+                        displayGuests !== "Add guests"
+                          ? "text-neutral-900 font-semibold"
+                          : "text-neutral-500 font-normal"
+                      }`}>
                         {displayGuests}
                       </div>
                     </button>
 
                     {/* RED SEARCH ACTION BUTTON */}
-                    <div className="pl-2 pr-2.5 py-1.5 shrink-0 relative z-10">
+                    <div className="pl-2 pr-3 py-2 shrink-0 relative z-10">
                       <button
                         type="button"
                         onClick={handleExecuteSearch}
                         className="
-                          flex items-center gap-2 
-                          bg-gradient-to-r from-rose-500 to-rose-600 
-                          hover:from-rose-600 hover:to-rose-700 
+                          flex items-center gap-2.5 
+                          bg-[#FF385C] hover:bg-[#E00B41] 
                           text-white 
                           font-semibold 
-                          text-sm 
-                          px-4.5 py-3 
+                          text-[15px] 
+                          px-6 py-3.5 
                           rounded-full 
                           shadow-sm 
                           hover:shadow-md 
-                          transition 
+                          transition-all 
                           transform 
                           hover:scale-[1.02] 
                           active:scale-[0.98] 
                           cursor-pointer
+                          whitespace-nowrap
                         "
                       >
-                        <Search className="w-4 h-4 stroke-[2.5]" />
-                        <span>Search</span>
+                        <Search className="w-4 h-4 stroke-[2.75]" />
+                        <span className="font-bold">Search</span>
                       </button>
                     </div>
 
@@ -619,23 +740,43 @@ export const Navbar = () => {
                           </div>
                         ) : (
                           <div>
-                            <div className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2.5">
-                              Popular Nigerian Destinations
+                            <div className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2.5 px-1">
+                              Suggested destinations
                             </div>
-                            <div className="grid grid-cols-2 gap-2 max-h-[250px] overflow-y-auto pr-1">
-                              {NIGERIAN_POPULAR_HUBS.slice(0, 8).map((hub) => (
-                                <button
-                                  key={hub.name}
-                                  type="button"
-                                  onClick={() => handleSelectPopularHub(hub)}
-                                  className="p-2.5 rounded-xl border border-neutral-200 hover:border-black text-left transition cursor-pointer hover:bg-neutral-50"
-                                >
-                                  <div className="text-xs font-bold text-neutral-800 truncate">
-                                    {hub.name}
-                                  </div>
-                                  <div className="text-[10px] text-neutral-500">{hub.state}</div>
-                                </button>
-                              ))}
+                            <div className="flex flex-col max-h-[300px] overflow-y-auto">
+                              {NIGERIAN_POPULAR_HUBS.map((hub) => {
+                                // Create an icon map
+                                const IconComponent = {
+                                  Navigation,
+                                  Palmtree,
+                                  Home: HomeIcon,
+                                  Building2,
+                                  Landmark,
+                                  GlassWater,
+                                  Globe,
+                                }[hub.icon as string] || MapPin;
+
+                                return (
+                                  <button
+                                    key={hub.name}
+                                    type="button"
+                                    onClick={() => handleSelectPopularHub(hub)}
+                                    className="flex items-center gap-4 p-2.5 hover:bg-neutral-100 rounded-xl transition text-left cursor-pointer"
+                                  >
+                                    <div className="w-12 h-12 rounded-xl bg-neutral-100/80 border border-neutral-200/50 flex items-center justify-center shrink-0">
+                                      <IconComponent className="w-5 h-5 text-neutral-700" strokeWidth={1.5} />
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="text-[15px] font-medium text-neutral-800">
+                                        {hub.name}
+                                      </span>
+                                      <span className="text-[13px] text-neutral-500">
+                                        {hub.state}
+                                      </span>
+                                    </div>
+                                  </button>
+                                );
+                              })}
                             </div>
                           </div>
                         )}

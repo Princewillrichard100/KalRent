@@ -94,13 +94,29 @@ export const RentModal = () => {
       const cityName = cityParts[0]?.trim() || selectedCity;
       const stateName = cityParts[1]?.trim() || "Nigeria";
 
+      // Map UI category label to Prisma PropertyType
+      const mappedCategory =
+        category === "Apartments"
+          ? "Apartment"
+          : category === "Villas"
+          ? "Villa"
+          : category === "Townhouses"
+          ? "Townhouse"
+          : category === "Cottages"
+          ? "Cottage"
+          : category === "Rooms"
+          ? "Rooms"
+          : category === "Tiny houses"
+          ? "Tinyhouse"
+          : "Apartment";
+
       formData.append("name", name || `${category} in ${selectedCity}`);
       formData.append(
         "description",
         description || `Beautiful and serene ${category} located in ${selectedCity}. Includes 24/7 security and essential amenities.`
       );
-      formData.append("propertyType", category);
-      formData.append("campusZone", selectedCity);
+      formData.append("propertyType", mappedCategory);
+      formData.append("campusZone", "Other");
       formData.append("landmark", landmark || `${selectedCity}`);
       formData.append("address", address || `${selectedCity}, Nigeria`);
       formData.append("city", cityName);
@@ -117,16 +133,16 @@ export const RentModal = () => {
       formData.append(
         "amenities",
         JSON.stringify([
-          "Air Conditioning",
-          "24/7 Power Supply",
-          "High-Speed Wi-Fi",
-          "Dedicated Security",
-          "Clean Water Supply",
+          "AirConditioning",
+          "WiFi",
+          "Parking",
+          "WasherDryer",
+          "HighSpeedInternet",
         ])
       );
       formData.append(
         "highlights",
-        JSON.stringify(["Prime Location", "Protected Booking", "Instant Check-in"])
+        JSON.stringify(["RecentlyRenovated", "GreatView", "CloseToTransit"])
       );
       formData.append("managerCognitoId", authUser.cognitoInfo.userId);
 

@@ -131,7 +131,53 @@ export const getProperties = async (
       lat,
       lng,
       radius,
+      minLat,
+      maxLat,
+      minLng,
+      maxLng,
+      ne_lat,
+      ne_lng,
+      sw_lat,
+      sw_lng,
+      bbox,
     } = req.query;
+
+    let parsedMinLat = minLat ? parseFloat(minLat as string) : undefined;
+    let parsedMaxLat = maxLat ? parseFloat(maxLat as string) : undefined;
+    let parsedMinLng = minLng ? parseFloat(minLng as string) : undefined;
+    let parsedMaxLng = maxLng ? parseFloat(maxLng as string) : undefined;
+
+    if (sw_lat && ne_lat && sw_lng && ne_lng) {
+      const swLatNum = parseFloat(sw_lat as string);
+      const neLatNum = parseFloat(ne_lat as string);
+      const swLngNum = parseFloat(sw_lng as string);
+      const neLngNum = parseFloat(ne_lng as string);
+
+      if (!isNaN(swLatNum) && !isNaN(neLatNum) && !isNaN(swLngNum) && !isNaN(neLngNum)) {
+        parsedMinLat = Math.min(swLatNum, neLatNum);
+        parsedMaxLat = Math.max(swLatNum, neLatNum);
+        parsedMinLng = Math.min(swLngNum, neLngNum);
+        parsedMaxLng = Math.max(swLngNum, neLngNum);
+      }
+    } else if (bbox && typeof bbox === "string") {
+      const parts = bbox.split(",").map(parseFloat);
+      if (parts.length === 4 && !parts.some(isNaN)) {
+        parsedMinLng = Math.min(parts[0], parts[2]);
+        parsedMinLat = Math.min(parts[1], parts[3]);
+        parsedMaxLng = Math.max(parts[0], parts[2]);
+        parsedMaxLat = Math.max(parts[1], parts[3]);
+      }
+    }
+
+    const hasBbox =
+      parsedMinLat !== undefined &&
+      parsedMaxLat !== undefined &&
+      parsedMinLng !== undefined &&
+      parsedMaxLng !== undefined &&
+      !isNaN(parsedMinLat) &&
+      !isNaN(parsedMaxLat) &&
+      !isNaN(parsedMinLng) &&
+      !isNaN(parsedMaxLng);
 
     const searchLat = lat || latitude;
     const searchLng = lng || longitude;
@@ -206,7 +252,13 @@ export const getProperties = async (
       );
     }
 
-    if (locationValue && locationValue !== "any") {
+    if (
+      locationValue &&
+      locationValue !== "any" &&
+      locationValue !== "Anywhere" &&
+      locationValue !== "Near me" &&
+      !hasBbox
+    ) {
       whereConditions.push(
         Prisma.sql`(
           l.address ILIKE ${"%" + locationValue + "%"} 
@@ -255,7 +307,14 @@ export const getProperties = async (
       }
     }
 
-    if (hasSearchCoords) {
+    if (hasBbox) {
+      whereConditions.push(
+        Prisma.sql`ST_Intersects(
+          l.coordinates,
+          ST_MakeEnvelope(${parsedMinLng}, ${parsedMinLat}, ${parsedMaxLng}, ${parsedMaxLat}, 4326)::geography
+        )`
+      );
+    } else if (hasSearchCoords && locationValue !== "Anywhere") {
       const radiusMeters = radius ? parseFloat(radius as string) : 25000;
       whereConditions.push(
         Prisma.sql`ST_DWithin(
@@ -298,6 +357,7 @@ export const getProperties = async (
           ? Prisma.sql`ORDER BY "distanceMeters" ASC`
           : Prisma.sql`ORDER BY p."postedDate" DESC`
       }
+      LIMIT 100
     `;
 
     const properties = await prisma.$queryRaw<any[]>(completeQuery);
@@ -430,6 +490,203 @@ export const getProperty = async (
   }
 };
 
+const VALID_PROPERTY_TYPES = [
+  "Rooms",
+  "Tinyhouse",
+  "Apartment",
+  "Villa",
+  "Townhouse",
+  "Cottage",
+] as const;
+
+const normalizePropertyType = (raw?: string): any => {
+  if (!raw) return "Apartment";
+  const cleaned = raw.trim().toLowerCase();
+  if (cleaned.startsWith("room")) return "Rooms";
+  if (cleaned.includes("tiny")) return "Tinyhouse";
+  if (cleaned.startsWith("apartment")) return "Apartment";
+  if (cleaned.startsWith("villa")) return "Villa";
+  if (cleaned.startsWith("townhouse")) return "Townhouse";
+  if (cleaned.startsWith("cottage")) return "Cottage";
+  const match = VALID_PROPERTY_TYPES.find(
+    (t) => t.toLowerCase() === cleaned || t.toLowerCase() === cleaned.replace(/s$/, "")
+  );
+  return match || "Apartment";
+};
+
+const VALID_CAMPUS_ZONES = [
+  "Tanke",
+  "Sanrab",
+  "OkeOdo",
+  "Jalala",
+  "MarkJunction",
+  "Other",
+] as const;
+
+const normalizeCampusZone = (raw?: string): any => {
+  if (!raw) return "Other";
+  const match = VALID_CAMPUS_ZONES.find(
+    (z) => z.toLowerCase() === raw.trim().toLowerCase()
+  );
+  return match || "Other";
+};
+
+const AMENITY_MAPPING: Record<string, string> = {
+  washerdryer: "WasherDryer",
+  washer: "WasherDryer",
+  airconditioning: "AirConditioning",
+  "air conditioning": "AirConditioning",
+  ac: "AirConditioning",
+  dishwasher: "Dishwasher",
+  highspeedinternet: "HighSpeedInternet",
+  "high speed internet": "HighSpeedInternet",
+  "high-speed internet": "HighSpeedInternet",
+  "high-speed wi-fi": "WiFi",
+  "high speed wi-fi": "WiFi",
+  wifi: "WiFi",
+  "wi-fi": "WiFi",
+  hardwoodfloors: "HardwoodFloors",
+  walkinclosets: "WalkInClosets",
+  microwave: "Microwave",
+  refrigerator: "Refrigerator",
+  pool: "Pool",
+  gym: "Gym",
+  parking: "Parking",
+  petsallowed: "PetsAllowed",
+  "24/7 power supply": "WiFi",
+  "dedicated security": "Parking",
+  "clean water supply": "WasherDryer",
+};
+
+const normalizeAmenities = (rawAmenities: any): any[] => {
+  let list: string[] = [];
+  if (typeof rawAmenities === "string") {
+    try {
+      if (rawAmenities.startsWith("[")) {
+        list = JSON.parse(rawAmenities);
+      } else {
+        list = rawAmenities.split(",").map((s) => s.trim());
+      }
+    } catch {
+      list = [];
+    }
+  } else if (Array.isArray(rawAmenities)) {
+    list = rawAmenities;
+  }
+
+  const validSet = new Set([
+    "WasherDryer",
+    "AirConditioning",
+    "Dishwasher",
+    "HighSpeedInternet",
+    "HardwoodFloors",
+    "WalkInClosets",
+    "Microwave",
+    "Refrigerator",
+    "Pool",
+    "Gym",
+    "Parking",
+    "PetsAllowed",
+    "WiFi",
+  ]);
+
+  const result = new Set<string>();
+  for (const item of list) {
+    if (typeof item !== "string") continue;
+    if (validSet.has(item)) {
+      result.add(item);
+    } else {
+      const mapped = AMENITY_MAPPING[item.toLowerCase().trim()];
+      if (mapped && validSet.has(mapped)) {
+        result.add(mapped);
+      }
+    }
+  }
+
+  if (result.size === 0) {
+    result.add("WiFi");
+    result.add("AirConditioning");
+  }
+
+  return Array.from(result);
+};
+
+const HIGHLIGHT_MAPPING: Record<string, string> = {
+  highspeedinternetaccess: "HighSpeedInternetAccess",
+  washerdryer: "WasherDryer",
+  airconditioning: "AirConditioning",
+  heating: "Heating",
+  smokefree: "SmokeFree",
+  cableready: "CableReady",
+  satellitetv: "SatelliteTV",
+  doublevanities: "DoubleVanities",
+  tubshower: "TubShower",
+  intercom: "Intercom",
+  sprinklersystem: "SprinklerSystem",
+  recentlyrenovated: "RecentlyRenovated",
+  closetotransit: "CloseToTransit",
+  greatview: "GreatView",
+  quietneighborhood: "QuietNeighborhood",
+  "prime location": "GreatView",
+  "protected booking": "RecentlyRenovated",
+  "instant check-in": "CloseToTransit",
+};
+
+const normalizeHighlights = (rawHighlights: any): any[] => {
+  let list: string[] = [];
+  if (typeof rawHighlights === "string") {
+    try {
+      if (rawHighlights.startsWith("[")) {
+        list = JSON.parse(rawHighlights);
+      } else {
+        list = rawHighlights.split(",").map((s) => s.trim());
+      }
+    } catch {
+      list = [];
+    }
+  } else if (Array.isArray(rawHighlights)) {
+    list = rawHighlights;
+  }
+
+  const validSet = new Set([
+    "HighSpeedInternetAccess",
+    "WasherDryer",
+    "AirConditioning",
+    "Heating",
+    "SmokeFree",
+    "CableReady",
+    "SatelliteTV",
+    "DoubleVanities",
+    "TubShower",
+    "Intercom",
+    "SprinklerSystem",
+    "RecentlyRenovated",
+    "CloseToTransit",
+    "GreatView",
+    "QuietNeighborhood",
+  ]);
+
+  const result = new Set<string>();
+  for (const item of list) {
+    if (typeof item !== "string") continue;
+    if (validSet.has(item)) {
+      result.add(item);
+    } else {
+      const mapped = HIGHLIGHT_MAPPING[item.toLowerCase().trim()];
+      if (mapped && validSet.has(mapped)) {
+        result.add(mapped);
+      }
+    }
+  }
+
+  if (result.size === 0) {
+    result.add("RecentlyRenovated");
+    result.add("GreatView");
+  }
+
+  return Array.from(result);
+};
+
 export const createProperty = async (
   req: Request,
   res: Response
@@ -537,38 +794,32 @@ export const createProperty = async (
       RETURNING id, address, city, state, country, "postalCode", ST_AsText(coordinates) as coordinates;
     `;
 
+    const propertyType = normalizePropertyType(propertyData.propertyType);
+    const campusZone = normalizeCampusZone(propertyData.campusZone);
+    const amenities = normalizeAmenities(propertyData.amenities);
+    const highlights = normalizeHighlights(propertyData.highlights);
+
     // create property
     const newProperty = await prisma.property.create({
       data: {
         ...propertyData,
+        propertyType,
+        campusZone,
+        amenities,
+        highlights,
         photoUrls,
         locationId: location.id,
         managerCognitoId,
-        campusZone: propertyData.campusZone,
         landmark: propertyData.landmark || "",
         annualRent,
         agentFee,
         cautionDeposit,
         platformFee,
-        amenities:
-          typeof propertyData.amenities === "string"
-            ? propertyData.amenities.startsWith("[")
-              ? JSON.parse(propertyData.amenities)
-              : propertyData.amenities.split(",").map((s: string) => s.trim()).filter(Boolean)
-            : Array.isArray(propertyData.amenities)
-            ? propertyData.amenities
-            : [],
-        highlights:
-          typeof propertyData.highlights === "string"
-            ? propertyData.highlights.startsWith("[")
-              ? JSON.parse(propertyData.highlights)
-              : propertyData.highlights.split(",").map((s: string) => s.trim()).filter(Boolean)
-            : Array.isArray(propertyData.highlights)
-            ? propertyData.highlights
-            : [],
-        isParkingIncluded: propertyData.isParkingIncluded === "true",
-        beds: parseInt(propertyData.beds),
-        baths: parseFloat(propertyData.baths),
+        isParkingIncluded:
+          propertyData.isParkingIncluded === "true" ||
+          propertyData.isParkingIncluded === true,
+        beds: parseInt(propertyData.beds) || 1,
+        baths: parseFloat(propertyData.baths) || 1,
       },
       include: {
         location: true,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
 import { Search, Home } from "lucide-react";
 import { useSearchModal } from "@/hooks/useSearchModal";
 import { differenceInDays } from "date-fns";
@@ -9,18 +9,31 @@ import { differenceInDays } from "date-fns";
 export const SearchPill = () => {
   const searchModal = useSearchModal();
   const params = useSearchParams();
+  const pathParams = useParams();
+
+  const pathLocation = pathParams?.location as string | undefined;
+  const decodedPathLocation = pathLocation ? decodeURIComponent(pathLocation) : undefined;
 
   const location = params?.get("location") || params?.get("locationValue") || params?.get("campusZone");
+  const lat = params?.get("lat");
+  const lng = params?.get("lng");
   const startDate = params?.get("startDate");
   const endDate = params?.get("endDate");
   const guestCount = params?.get("guestCount") || params?.get("beds");
 
   const locationLabel = useMemo(() => {
-    if (location) {
+    if (decodedPathLocation && decodedPathLocation !== "all") {
+      if (decodedPathLocation === "near-me") return "Near you";
+      return decodedPathLocation;
+    }
+    if (location && location !== "Near me" && location !== "Homes near you") {
       return location;
     }
+    if (lat && lng) {
+      return "Near you";
+    }
     return "Anywhere in Nigeria";
-  }, [location]);
+  }, [decodedPathLocation, location, lat, lng]);
 
   const durationLabel = useMemo(() => {
     if (startDate && endDate) {
@@ -41,7 +54,13 @@ export const SearchPill = () => {
 
   return (
     <div
-      onClick={searchModal.onOpen}
+      onClick={() => {
+        if (window.innerWidth >= 768) {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          searchModal.onOpen();
+        }
+      }}
       className="
         border 
         border-slate-200 

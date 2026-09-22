@@ -116,6 +116,15 @@ export const api = createApi({
           lat: filters.lat ?? filters.userLat,
           lng: filters.lng ?? filters.userLng,
           sortBy: filters.sortBy,
+          bbox: (filters as any).bbox,
+          minLat: (filters as any).minLat,
+          maxLat: (filters as any).maxLat,
+          minLng: (filters as any).minLng,
+          maxLng: (filters as any).maxLng,
+          ne_lat: (filters as any).ne_lat,
+          ne_lng: (filters as any).ne_lng,
+          sw_lat: (filters as any).sw_lat,
+          sw_lng: (filters as any).sw_lng,
         });
 
         return { url: "properties", params };

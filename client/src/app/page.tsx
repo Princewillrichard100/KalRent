@@ -1,93 +1,175 @@
 "use client";
 
-import Container from "@/components/Container";
-import EmptyState from "@/components/EmptyState";
-import ListingCard from "@/components/listings/ListingCard";
-import Navbar from "@/components/Navbar";
-import { useGetAuthUserQuery, useGetPropertiesQuery } from "@/state/api";
-import { useSearchParams } from "next/navigation";
 import React, { useMemo } from "react";
+import Navbar from "@/components/Navbar";
+import Container from "@/components/Container";
+import ListingSectionRow, { SectionData } from "@/components/listings/ListingSectionRow";
+import { useGetAuthUserQuery, useGetPropertiesQuery } from "@/state/api";
 import { useUserLocation } from "@/hooks/useUserLocation";
+import EmptyState from "@/components/EmptyState";
 
 export default function Home() {
-  const searchParams = useSearchParams();
   const { data: authUser } = useGetAuthUserQuery();
   const userCoords = useUserLocation();
 
-  const queryFilters = useMemo(() => {
-    const category = searchParams?.get("category") || searchParams?.get("propertyType");
-    const location = searchParams?.get("location") || searchParams?.get("campusZone");
-    const locationValue = searchParams?.get("locationValue") || searchParams?.get("location");
-    const guestCount = searchParams?.get("guestCount");
-    const roomCount = searchParams?.get("roomCount");
-    const bathroomCount = searchParams?.get("bathroomCount") || searchParams?.get("baths");
-    const startDate = searchParams?.get("startDate");
-    const endDate = searchParams?.get("endDate");
-    const beds = searchParams?.get("beds");
+  const { data: properties, isLoading, isError } = useGetPropertiesQuery({
+    userLat: userCoords?.lat,
+    userLng: userCoords?.lng,
+    sortBy: "newest",
+  } as any);
 
-    const searchLat = searchParams?.get("lat");
-    const searchLng = searchParams?.get("lng");
-    const parsedSearchLat = searchLat ? parseFloat(searchLat) : undefined;
-    const parsedSearchLng = searchLng ? parseFloat(searchLng) : undefined;
+  // Group properties into regional/thematic Nigerian collections
+  const sections = useMemo<SectionData[]>(() => {
+    if (!properties || properties.length === 0) return [];
 
-    return {
-      category: category || undefined,
-      location: location || undefined,
-      locationValue: locationValue || undefined,
-      guestCount: guestCount || undefined,
-      roomCount: roomCount || undefined,
-      bathroomCount: bathroomCount || undefined,
-      beds: beds || undefined,
-      startDate: startDate || undefined,
-      endDate: endDate || undefined,
-      userLat: userCoords?.lat,
-      userLng: userCoords?.lng,
-      lat: parsedSearchLat ?? userCoords?.lat,
-      lng: parsedSearchLng ?? userCoords?.lng,
-    };
-  }, [searchParams, userCoords]);
+    const ikejaCentral = properties.filter((p) => {
+      const addr = (p.location?.address || "").toLowerCase();
+      const city = (p.location?.city || "").toLowerCase();
+      return (
+        addr.includes("ikeja") ||
+        addr.includes("surulere") ||
+        addr.includes("yaba") ||
+        city.includes("ikeja")
+      );
+    });
 
-  const { data: properties, isLoading, isError } = useGetPropertiesQuery(queryFilters as any);
+    const lekkiCoastal = properties.filter((p) => {
+      const addr = (p.location?.address || "").toLowerCase();
+      const city = (p.location?.city || "").toLowerCase();
+      return (
+        addr.includes("lekki") ||
+        addr.includes("victoria island") ||
+        addr.includes("ikoyi")
+      );
+    });
+
+    const ibadanStays = properties.filter((p) => {
+      const city = (p.location?.city || "").toLowerCase();
+      const addr = (p.location?.address || "").toLowerCase();
+      return (
+        city.includes("ibadan") ||
+        addr.includes("bodija") ||
+        addr.includes("agodi") ||
+        addr.includes("oluyole")
+      );
+    });
+
+    const ogunRetreats = properties.filter((p) => {
+      const state = (p.location?.state || "").toLowerCase();
+      const city = (p.location?.city || "").toLowerCase();
+      const addr = (p.location?.address || "").toLowerCase();
+      return (
+        state.includes("ogun") ||
+        city.includes("ogun") ||
+        addr.includes("arepo") ||
+        addr.includes("mowe") ||
+        addr.includes("magboro")
+      );
+    });
+
+    const luxuryVillas = properties.filter((p) => {
+      return (
+        p.propertyType === "Villa" ||
+        p.propertyType === "Townhouse" ||
+        p.annualRent >= 8_000_000
+      );
+    });
+
+    return [
+      {
+        title: "Stay in Ikeja & Central Lagos",
+        subtitle: "Close to tech hubs, nightlife, and the airport",
+        location: "Ikeja",
+        placeId: "hub_Ikeja",
+        lat: 6.5965,
+        lng: 3.3421,
+        listings: ikejaCentral.length ? ikejaCentral : properties.slice(0, 8),
+      },
+      {
+        title: "Available in Lekki & Coastal Lagos",
+        subtitle: "Luxury coastal homes, beach access, and prime estates",
+        location: "Lekki",
+        placeId: "hub_Lekki",
+        lat: 6.4449,
+        lng: 3.4691,
+        listings: lekkiCoastal.length ? lekkiCoastal : properties.slice(8, 16),
+      },
+      {
+        title: "Top stays in Bodija & Agodi, Ibadan",
+        subtitle: "Historic estates and peaceful getaways along the corridor",
+        location: "Ibadan",
+        placeId: "hub_Ibadan",
+        lat: 7.4289,
+        lng: 3.9100,
+        listings: ibadanStays.length ? ibadanStays : properties.slice(16, 24),
+      },
+      {
+        title: "Peaceful retreats in Ogun State",
+        subtitle: "Gated communities in Arepo, Magboro & Mowe",
+        location: "Ogun",
+        placeId: "hub_Ogun",
+        lat: 6.6908,
+        lng: 3.4475,
+        listings: ogunRetreats.length ? ogunRetreats : properties.slice(24, 32),
+      },
+      {
+        title: "Luxury Villas & Executive Penthouses",
+        subtitle: "Premium residences with private pools and full amenities",
+        location: "all",
+        placeId: "hub_Luxury",
+        lat: 6.4531,
+        lng: 3.4395,
+        listings: luxuryVillas.length ? luxuryVillas : properties.slice(0, 10),
+      },
+    ];
+  }, [properties]);
 
   return (
     <div className="h-full w-full min-h-screen bg-white">
       <Navbar />
 
-      <main className="h-full w-full">
-        {isLoading ? (
-          <Container className="pt-28 md:pt-44 pb-20">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 min-[2200px]:grid-cols-5 gap-8">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <div key={index} className="flex flex-col gap-3 w-full animate-pulse">
-                  <div className="aspect-square w-full rounded-2xl bg-neutral-200"></div>
-                  <div className="flex justify-between items-center">
-                    <div className="h-5 bg-neutral-200 rounded w-2/3"></div>
-                    <div className="h-4 bg-neutral-200 rounded w-1/5"></div>
+      <main className="h-full w-full pt-28 md:pt-44 pb-20">
+        <Container>
+          {isLoading ? (
+            <div className="space-y-12">
+              {[1, 2, 3].map((sectionIdx) => (
+                <div key={sectionIdx} className="space-y-4 animate-pulse">
+                  <div className="h-7 bg-neutral-200 rounded w-1/4"></div>
+                  <div className="h-4 bg-neutral-100 rounded w-1/3 mb-4"></div>
+                  <div className="flex gap-6 overflow-hidden">
+                    {[1, 2, 3, 4].map((cardIdx) => (
+                      <div
+                        key={cardIdx}
+                        className="min-w-[280px] flex flex-col gap-3"
+                      >
+                        <div className="aspect-square w-full rounded-2xl bg-neutral-200"></div>
+                        <div className="h-4 bg-neutral-200 rounded w-3/4"></div>
+                        <div className="h-3.5 bg-neutral-100 rounded w-1/2"></div>
+                        <div className="h-4 bg-neutral-200 rounded w-1/3"></div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="h-4 bg-neutral-100 rounded w-1/2"></div>
-                  <div className="h-4 bg-neutral-100 rounded w-1/3"></div>
-                  <div className="h-5 bg-neutral-200 rounded w-1/3 mt-1"></div>
                 </div>
               ))}
             </div>
-          </Container>
-        ) : isError || !properties || properties.length === 0 ? (
-          <div className="pt-28 md:pt-44">
-            <EmptyState showReset />
-          </div>
-        ) : (
-          <Container className="pt-28 md:pt-44 pb-20">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 min-[2200px]:grid-cols-5 gap-8">
-              {properties.map((property) => (
-                <ListingCard
-                  key={property.id}
-                  data={property}
+          ) : isError || !properties || properties.length === 0 ? (
+            <EmptyState
+              title="No properties available"
+              subtitle="Please check back soon for verified rentals across Nigeria."
+              showReset
+            />
+          ) : (
+            <div className="flex flex-col space-y-4">
+              {sections.map((section, idx) => (
+                <ListingSectionRow
+                  key={idx}
+                  section={section}
                   currentUser={authUser}
                 />
               ))}
             </div>
-          </Container>
-        )}
+          )}
+        </Container>
       </main>
     </div>
   );

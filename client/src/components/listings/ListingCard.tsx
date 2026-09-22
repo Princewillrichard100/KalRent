@@ -6,6 +6,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import HeartButton from "@/components/HeartButton";
 import Button from "@/components/Button";
 import { Property } from "@/types/prismaTypes";
+import { useMarkerHover } from "@/hooks/useMarkerHover";
 
 interface ListingCardProps {
   data: Property & {
@@ -20,6 +21,10 @@ interface ListingCardProps {
   actionLabel?: string;
   actionId?: string | number;
   currentUser?: any;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  isHovered?: boolean;
+  onClick?: () => void;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -30,11 +35,26 @@ const ListingCard: React.FC<ListingCardProps> = ({
   actionLabel,
   actionId = "",
   currentUser,
+  onMouseEnter,
+  onMouseLeave,
+  isHovered = false,
+  onClick,
 }) => {
   const router = useRouter();
+  const { highlightMarker, unhighlightMarker } = useMarkerHover();
   const [imgSrc, setImgSrc] = useState(
     data.photoUrls?.[0] || "/placeholder.jpg"
   );
+
+  const handleMouseEnter = useCallback(() => {
+    highlightMarker(data.id);
+    onMouseEnter?.();
+  }, [highlightMarker, data.id, onMouseEnter]);
+
+  const handleMouseLeave = useCallback(() => {
+    unhighlightMarker(data.id);
+    onMouseLeave?.();
+  }, [unhighlightMarker, data.id, onMouseLeave]);
 
   const handleCancel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -96,8 +116,19 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
   return (
     <div
-      onClick={() => router.push(`/listings/${data.id}`)}
-      className="col-span-1 cursor-pointer group"
+      id={`listing-card-${data.id}`}
+      onClick={() => {
+        if (onClick) {
+          onClick();
+        } else {
+          router.push(`/listings/${data.id}`);
+        }
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`listing-card-item col-span-1 cursor-pointer group transition-all duration-150 rounded-2xl p-1.5 -m-1.5 ${
+        isHovered ? "is-hovered" : ""
+      }`}
     >
       <div className="flex flex-col gap-2 w-full">
         {/* 1. Rounded image container with Heart toggle */}
@@ -112,6 +143,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
         >
           <Image
             fill
+            loading="lazy"
+            priority={false}
             className="
               object-cover 
               h-full 

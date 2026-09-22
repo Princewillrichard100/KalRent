@@ -149,7 +149,18 @@ export const SearchModal = () => {
     const finalLocation =
       selectedSuggestion?.display_name || locationInput.trim() || selectedHub;
 
-    if (finalLocation) {
+    const isNearMe =
+      selectedSuggestion?.place_id === "near_me" ||
+      locationInput === "Homes near you" ||
+      locationInput === "Near me" ||
+      selectedHub === "Near me";
+
+    if (isNearMe) {
+      currentParams.delete("location");
+      currentParams.delete("locationValue");
+      currentParams.delete("campusZone");
+      currentParams.delete("placeId");
+    } else if (finalLocation) {
       currentParams.set("location", finalLocation);
       currentParams.set("locationValue", finalLocation);
     } else {
@@ -179,9 +190,16 @@ export const SearchModal = () => {
       currentParams.set("endDate", dateRange.endDate.toISOString());
     }
 
+    let destLocation = "all";
+    if (isNearMe) {
+      destLocation = "near-me";
+    } else if (finalLocation && finalLocation !== "Anywhere") {
+      destLocation = finalLocation.split(",")[0].trim();
+    }
+
     setStep(STEPS.LOCATION);
     searchModal.onClose();
-    router.push(`/?${currentParams.toString()}`);
+    router.push(`/s/${encodeURIComponent(destLocation)}/homes?${currentParams.toString()}`);
   }, [
     step,
     searchModal,
