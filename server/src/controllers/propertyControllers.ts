@@ -128,10 +128,23 @@ export const getProperties = async (
       userLat,
       userLng,
       sortBy,
+      lat,
+      lng,
+      radius,
     } = req.query;
 
-    const effectiveLat = userLat || req.query.lat;
-    const effectiveLng = userLng || req.query.lng;
+    const searchLat = lat || latitude;
+    const searchLng = lng || longitude;
+    const hasSearchCoords =
+      searchLat !== undefined &&
+      searchLng !== undefined &&
+      searchLat !== "" &&
+      searchLng !== "" &&
+      !isNaN(parseFloat(searchLat as string)) &&
+      !isNaN(parseFloat(searchLng as string));
+
+    const effectiveLat = hasSearchCoords ? searchLat : userLat;
+    const effectiveLng = hasSearchCoords ? searchLng : userLng;
 
     const hasUserCoords =
       effectiveLat !== undefined &&
@@ -242,17 +255,13 @@ export const getProperties = async (
       }
     }
 
-    if (latitude && longitude) {
-      const lat = parseFloat(latitude as string);
-      const lng = parseFloat(longitude as string);
-      const radiusInKilometers = 1000;
-      const degrees = radiusInKilometers / 111; // Converts kilometers to degrees
-
+    if (hasSearchCoords) {
+      const radiusMeters = radius ? parseFloat(radius as string) : 25000;
       whereConditions.push(
         Prisma.sql`ST_DWithin(
-          l.coordinates::geometry,
-          ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326),
-          ${degrees}
+          l.coordinates,
+          ST_SetSRID(ST_MakePoint(${parsedUserLng}, ${parsedUserLat}), 4326)::geography,
+          ${radiusMeters}
         )`
       );
     }

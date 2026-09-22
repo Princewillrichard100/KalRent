@@ -25,6 +25,11 @@ export default function Home() {
     const endDate = searchParams?.get("endDate");
     const beds = searchParams?.get("beds");
 
+    const searchLat = searchParams?.get("lat");
+    const searchLng = searchParams?.get("lng");
+    const parsedSearchLat = searchLat ? parseFloat(searchLat) : undefined;
+    const parsedSearchLng = searchLng ? parseFloat(searchLng) : undefined;
+
     return {
       category: category || undefined,
       location: location || undefined,
@@ -37,8 +42,8 @@ export default function Home() {
       endDate: endDate || undefined,
       userLat: userCoords?.lat,
       userLng: userCoords?.lng,
-      lat: userCoords?.lat,
-      lng: userCoords?.lng,
+      lat: parsedSearchLat ?? userCoords?.lat,
+      lng: parsedSearchLng ?? userCoords?.lng,
     };
   }, [searchParams, userCoords]);
 

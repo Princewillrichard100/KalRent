@@ -86,12 +86,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
   }, [distanceKm, data.location, data.city, data.campusZone]);
 
   const titleHeader = useMemo(() => {
-    if (data.name) return data.name;
-    const city = data.location?.city || data.city;
-    const state = data.location?.state || data.state;
-    if (city && state) return `${city}, ${state}`;
-    return city || data.campusZone || "Stunning Rental";
-  }, [data.name, data.location, data.city, data.state, data.campusZone]);
+    let propertyType = (data as any).propertyType || data.category || "Apartment";
+    if (propertyType.endsWith("s") && propertyType.toLowerCase() !== "campus") {
+      propertyType = propertyType.slice(0, -1);
+    }
+    const city = data.location?.city || data.city || data.campusZone || "Nigeria";
+    return `${propertyType} in ${city}`;
+  }, [data]);
 
   return (
     <div

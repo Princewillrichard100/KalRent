@@ -7,6 +7,10 @@ import {
   Property,
   Tenant,
 } from "@/types/prismaTypes";
+import {
+  AutocompleteResponse,
+  LocationDetailsResponse,
+} from "@/types/location";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
@@ -153,6 +157,26 @@ export const api = createApi({
               { type: "Properties", id: "NEARBY" },
             ]
           : [{ type: "Properties", id: "NEARBY" }],
+    }),
+
+    getLocationsAutocomplete: build.query<
+      AutocompleteResponse,
+      { query: string }
+    >({
+      query: ({ query }) => ({
+        url: "locations/autocomplete",
+        params: { query },
+      }),
+    }),
+
+    getLocationDetails: build.query<
+      LocationDetailsResponse,
+      { placeId: string }
+    >({
+      query: ({ placeId }) => ({
+        url: "locations/details",
+        params: { place_id: placeId },
+      }),
     }),
 
     getProperty: build.query<Property, number>({
@@ -464,6 +488,8 @@ export const {
   useUpdateManagerSettingsMutation,
   useGetPropertiesQuery,
   useGetNearbyListingsQuery,
+  useGetLocationsAutocompleteQuery,
+  useGetLocationDetailsQuery,
   useGetPropertyQuery,
   useGetCurrentResidencesQuery,
   useGetManagerPropertiesQuery,

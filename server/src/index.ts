@@ -13,6 +13,7 @@ import leaseRoutes from "./routes/leaseRoutes";
 import applicationRoutes from "./routes/applicationRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
 import webhookRoutes from "./routes/webhookRoutes";
+import locationRoutes from "./routes/locationRoutes";
 import { getPropertyPhoto } from "./controllers/propertyControllers";
 
 /* CONFIGURATIONS */
@@ -44,6 +45,8 @@ app.use("/leases", leaseRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/webhooks", webhookRoutes);
 app.use("/api/webhooks", webhookRoutes);
+app.use("/locations", locationRoutes);
+app.use("/api/locations", locationRoutes);
 app.use("/tenants", authMiddleware(["tenant", "manager", "admin"]), tenantRoutes);
 app.use("/managers", authMiddleware(["manager", "admin"]), managerRoutes);
 
