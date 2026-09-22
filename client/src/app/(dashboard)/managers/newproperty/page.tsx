@@ -30,7 +30,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 const STEPS = [
   { id: 1, name: "Basics & Location", icon: Building2 },

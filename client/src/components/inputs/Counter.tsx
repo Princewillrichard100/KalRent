@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Minus, Plus } from "lucide-react";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
 interface CounterProps {
   title: string;
@@ -10,11 +10,11 @@ interface CounterProps {
   onChange: (value: number) => void;
 }
 
-export const Counter: React.FC<CounterProps> = ({
+const Counter: React.FC<CounterProps> = ({
   title,
   subtitle,
   value,
-  onChange,
+  onChange
 }) => {
   const onAdd = useCallback(() => {
     onChange(value + 1);
@@ -24,67 +24,69 @@ export const Counter: React.FC<CounterProps> = ({
     if (value === 1) {
       return;
     }
+
     onChange(value - 1);
   }, [onChange, value]);
 
-  return (
-    <div className="flex flex-row items-center justify-between py-3">
+  return ( 
+    <div className="flex flex-row items-center justify-between">
       <div className="flex flex-col">
-        <div className="font-semibold text-sm text-slate-900">{title}</div>
-        <div className="font-light text-xs text-slate-500">{subtitle}</div>
+        <div className="font-medium">{title}</div>
+        <div className="font-light text-gray-600">
+          {subtitle}
+        </div>
       </div>
       <div className="flex flex-row items-center gap-4">
-        <button
-          type="button"
+        <div
           onClick={onReduce}
-          disabled={value <= 1}
-          className={`
-            w-9 
-            h-9 
-            rounded-full 
-            border 
-            border-slate-300 
-            flex 
-            items-center 
-            justify-center 
-            text-slate-600 
-            transition 
-            ${
-              value <= 1
-                ? "opacity-40 cursor-not-allowed border-slate-200"
-                : "cursor-pointer hover:border-slate-800 hover:text-slate-900"
-            }
-          `}
-        >
-          <Minus className="w-3.5 h-3.5" />
-        </button>
-        <div className="font-semibold text-sm text-slate-700 min-w-[20px] text-center">
-          {value}
-        </div>
-        <button
-          type="button"
-          onClick={onAdd}
           className="
-            w-9 
-            h-9 
-            rounded-full 
-            border 
-            border-slate-300 
-            flex 
-            items-center 
-            justify-center 
-            text-slate-600 
-            cursor-pointer 
-            hover:border-slate-800 
-            hover:text-slate-900 
+            w-10
+            h-10
+            rounded-full
+            border-[1px]
+            border-neutral-400
+            flex
+            items-center
+            justify-center
+            text-neutral-600
+            cursor-pointer
+            hover:opacity-80
             transition
           "
         >
-          <Plus className="w-3.5 h-3.5" />
-        </button>
+          <AiOutlineMinus />
+        </div>
+        <div 
+          className="
+            font-light 
+            text-xl 
+            text-neutral-600
+          "
+        >
+          {value}
+        </div>
+        <div
+          onClick={onAdd}
+          className="
+            w-10
+            h-10
+            rounded-full
+            border-[1px]
+            border-neutral-400
+            flex
+            items-center
+            justify-center
+            text-neutral-600
+            cursor-pointer
+            hover:opacity-80
+            transition
+          "
+        >
+          <AiOutlinePlus />
+        </div>
       </div>
     </div>
-  );
-};
-
+   );
+}
+ 
 export default Counter;

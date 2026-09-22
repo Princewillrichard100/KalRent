@@ -7,7 +7,7 @@ import {
   useUpdateManagerSettingsMutation,
 } from "@/state/api";
 import React from "react";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 const ManagerSettings = () => {
   const { data: authUser, isLoading } = useGetAuthUserQuery();

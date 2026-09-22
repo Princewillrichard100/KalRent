@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { IoMdClose } from "react-icons/io";
+import Button from "../Button";
 
 interface ModalProps {
   isOpen?: boolean;
@@ -17,17 +17,17 @@ interface ModalProps {
   secondaryActionLabel?: string;
 }
 
-export const Modal: React.FC<ModalProps> = ({
+const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
   title,
   body,
-  footer,
   actionLabel,
+  footer,
   disabled,
   secondaryAction,
-  secondaryActionLabel,
+  secondaryActionLabel
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -39,7 +39,7 @@ export const Modal: React.FC<ModalProps> = ({
     if (disabled) {
       return;
     }
-
+  
     setShowModal(false);
     setTimeout(() => {
       onClose();
@@ -67,25 +67,23 @@ export const Modal: React.FC<ModalProps> = ({
   }
 
   return (
-    <div
-      className="
-        justify-center 
-        items-center 
-        flex 
-        overflow-x-hidden 
-        overflow-y-auto 
-        fixed 
-        inset-0 
-        z-50 
-        outline-none 
-        focus:outline-none 
-        bg-neutral-900/60
-        backdrop-blur-sm
-      "
-      onClick={handleClose}
-    >
+    <>
       <div
         className="
+          justify-center 
+          items-center 
+          flex 
+          overflow-x-hidden 
+          overflow-y-auto 
+          fixed 
+          inset-0 
+          z-50 
+          outline-none 
+          focus:outline-none
+          bg-neutral-800/70
+        "
+      >
+        <div className="
           relative 
           w-full
           md:w-4/6
@@ -96,27 +94,24 @@ export const Modal: React.FC<ModalProps> = ({
           h-full 
           lg:h-auto
           md:h-auto
-        "
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Content */}
-        <div
-          className={`
+          "
+        >
+          {/*content*/}
+          <div className={`
             translate
             duration-300
             h-full
-            ${showModal ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
-          `}
-        >
-          <div
-            className="
+            ${showModal ? 'translate-y-0' : 'translate-y-full'}
+            ${showModal ? 'opacity-100' : 'opacity-0'}
+          `}>
+            <div className="
               translate
               h-full
               lg:h-auto
               md:h-auto
               border-0 
-              rounded-2xl 
-              shadow-2xl 
+              rounded-lg 
+              shadow-lg 
               relative 
               flex 
               flex-col 
@@ -124,74 +119,73 @@ export const Modal: React.FC<ModalProps> = ({
               bg-white 
               outline-none 
               focus:outline-none
-              overflow-hidden
             "
-          >
-            {/* Header */}
-            <div
-              className="
+            >
+              {/*header*/}
+              <div className="
                 flex 
                 items-center 
-                p-5
+                p-6
                 rounded-t
                 justify-center
                 relative
-                border-b
-                border-slate-100
-              "
-            >
-              <button
-                onClick={handleClose}
-                className="
-                  p-1.5
-                  border-0 
-                  hover:bg-slate-100
-                  rounded-full
-                  transition
-                  absolute
-                  left-5
-                  cursor-pointer
-                  text-slate-600
+                border-b-[1px]
                 "
               >
-                <X className="w-4 h-4" />
-              </button>
-              <div className="text-base font-bold text-slate-900">{title}</div>
-            </div>
-
-            {/* Body */}
-            <div className="relative p-6 flex-auto max-h-[70vh] overflow-y-auto">
-              {body}
-            </div>
-
-            {/* Footer */}
-            <div className="flex flex-col gap-2 p-6 border-t border-slate-100 bg-slate-50/50">
-              <div className="flex flex-row items-center gap-4 w-full">
-                {secondaryAction && secondaryActionLabel && (
-                  <Button
-                    variant="outline"
-                    disabled={disabled}
-                    onClick={handleSecondaryAction}
-                    className="w-full rounded-xl border-slate-200 text-slate-700 hover:bg-slate-100 py-3 text-sm font-semibold h-11 cursor-pointer"
-                  >
-                    {secondaryActionLabel}
-                  </Button>
-                )}
-                <Button
-                  disabled={disabled}
-                  onClick={handleSubmit}
-                  className="w-full rounded-xl bg-rose-500 hover:bg-rose-600 text-white py-3 text-sm font-semibold h-11 cursor-pointer shadow-sm transition-all"
+                <button
+                  className="
+                    p-1
+                    border-0 
+                    hover:opacity-70
+                    transition
+                    absolute
+                    left-9
+                  "
+                  onClick={handleClose}
                 >
-                  {actionLabel}
-                </Button>
+                  <IoMdClose size={18} />
+                </button>
+                <div className="text-lg font-semibold">
+                  {title}
+                </div>
               </div>
-              {footer}
+              {/*body*/}
+              <div className="relative p-6 flex-auto max-h-[70vh] overflow-y-auto">
+                {body}
+              </div>
+              {/*footer*/}
+              <div className="flex flex-col gap-2 p-6">
+                <div 
+                  className="
+                    flex 
+                    flex-row 
+                    items-center 
+                    gap-4 
+                    w-full
+                  "
+                >
+                  {secondaryAction && secondaryActionLabel && (
+                    <Button 
+                      disabled={disabled} 
+                      label={secondaryActionLabel} 
+                      onClick={handleSecondaryAction}
+                      outline
+                    />  
+                  )}
+                  <Button 
+                    disabled={disabled} 
+                    label={actionLabel} 
+                    onClick={handleSubmit}
+                  />
+                </div>
+                {footer}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
-};
+}
 
 export default Modal;

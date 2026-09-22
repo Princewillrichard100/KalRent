@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 import {
   useAddFavoritePropertyMutation,
   useRemoveFavoritePropertyMutation,

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import { Toaster } from "@/components/ui/sonner";
+import ToasterProvider from "@/providers/ToasterProvider";
 import ModalsProvider from "@/components/modals/ModalsProvider";
 
 const outfit = Outfit({
@@ -27,10 +27,10 @@ export default function RootLayout({
         className="font-sans antialiased text-slate-900 bg-slate-50 [text-rendering:optimizeLegibility] min-h-screen"
       >
         <Providers>
+          <ToasterProvider />
           <ModalsProvider />
           {children}
         </Providers>
-        <Toaster closeButton position="top-right" />
       </body>
     </html>
   );

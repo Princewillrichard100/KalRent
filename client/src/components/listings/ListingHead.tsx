@@ -4,7 +4,7 @@ import Image from "next/image";
 import HeartButton from "@/components/HeartButton";
 import { MapPin, Share, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 interface ListingHeadProps {
   title: string;

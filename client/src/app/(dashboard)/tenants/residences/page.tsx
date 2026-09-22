@@ -1,6 +1,6 @@
 "use client";
 
-import Card from "@/components/Card";
+import ListingCard from "@/components/listings/ListingCard";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import { EnterpriseTenancyCard } from "@/components/EnterpriseTenancyCard";
@@ -75,19 +75,24 @@ const Residences = () => {
         <h2 className="text-lg font-bold text-slate-800">
           Residence Properties
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div 
+          className="
+            mt-6
+            grid 
+            grid-cols-1 
+            sm:grid-cols-2 
+            md:grid-cols-3 
+            lg:grid-cols-4 
+            xl:grid-cols-5
+            2xl:grid-cols-6
+            gap-8
+          "
+        >
           {currentResidences?.map((property) => (
-            <Card
+            <ListingCard
               key={property.id}
-              property={property}
-              isFavorite={
-                tenant?.favorites?.some(
-                  (fav: { id: number }) => fav.id === property.id
-                ) || false
-              }
-              onFavoriteToggle={() => {}}
-              showFavoriteButton={false}
-              propertyLink={`/tenants/residences/${property.id}`}
+              data={property}
+              currentUser={authUser}
             />
           ))}
         </div>

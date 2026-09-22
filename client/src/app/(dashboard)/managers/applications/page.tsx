@@ -22,7 +22,7 @@ import {
 import Link from "next/link";
 import React, { useState } from "react";
 import { downloadAgreement } from "@/lib/downloadAgreement";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 const Applications = () => {
   const { data: authUser } = useGetAuthUserQuery();

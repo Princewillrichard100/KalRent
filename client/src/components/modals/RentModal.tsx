@@ -7,8 +7,10 @@ import { useLoginModal } from "@/hooks/useLoginModal";
 import Modal from "./Modal";
 import CategoryInput from "@/components/inputs/CategoryInput";
 import Counter from "@/components/inputs/Counter";
+import Heading from "@/components/Heading";
+import Input from "@/components/inputs/Input";
 import { useCreatePropertyMutation, useGetAuthUserQuery } from "@/state/api";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 import {
   Building,
   Building2,
@@ -149,22 +151,30 @@ export const RentModal = () => {
   }, [step]);
 
   let bodyContent = (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h3 className="text-lg font-bold text-slate-900">Which best describes your place?</h3>
-        <p className="text-xs text-slate-500 mt-1">
-          Pick a category to help students find suitable accommodation.
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto">
+    <div className="flex flex-col gap-8">
+      <Heading
+        title="Which of these best describes your place?"
+        subtitle="Pick a category"
+      />
+      <div 
+        className="
+          grid 
+          grid-cols-1 
+          md:grid-cols-2 
+          gap-3
+          max-h-[50vh]
+          overflow-y-auto
+        "
+      >
         {CATEGORIES.map((item) => (
-          <CategoryInput
-            key={item.label}
-            onClick={(cat) => setCategory(cat)}
-            selected={category === item.label}
-            label={item.label}
-            icon={item.icon}
-          />
+          <div key={item.label} className="col-span-1">
+            <CategoryInput
+              onClick={(cat) => setCategory(cat)}
+              selected={category === item.label}
+              label={item.label}
+              icon={item.icon}
+            />
+          </div>
         ))}
       </div>
     </div>
@@ -172,26 +182,23 @@ export const RentModal = () => {
 
   if (step === STEPS.LOCATION) {
     bodyContent = (
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Where is your place located?"
+          subtitle="Help guests find you!"
+        />
         <div>
-          <h3 className="text-lg font-bold text-slate-900">Where is your property located?</h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Specify the campus zone and exact street landmark in Ilorin.
-          </p>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-2">Campus Zone</label>
+          <label className="text-sm font-semibold text-neutral-700 block mb-2">Campus Zone</label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {CAMPUS_ZONES.map((zone) => (
               <button
                 key={zone}
                 type="button"
                 onClick={() => setCampusZone(zone)}
-                className={`p-2.5 rounded-xl border text-xs font-medium text-center transition cursor-pointer ${
+                className={`p-3 rounded-xl border-2 text-xs font-semibold text-center transition cursor-pointer ${
                   campusZone === zone
-                    ? "border-rose-500 bg-rose-50/80 text-rose-700 font-bold"
-                    : "border-slate-200 hover:border-slate-400 text-slate-700"
+                    ? "border-black bg-neutral-100 font-bold"
+                    : "border-neutral-200 hover:border-neutral-400"
                 }`}
               >
                 {zone}
@@ -200,72 +207,67 @@ export const RentModal = () => {
           </div>
         </div>
 
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1.5">Street Address</label>
-          <input
-            type="text"
-            placeholder="e.g. 15 University Road, Tanke"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-          />
-        </div>
+        <Input
+          id="address"
+          label="Street Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          required
+        />
 
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1.5">Notable Landmark</label>
-          <input
-            type="text"
-            placeholder="e.g. Opposite Sanrab Filling Station"
-            value={landmark}
-            onChange={(e) => setLandmark(e.target.value)}
-            className="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-          />
-        </div>
+        <Input
+          id="landmark"
+          label="Notable Landmark"
+          value={landmark}
+          onChange={(e) => setLandmark(e.target.value)}
+          required
+        />
       </div>
     );
   }
 
   if (step === STEPS.INFO) {
     bodyContent = (
-      <div className="flex flex-col gap-5">
-        <div>
-          <h3 className="text-lg font-bold text-slate-900">Share some basics about your hostel</h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Specify room count and essential student amenities.
-          </p>
-        </div>
-        <div className="divide-y divide-slate-100">
-          <Counter
-            title="Bedrooms"
-            subtitle="How many bedrooms or bed spaces?"
-            value={bedCount}
-            onChange={(val) => setBedCount(val)}
-          />
-          <Counter
-            title="Bathrooms"
-            subtitle="How many bathrooms in this unit?"
-            value={bathCount}
-            onChange={(val) => setBathCount(val)}
-          />
-        </div>
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Share some basics about your place"
+          subtitle="What amenities do you have?"
+        />
+        <Counter 
+          onChange={(value) => setBedCount(value)}
+          value={bedCount}
+          title="Guests" 
+          subtitle="How many guests do you allow?"
+        />
+        <hr />
+        <Counter 
+          onChange={(value) => setBedCount(value)}
+          value={bedCount}
+          title="Rooms" 
+          subtitle="How many rooms do you have?"
+        />
+        <hr />
+        <Counter 
+          onChange={(value) => setBathCount(value)}
+          value={bathCount}
+          title="Bathrooms" 
+          subtitle="How many bathrooms do you have?"
+        />
       </div>
     );
   }
 
   if (step === STEPS.IMAGES) {
     bodyContent = (
-      <div className="flex flex-col gap-5">
-        <div>
-          <h3 className="text-lg font-bold text-slate-900">Add photos of your hostel</h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Show students what the room, compound, and facilities look like.
-          </p>
-        </div>
-
-        <label className="border-2 border-dashed border-slate-300 hover:border-slate-500 p-8 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition bg-slate-50/50">
-          <Upload className="w-8 h-8 text-slate-400 mb-2" />
-          <span className="text-xs font-semibold text-slate-700">Click to upload photos</span>
-          <span className="text-[11px] text-slate-400 mt-0.5">PNG, JPG, WEBP up to 10MB each</span>
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Add a photo of your place"
+          subtitle="Show guests what your place looks like!"
+        />
+        <label className="border-2 border-dashed border-neutral-300 hover:border-neutral-500 p-12 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition bg-neutral-50">
+          <Upload className="w-10 h-10 text-neutral-400 mb-2" />
+          <span className="text-sm font-semibold text-neutral-700">Click to upload photos</span>
+          <span className="text-xs text-neutral-400 mt-1">PNG, JPG, WEBP up to 10MB each</span>
           <input
             type="file"
             multiple
@@ -280,7 +282,7 @@ export const RentModal = () => {
             {selectedPhotos.map((file, idx) => (
               <div
                 key={idx}
-                className="text-xs bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg text-slate-700 font-medium"
+                className="text-xs bg-neutral-100 border border-neutral-200 px-3 py-1.5 rounded-lg text-neutral-700 font-medium"
               >
                 {file.name}
               </div>
@@ -293,33 +295,28 @@ export const RentModal = () => {
 
   if (step === STEPS.DESCRIPTION) {
     bodyContent = (
-      <div className="flex flex-col gap-4">
-        <div>
-          <h3 className="text-lg font-bold text-slate-900">How would you describe your hostel?</h3>
-          <p className="text-xs text-slate-500 mt-1">Short and catchy titles work best.</p>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">Listing Title</label>
-          <input
-            type="text"
-            placeholder="e.g. Serene Self-Con with Constant Power, Tanke"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">Description</label>
-          <textarea
-            rows={4}
-            placeholder="Describe the atmosphere, security, water supply, and proximity to campus shuttle park."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-3 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none"
-          />
-        </div>
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="How would you describe your place?"
+          subtitle="Short and sweet works best!"
+        />
+        <Input
+          id="title"
+          label="Title"
+          disabled={isLoading}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <hr />
+        <Input
+          id="description"
+          label="Description"
+          disabled={isLoading}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
       </div>
     );
   }
@@ -329,61 +326,55 @@ export const RentModal = () => {
     const totalUpfront = annualRent + agentFee + cautionDeposit + Math.round(annualRent * 0.05);
 
     bodyContent = (
-      <div className="flex flex-col gap-4">
-        <div>
-          <h3 className="text-lg font-bold text-slate-900">Set your pricing & statutory fees</h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Agent fee is capped at 10% max by statutory Kwara tenancy guidelines.
-          </p>
-        </div>
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Now, set your price"
+          subtitle="How much do you charge per year?"
+        />
+        <Input
+          id="price"
+          label="Annual Rent"
+          formatPrice 
+          type="number" 
+          disabled={isLoading}
+          value={annualRent}
+          onChange={(e) => {
+            const val = Number(e.target.value);
+            setAnnualRent(val);
+            setAgentFee(Math.round(val * 0.1));
+          }}
+          required
+        />
 
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">Annual Rent (₦)</label>
-          <input
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            id="agentFee"
+            label="Agent Fee (Max 10%)"
+            formatPrice
             type="number"
-            value={annualRent}
-            onChange={(e) => {
-              const val = Number(e.target.value);
-              setAnnualRent(val);
-              setAgentFee(Math.round(val * 0.1));
-            }}
-            className="w-full px-4 py-2.5 text-sm font-bold text-slate-900 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            disabled={isLoading}
+            value={agentFee}
+            onChange={(e) => setAgentFee(Number(e.target.value))}
+            required
+          />
+          <Input
+            id="cautionDeposit"
+            label="Caution Deposit (Escrow)"
+            formatPrice
+            type="number"
+            disabled={isLoading}
+            value={cautionDeposit}
+            onChange={(e) => setCautionDeposit(Number(e.target.value))}
+            required
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Agent Fee (Max 10%)
-            </label>
-            <input
-              type="number"
-              value={agentFee}
-              onChange={(e) => setAgentFee(Number(e.target.value))}
-              className={`w-full px-3 py-2 text-xs rounded-xl border ${
-                isFeeOverCeiling ? "border-rose-500 bg-rose-50" : "border-slate-200"
-              }`}
-            />
-          </div>
-          <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Caution Deposit (Escrow)
-            </label>
-            <input
-              type="number"
-              value={cautionDeposit}
-              onChange={(e) => setCautionDeposit(Number(e.target.value))}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200"
-            />
-          </div>
-        </div>
-
-        <div className="bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl text-xs space-y-1.5">
-          <div className="flex justify-between font-bold text-slate-900">
+        <div className="bg-neutral-50 border border-neutral-200 p-4 rounded-xl text-xs space-y-1.5">
+          <div className="flex justify-between font-bold text-neutral-900 text-sm">
             <span>Total Tenant Upfront:</span>
             <span>₦{totalUpfront.toLocaleString()}</span>
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-neutral-500 text-xs">
             Includes 5% platform fee (₦{(Math.round(annualRent * 0.05)).toLocaleString()}) & BaaS Escrow Guarantee.
           </p>
         </div>
@@ -393,13 +384,14 @@ export const RentModal = () => {
 
   return (
     <Modal
+      disabled={isLoading}
       isOpen={rentModal.isOpen}
-      onClose={rentModal.onClose}
-      onSubmit={onSubmit}
+      title="Airbnb your home!"
       actionLabel={actionLabel}
+      onSubmit={onSubmit}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
-      title="List your Hostel on KalRent"
+      onClose={rentModal.onClose}
       body={bodyContent}
     />
   );

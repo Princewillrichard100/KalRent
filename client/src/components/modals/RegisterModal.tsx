@@ -2,11 +2,12 @@
 
 import { useState, useCallback } from "react";
 import { signUp, confirmSignUp, resendSignUpCode, signIn } from "aws-amplify/auth";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 import { useRegisterModal } from "@/hooks/useRegisterModal";
 import { useLoginModal } from "@/hooks/useLoginModal";
 import Modal from "./Modal";
-import { Mail, Lock, User, Phone, KeyRound, ShieldCheck } from "lucide-react";
+import Heading from "@/components/Heading";
+import Input from "@/components/inputs/Input";
 
 enum STEPS {
   FORM = 0,
@@ -40,7 +41,6 @@ export const RegisterModal = () => {
     setIsLoading(true);
 
     try {
-      // Format phone number with Nigerian country code if necessary
       let formattedPhone = phoneNumber.trim();
       if (formattedPhone.startsWith("0")) {
         formattedPhone = `+234${formattedPhone.slice(1)}`;
@@ -87,14 +87,13 @@ export const RegisterModal = () => {
 
       toast.success("Email verified! Signing you in...");
 
-      // Automatically sign in
       try {
         await signIn({
           username: email.trim(),
           password,
         });
       } catch {
-        // In case auto-sign-in fails, guide to login
+        // In case auto-sign-in fails
       }
 
       registerModal.onClose();
@@ -118,171 +117,115 @@ export const RegisterModal = () => {
 
   let bodyContent = (
     <div className="flex flex-col gap-4">
-      <div>
-        <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
-          Create your KalRent Account
-        </h3>
-        <p className="text-xs text-slate-500 mt-1">
-          Join the verified student housing & BaaS escrow rental community.
-        </p>
+      <Heading
+        title="Welcome to Airbnb"
+        subtitle="Create an account!"
+      />
+      <div className="flex flex-row gap-3 py-1">
+        <button
+          type="button"
+          onClick={() => setRole("tenant")}
+          className={`flex-1 py-2 px-3 rounded-lg border-2 text-xs font-semibold transition ${
+            role === "tenant" ? "border-black bg-neutral-100" : "border-neutral-200"
+          }`}
+        >
+          Student / Tenant
+        </button>
+        <button
+          type="button"
+          onClick={() => setRole("manager")}
+          className={`flex-1 py-2 px-3 rounded-lg border-2 text-xs font-semibold transition ${
+            role === "manager" ? "border-black bg-neutral-100" : "border-neutral-200"
+          }`}
+        >
+          Host / Manager
+        </button>
       </div>
-
-      <div className="space-y-3 pt-1">
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Account Type
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setRole("tenant")}
-              className={`p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer ${
-                role === "tenant"
-                  ? "border-rose-500 bg-rose-50/80 text-rose-700"
-                  : "border-slate-200 text-slate-600 hover:border-slate-400"
-              }`}
-            >
-              <User className="w-3.5 h-3.5" />
-              Student Tenant
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole("manager")}
-              className={`p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer ${
-                role === "manager"
-                  ? "border-rose-500 bg-rose-50/80 text-rose-700"
-                  : "border-slate-200 text-slate-600 hover:border-slate-400"
-              }`}
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              Hostel Manager
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Full Name
-          </label>
-          <div className="relative">
-            <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="text"
-              placeholder="Richard Princewill"
-              disabled={isLoading}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Email Address
-          </label>
-          <div className="relative">
-            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="email"
-              placeholder="student@unilorin.edu.ng"
-              disabled={isLoading}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Phone Number
-          </label>
-          <div className="relative">
-            <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="tel"
-              placeholder="08088203832"
-              disabled={isLoading}
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Password
-          </label>
-          <div className="relative">
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="password"
-              placeholder="At least 8 chars with symbols"
-              disabled={isLoading}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
-          </div>
-        </div>
-      </div>
+      <Input
+        id="name"
+        label="Name"
+        disabled={isLoading}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <Input
+        id="email"
+        label="Email"
+        type="email"
+        disabled={isLoading}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <Input
+        id="phoneNumber"
+        label="Phone Number"
+        type="tel"
+        disabled={isLoading}
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+        required
+      />
+      <Input
+        id="password"
+        label="Password"
+        type="password"
+        disabled={isLoading}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
     </div>
   );
 
   if (step === STEPS.CONFIRM) {
     bodyContent = (
       <div className="flex flex-col gap-4">
-        <div>
-          <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
-            Verify Your Email
-          </h3>
-          <p className="text-xs text-slate-500 mt-1">
-            We sent a 6-digit confirmation code to{" "}
-            <span className="font-semibold text-slate-800">{email}</span>.
-          </p>
-        </div>
-
-        <div className="pt-2">
-          <label className="text-xs font-semibold text-slate-700 block mb-1.5">
-            Confirmation Code
-          </label>
-          <div className="relative">
-            <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="text"
-              placeholder="123456"
-              maxLength={6}
-              disabled={isLoading}
-              value={confirmationCode}
-              onChange={(e) => setConfirmationCode(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-sm font-mono tracking-widest rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
-          </div>
-          <button
-            type="button"
-            onClick={handleResendCode}
-            className="text-xs text-rose-500 hover:underline font-semibold mt-2.5 block cursor-pointer"
-          >
-            Didn&apos;t receive code? Resend
-          </button>
+        <Heading
+          title="Verify your email"
+          subtitle={`We sent a code to ${email}`}
+        />
+        <Input
+          id="confirmationCode"
+          label="6-Digit Confirmation Code"
+          disabled={isLoading}
+          value={confirmationCode}
+          onChange={(e) => setConfirmationCode(e.target.value)}
+          required
+        />
+        <div 
+          onClick={handleResendCode}
+          className="text-neutral-500 text-xs hover:underline cursor-pointer"
+        >
+          Didn&apos;t receive code? Resend
         </div>
       </div>
     );
   }
 
   const footerContent = (
-    <div className="flex flex-col gap-3 mt-2 text-center">
-      <div className="text-xs text-slate-500">
-        Already have a KalRent account?{" "}
-        <button
-          type="button"
-          onClick={onToggle}
-          className="text-rose-500 hover:underline font-semibold cursor-pointer"
-        >
-          Log in
-        </button>
+    <div className="flex flex-col gap-4 mt-3">
+      <hr />
+      <div 
+        className="
+          text-neutral-500 
+          text-center 
+          mt-4 
+          font-light
+        "
+      >
+        <p>Already have an account?
+          <span 
+            onClick={onToggle} 
+            className="
+              text-neutral-800
+              cursor-pointer 
+              hover:underline
+              ml-1
+            "
+            > Log in</span>
+        </p>
       </div>
     </div>
   );
@@ -291,14 +234,8 @@ export const RegisterModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={registerModal.isOpen}
-      title={step === STEPS.FORM ? "Register" : "Verify Email"}
-      actionLabel={
-        isLoading
-          ? "Processing..."
-          : step === STEPS.FORM
-          ? "Create Account"
-          : "Confirm & Sign In"
-      }
+      title="Register"
+      actionLabel={step === STEPS.FORM ? "Continue" : "Confirm & Sign In"}
       onClose={registerModal.onClose}
       onSubmit={step === STEPS.FORM ? handleSignUp : handleConfirmCode}
       secondaryAction={step === STEPS.CONFIRM ? () => setStep(STEPS.FORM) : undefined}

@@ -1,42 +1,43 @@
 "use client";
 
+import { IconType } from "react-icons";
 import { LucideIcon } from "lucide-react";
 
 interface CategoryInputProps {
-  icon: LucideIcon;
+  icon: IconType | LucideIcon | any;
   label: string;
   selected?: boolean;
   onClick: (value: string) => void;
 }
 
-export const CategoryInput: React.FC<CategoryInputProps> = ({
+const CategoryInput: React.FC<CategoryInputProps> = ({
   icon: Icon,
   label,
   selected,
-  onClick,
+  onClick
 }) => {
-  return (
-    <button
-      type="button"
+  return ( 
+    <div
       onClick={() => onClick(label)}
       className={`
         rounded-xl
+        border-2
         p-4
         flex
         flex-col
         gap-3
-        hover:border-slate-800
+        hover:border-black
         transition
         cursor-pointer
-        text-left
-        w-full
-        ${selected ? "border-2 border-slate-900 bg-slate-50/80 shadow-xs" : "border border-slate-200 bg-white"}
+        ${selected ? 'border-black' : 'border-neutral-200'}
       `}
     >
-      <Icon className={`w-6 h-6 ${selected ? "text-rose-500" : "text-slate-600"}`} />
-      <div className="font-semibold text-xs text-slate-800">{label}</div>
-    </button>
-  );
-};
-
+      <Icon size={30} />
+      <div className="font-semibold">
+        {label}
+      </div>
+    </div>
+   );
+}
+ 
 export default CategoryInput;

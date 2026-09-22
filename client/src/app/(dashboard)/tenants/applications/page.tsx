@@ -20,7 +20,7 @@ import {
 import React from "react";
 import { openPaystackPopup } from "@/lib/paystack";
 import { downloadAgreement } from "@/lib/downloadAgreement";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 const Applications = () => {
   const { data: authUser } = useGetAuthUserQuery();

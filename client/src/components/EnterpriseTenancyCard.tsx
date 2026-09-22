@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 interface EnterpriseTenancyCardProps {
   leaseId: number;
