@@ -79,6 +79,27 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
   const [currentBbox, setCurrentBbox] = useState<BoundingBox | null>(null);
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
 
+  const [isSmoothSearching, setIsSmoothSearching] = useState(isSearchingArea);
+  const searchStartRef = useRef<number>(0);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (isSearchingArea) {
+      searchStartRef.current = Date.now();
+      setIsSmoothSearching(true);
+    } else {
+      const elapsed = Date.now() - searchStartRef.current;
+      const minDuration = 450;
+      const remaining = Math.max(0, minDuration - elapsed);
+
+      timeout = setTimeout(() => {
+        setIsSmoothSearching(false);
+      }, remaining);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [isSearchingArea]);
+
   const defaultLng = center?.[1] || 3.4219;
   const defaultLat = center?.[0] || 6.4531;
 
@@ -305,7 +326,7 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
       <div ref={mapContainerRef} className="w-full h-full" />
 
       {/* Floating Searching Indicator / Search This Area */}
-      {isSearchingArea ? (
+      {isSmoothSearching ? (
         <div className="absolute top-5 left-1/2 -translate-x-1/2 z-30 animate-in fade-in slide-in-from-top-3 duration-200">
           <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md text-neutral-800 font-semibold text-xs px-4 py-2 rounded-full shadow-lg border border-neutral-200/90">
             <Loader2 className="w-3.5 h-3.5 animate-spin text-neutral-700" />
