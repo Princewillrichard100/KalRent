@@ -27,29 +27,29 @@ const FeaturesSection = () => {
     {
       icon: ShieldCheck,
       badge: "Financial Security",
-      title: "BaaS Escrow Protected Deposits",
+      title: "KalRent Cover Protected Stays",
       description:
-        "Your caution deposit is quarantined in a ring-fenced escrow account. Funds are released strictly upon move-out inspection clearance in compliance with Kwara State Tenancy Laws.",
-      linkText: "Browse Escrow Hostels",
+        "Your caution deposit is kept safe and refunded promptly upon checkout clearance with 24/7 guest support.",
+      linkText: "Browse Protected Stays",
       linkHref: "/search",
     },
     {
       icon: Scale,
       badge: "Zero Exploitation",
-      title: "10% Statutory Fee Cap",
+      title: "Capped & Transparent Fees",
       description:
-        "We enforce a strict statutory ceiling on agent fees (maximum 10% of annual base rent). No hidden checkout surcharges, unexpected finder fees, or surprise agency costs.",
+        "Clear pricing with maximum 10% agent commission. No hidden checkout surcharges, unexpected finder fees, or surprise costs.",
       linkText: "View Transparent Pricing",
       linkHref: "/search?sortBy=annualRent",
     },
     {
       icon: MapPin,
-      badge: "Campus Proximity",
-      title: "Verified Student Hostels",
+      badge: "Prime Locations",
+      title: "Verified Nigerian Properties",
       description:
-        "Every accommodation is physically inspected and tagged with live GPS coordinates. Calculate your exact walking or commute distance to UNILORIN, Kwasu, and polytechnic campuses.",
-      linkText: "Explore Nearby Rentals",
-      linkHref: "/search?sortBy=distance",
+        "Every accommodation is physically inspected and tagged with live GPS coordinates across Lagos, Abuja, Port Harcourt, and beyond.",
+      linkText: "Explore Neighborhoods",
+      linkHref: "/search",
     },
   ];
 

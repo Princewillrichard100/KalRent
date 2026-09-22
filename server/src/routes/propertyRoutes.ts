@@ -4,6 +4,7 @@ import {
   getProperty,
   createProperty,
   getPropertyPhoto,
+  getNearbyProperties,
 } from "../controllers/propertyControllers";
 import multer from "multer";
 import { authMiddleware } from "../middleware/authMiddleware";
@@ -19,6 +20,7 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 router.get("/photos/*", getPropertyPhoto);
+router.get("/nearby", getNearbyProperties);
 router.get("/", getProperties);
 router.get("/:id", getProperty);
 router.get("/:id/leases", authMiddleware(["manager", "tenant"]), getPropertyLeases);

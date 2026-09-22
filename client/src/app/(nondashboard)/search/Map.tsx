@@ -49,13 +49,13 @@ const Map = () => {
     const initialCenter: [number, number] =
       filters.userLng && filters.userLat
         ? [filters.userLng, filters.userLat]
-        : filters.coordinates || [4.5901, 8.4799];
+        : filters.coordinates || [8.6753, 9.0820];
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v12",
       center: initialCenter,
-      zoom: 12,
+      zoom: 6,
     });
 
     mapRef.current = map;
@@ -144,7 +144,7 @@ const Map = () => {
             ${distanceBadge}
           </div>
           <div class="airbnb-popup-info">
-            <div class="airbnb-popup-zone">${property.campusZone || "Ilorin Campus Area"}</div>
+            <div class="airbnb-popup-zone">${property.campusZone || property.city || "Nigeria"}</div>
             <a href="/search/${property.id}" class="airbnb-popup-title">${property.name}</a>
             <div class="airbnb-popup-price">
               ₦${property.annualRent?.toLocaleString()}

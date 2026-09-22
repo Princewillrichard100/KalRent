@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import { Toaster } from "@/components/ui/sonner";
+import ToasterProvider from "@/providers/ToasterProvider";
+import ModalsProvider from "@/components/modals/ModalsProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -11,8 +12,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "KalRent | Campus Rental & Escrow Platform",
-  description: "Secure student accommodation rentals and escrow payments",
+  title: "KalRent | Vacation Rentals, Cabins, Beach Houses & Stays",
+  description: "Find vacation rentals, apartments, and private homes across Nigeria with KalRent Cover protection.",
 };
 
 export default function RootLayout({
@@ -25,8 +26,11 @@ export default function RootLayout({
       <body
         className="font-sans antialiased text-slate-900 bg-slate-50 [text-rendering:optimizeLegibility] min-h-screen"
       >
-        <Providers>{children}</Providers>
-        <Toaster closeButton position="top-right" />
+        <Providers>
+          <ToasterProvider />
+          <ModalsProvider />
+          {children}
+        </Providers>
       </body>
     </html>
   );

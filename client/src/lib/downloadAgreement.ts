@@ -1,5 +1,5 @@
 import { fetchAuthSession } from "aws-amplify/auth";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 export const downloadAgreement = async (
   leaseId: number,

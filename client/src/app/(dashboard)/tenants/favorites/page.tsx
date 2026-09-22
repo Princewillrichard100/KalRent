@@ -1,15 +1,14 @@
 "use client";
 
-import Card from "@/components/Card";
-import Header from "@/components/Header";
+import ListingCard from "@/components/listings/ListingCard";
+import Heading from "@/components/Heading";
+import EmptyState from "@/components/EmptyState";
 import Loading from "@/components/Loading";
 import {
   useGetAuthUserQuery,
   useGetPropertiesQuery,
   useGetTenantQuery,
 } from "@/state/api";
-import { Heart, Search } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 
 const Favorites = () => {
@@ -44,40 +43,37 @@ const Favorites = () => {
 
   return (
     <div className="dashboard-container space-y-6">
-      <Header
-        title="Saved Hostels"
-        subtitle="Browse and compare your shortlisted student properties"
+      <Heading
+        title="Favorites"
+        subtitle="List of places you favorited!"
       />
       {hasFavorites ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div 
+          className="
+            mt-6
+            grid 
+            grid-cols-1 
+            sm:grid-cols-2 
+            md:grid-cols-3 
+            lg:grid-cols-4 
+            xl:grid-cols-5
+            2xl:grid-cols-6
+            gap-8
+          "
+        >
           {favoriteProperties.map((property) => (
-            <Card
+            <ListingCard
               key={property.id}
-              property={property}
-              isFavorite={true}
-              onFavoriteToggle={() => {}}
-              showFavoriteButton={false}
-              propertyLink={`/search/${property.id}`}
+              data={property}
+              currentUser={authUser}
             />
           ))}
         </div>
       ) : (
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-12 text-center max-w-lg mx-auto shadow-xs">
-          <div className="w-14 h-14 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Heart className="w-7 h-7" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900">No saved hostels yet</h3>
-          <p className="text-sm text-slate-500 mt-1.5 leading-relaxed">
-            Shortlist hostels near Tanke, Sanrab, OkeOdo, or Jalala to easily compare fees, proximity, and amenities later.
-          </p>
-          <Link
-            href="/search"
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 mt-6 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl shadow-xs transition-colors"
-          >
-            <Search className="w-4 h-4" />
-            <span>Explore Campus Listings</span>
-          </Link>
-        </div>
+        <EmptyState
+          title="No favorites found"
+          subtitle="Looks like you have no favorite listings."
+        />
       )}
     </div>
   );

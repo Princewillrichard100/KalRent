@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PropertyTypeIcons } from "@/lib/constants";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 const FiltersBar = () => {
   const dispatch = useDispatch();

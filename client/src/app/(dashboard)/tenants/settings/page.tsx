@@ -7,7 +7,7 @@ import {
   useUpdateTenantSettingsMutation,
 } from "@/state/api";
 import React from "react";
-import { toast } from "sonner";
+import { toast } from 'react-hot-toast';
 
 const TenantSettings = () => {
   const { data: authUser, isLoading } = useGetAuthUserQuery();

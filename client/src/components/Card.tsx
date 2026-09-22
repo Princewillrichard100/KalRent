@@ -2,6 +2,7 @@ import { Bath, Bed, Heart, House, MapPin, ShieldCheck, Star } from "lucide-react
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import HeartButton from "@/components/HeartButton";
 
 const Card = ({
   property,
@@ -49,7 +50,7 @@ const Card = ({
           )}
           <span className="bg-emerald-700/85 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
             <ShieldCheck className="w-3 h-3 shrink-0" />
-            Escrow Protected
+            Protected Booking
           </span>
           {property.isParkingIncluded && (
             <span className="bg-white/90 backdrop-blur-xs text-slate-800 text-xs font-medium px-2 py-0.5 rounded-lg">
@@ -58,16 +59,9 @@ const Card = ({
           )}
         </div>
         {showFavoriteButton && (
-          <button
-            className="absolute bottom-3 right-3 bg-white/90 hover:bg-white backdrop-blur-xs rounded-full p-2 cursor-pointer shadow-xs transition-transform active:scale-95"
-            onClick={onFavoriteToggle}
-          >
-            <Heart
-              className={`w-4 h-4 ${
-                isFavorite ? "text-red-500 fill-red-500" : "text-slate-600"
-              }`}
-            />
-          </button>
+          <div className="absolute top-2.5 right-2.5 z-10">
+            <HeartButton propertyId={property.id} />
+          </div>
         )}
       </div>
       <div className="p-4">

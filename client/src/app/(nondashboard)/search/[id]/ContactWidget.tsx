@@ -21,7 +21,7 @@ const ContactWidget = ({ onOpenModal }: ContactWidgetProps) => {
       {/* Trust Guarantee Header */}
       <div className="bg-emerald-50/80 border border-emerald-200/60 rounded-xl p-3 flex items-center gap-2.5 text-xs text-emerald-900">
         <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-        <span className="font-semibold">BaaS Escrow Protected Booking</span>
+        <span className="font-semibold">Protected Booking Guarantee</span>
       </div>
 
       {/* Contact Property */}
@@ -31,7 +31,7 @@ const ContactWidget = ({ onOpenModal }: ContactWidgetProps) => {
         </div>
         <div>
           <span className="text-[11px] text-slate-500 font-medium block">
-            Direct Student Support
+            Direct Guest Support
           </span>
           <div className="text-sm font-bold text-slate-900 font-mono">
             +234 808 820 3832

@@ -1,66 +1,73 @@
 "use client";
 
-import { NAVBAR_HEIGHT } from "@/lib/constants";
-import { useAppDispatch, useAppSelector } from "@/state/redux";
+import React, { useMemo, useState } from "react";
+import HomesClient from "@/components/HomesClient";
+import { useGetAuthUserQuery, useGetPropertiesQuery } from "@/state/api";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
-import FiltersBar from "./FiltersBar";
-import FiltersFull from "./FiltersFull";
-import { cleanParams } from "@/lib/utils";
-import { setFilters } from "@/state";
-import Map from "./Map";
-import Listings from "./Listings";
+import { useUserLocation } from "@/hooks/useUserLocation";
+import { BoundingBox } from "@/components/map/InteractiveSearchMap";
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
-  const dispatch = useAppDispatch();
-  const isFiltersFullOpen = useAppSelector(
-    (state) => state.global.isFiltersFullOpen
-  );
+  const { data: authUser } = useGetAuthUserQuery();
+  const userCoords = useUserLocation();
+  const [customBbox, setCustomBbox] = useState<BoundingBox | null>(null);
 
-  useEffect(() => {
-    const initialFilters = Array.from(searchParams.entries()).reduce(
-      (acc: any, [key, value]) => {
-        if (key === "priceRange" || key === "squareFeet") {
-          acc[key] = value.split(",").map((v) => (v === "" ? null : Number(v)));
-        } else if (key === "coordinates") {
-          acc[key] = value.split(",").map(Number);
-        } else {
-          acc[key] = value === "any" ? null : value;
-        }
+  const queryFilters = useMemo(() => {
+    const category = searchParams?.get("category") || searchParams?.get("propertyType");
+    const location = searchParams?.get("location") || searchParams?.get("campusZone");
+    const locationValue = searchParams?.get("locationValue") || searchParams?.get("location");
+    const guestCount = searchParams?.get("guestCount");
+    const roomCount = searchParams?.get("roomCount");
+    const bathroomCount = searchParams?.get("bathroomCount") || searchParams?.get("baths");
+    const startDate = searchParams?.get("startDate");
+    const endDate = searchParams?.get("endDate");
+    const beds = searchParams?.get("beds");
 
-        return acc;
-      },
-      {}
-    );
+    const searchLat = searchParams?.get("lat");
+    const searchLng = searchParams?.get("lng");
+    const parsedSearchLat = searchLat ? parseFloat(searchLat) : undefined;
+    const parsedSearchLng = searchLng ? parseFloat(searchLng) : undefined;
 
-    const cleanedFilters = cleanParams(initialFilters);
-    dispatch(setFilters(cleanedFilters));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    return {
+      category: category || undefined,
+      location: location || undefined,
+      locationValue: locationValue || undefined,
+      guestCount: guestCount || undefined,
+      roomCount: roomCount || undefined,
+      bathroomCount: bathroomCount || undefined,
+      beds: beds || undefined,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
+      userLat: userCoords?.lat,
+      userLng: userCoords?.lng,
+      lat: parsedSearchLat,
+      lng: parsedSearchLng,
+      minLat: customBbox?.minLat,
+      maxLat: customBbox?.maxLat,
+      minLng: customBbox?.minLng,
+      maxLng: customBbox?.maxLng,
+    };
+  }, [searchParams, userCoords, customBbox]);
+
+  const {
+    data: properties,
+    isLoading,
+    isError,
+    isFetching,
+  } = useGetPropertiesQuery(queryFilters as any);
 
   return (
-    <div
-      className="w-full mx-auto px-5 flex flex-col"
-      style={{
-        height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-      }}
-    >
-      <FiltersBar />
-      <div className="flex justify-between flex-1 overflow-hidden gap-3 mb-5">
-        <div
-          className={`h-full overflow-auto transition-all duration-300 ease-in-out ${
-            isFiltersFullOpen
-              ? "w-3/12 opacity-100 visible"
-              : "w-0 opacity-0 invisible"
-          }`}
-        >
-          <FiltersFull />
-        </div>
-        <Map />
-        <div className="basis-4/12 overflow-y-auto">
-          <Listings />
-        </div>
-      </div>
+    <div className="w-full h-full">
+      <HomesClient
+        properties={properties || []}
+        isLoading={isLoading}
+        isError={isError}
+        authUser={authUser}
+        userCoords={userCoords}
+        onBboxChange={setCustomBbox}
+        isSearchingArea={isFetching}
+      />
     </div>
   );
 };

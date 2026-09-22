@@ -7,11 +7,18 @@ import {
   Property,
   Tenant,
 } from "@/types/prismaTypes";
+import {
+  AutocompleteResponse,
+  LocationDetailsResponse,
+} from "@/types/location";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
 
-export type PropertyWithDistance = Property & { distanceKm?: number };
+export type PropertyWithDistance = Property & {
+  distanceKm?: number;
+  distance_km?: number;
+};
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -85,11 +92,18 @@ export const api = createApi({
       query: (filters) => {
         const params = cleanParams({
           location: filters.location,
+          locationValue: filters.locationValue,
           priceMin: filters.priceRange?.[0],
           priceMax: filters.priceRange?.[1],
           beds: filters.beds,
           baths: filters.baths,
           propertyType: filters.propertyType,
+          category: filters.category,
+          guestCount: filters.guestCount,
+          roomCount: filters.roomCount,
+          bathroomCount: filters.bathroomCount,
+          startDate: filters.startDate,
+          endDate: filters.endDate,
           squareFeetMin: filters.squareFeet?.[0],
           squareFeetMax: filters.squareFeet?.[1],
           amenities: filters.amenities?.join(","),
@@ -97,9 +111,20 @@ export const api = createApi({
           favoriteIds: filters.favoriteIds?.join(","),
           latitude: filters.coordinates?.[1],
           longitude: filters.coordinates?.[0],
-          userLat: filters.userLat,
-          userLng: filters.userLng,
+          userLat: filters.userLat ?? filters.lat,
+          userLng: filters.userLng ?? filters.lng,
+          lat: filters.lat ?? filters.userLat,
+          lng: filters.lng ?? filters.userLng,
           sortBy: filters.sortBy,
+          bbox: (filters as any).bbox,
+          minLat: (filters as any).minLat,
+          maxLat: (filters as any).maxLat,
+          minLng: (filters as any).minLng,
+          maxLng: (filters as any).maxLng,
+          ne_lat: (filters as any).ne_lat,
+          ne_lng: (filters as any).ne_lng,
+          sw_lat: (filters as any).sw_lat,
+          sw_lng: (filters as any).sw_lng,
         });
 
         return { url: "properties", params };
@@ -116,6 +141,51 @@ export const api = createApi({
           error: "Failed to fetch properties.",
         });
       },
+    }),
+
+    getNearbyListings: build.query<
+      PropertyWithDistance[],
+      { lat: number; lng: number; radius?: number; limit?: number }
+    >({
+      query: (params) => ({
+        url: "properties/nearby",
+        params: cleanParams(params),
+      }),
+      transformResponse: (
+        response:
+          | { listings?: PropertyWithDistance[]; properties?: PropertyWithDistance[] }
+          | PropertyWithDistance[]
+      ) => {
+        if (Array.isArray(response)) return response;
+        return response.listings || response.properties || [];
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+              { type: "Properties", id: "NEARBY" },
+            ]
+          : [{ type: "Properties", id: "NEARBY" }],
+    }),
+
+    getLocationsAutocomplete: build.query<
+      AutocompleteResponse,
+      { query: string }
+    >({
+      query: ({ query }) => ({
+        url: "locations/autocomplete",
+        params: { query },
+      }),
+    }),
+
+    getLocationDetails: build.query<
+      LocationDetailsResponse,
+      { placeId: string }
+    >({
+      query: ({ placeId }) => ({
+        url: "locations/details",
+        params: { place_id: placeId },
+      }),
     }),
 
     getProperty: build.query<Property, number>({
@@ -426,6 +496,9 @@ export const {
   useUpdateTenantSettingsMutation,
   useUpdateManagerSettingsMutation,
   useGetPropertiesQuery,
+  useGetNearbyListingsQuery,
+  useGetLocationsAutocompleteQuery,
+  useGetLocationDetailsQuery,
   useGetPropertyQuery,
   useGetCurrentResidencesQuery,
   useGetManagerPropertiesQuery,

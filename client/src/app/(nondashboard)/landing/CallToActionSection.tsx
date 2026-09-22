@@ -26,13 +26,13 @@ const CallToActionSection = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 bg-slate-900/60 p-8 sm:p-10 rounded-3xl border border-slate-700/60 shadow-2xl backdrop-blur-md">
           <div className="space-y-3 max-w-lg text-center md:text-left">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              Ready for the upcoming semester?
+              Ready for your next stay or move?
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Lock in Your Verified Student Hostel Today
+              Lock in Your Verified Nigerian Stay Today
             </h2>
             <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Explore listings across Tanke, Sanrab, Oke-Odo, and Jalala with BaaS escrow security and zero agent fee overcharging.
+              Explore properties across Lagos, Abuja, Port Harcourt, and nationwide with KalRent Cover security and zero hidden fees.
             </p>
           </div>
 
@@ -42,7 +42,7 @@ const CallToActionSection = () => {
               className="inline-flex items-center justify-center gap-2 text-slate-900 bg-white rounded-xl px-5 py-3 text-xs font-bold hover:bg-slate-100 transition-colors shadow-xs cursor-pointer"
             >
               <Search className="w-4 h-4 text-emerald-600" />
-              <span>Browse All Hostels</span>
+              <span>Browse All Listings</span>
             </Link>
             <Link
               href="/signup"

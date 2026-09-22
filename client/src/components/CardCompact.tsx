@@ -46,7 +46,7 @@ const CardCompact = ({
             </span>
           )}
           <span className="bg-emerald-700/80 backdrop-blur-xs text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md w-fit">
-            Escrow
+            Protected
           </span>
         </div>
       </div>
