@@ -8,7 +8,6 @@ import { Building2 } from "lucide-react";
 import Container from "./Container";
 import SearchPill from "./navbar/SearchPill";
 import UserMenu from "./navbar/UserMenu";
-import Categories from "./navbar/Categories";
 import { SidebarTrigger } from "./ui/sidebar";
 
 export const Navbar = () => {
@@ -60,10 +59,6 @@ export const Navbar = () => {
             </div>
           )}
         </Container>
-      </div>
-
-      {/* Category horizontal scroll bar */}
-      <Categories />
     </div>
   );
 };
