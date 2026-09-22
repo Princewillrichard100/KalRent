@@ -36,9 +36,9 @@ const PaymentMethod = () => {
     <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 flex-1">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900">Payment & Escrow Method</h2>
+          <h2 className="text-lg font-bold text-slate-900">Payment Method</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Secured via KalRent BaaS Escrow Trust & Paystack.
+            Secured via KalRent Protected Booking & Paystack.
           </p>
         </div>
         <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -55,7 +55,7 @@ const PaymentMethod = () => {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-semibold text-slate-900">
-                Direct Debit & BaaS Escrow Account
+                Direct Debit & Bank Transfer
               </h3>
             </div>
             <div className="text-xs text-slate-500 flex items-center gap-1.5">
@@ -83,7 +83,7 @@ const BillingHistory = ({ payments }: { payments: Payment[] }) => {
         <div>
           <h2 className="text-xl font-bold text-slate-900 mb-1">Billing & Receipt History</h2>
           <p className="text-sm text-slate-500">
-            Download your verified payment receipts and statutory lease statements.
+            Download your verified payment receipts and lease statements.
           </p>
         </div>
         {hasPayments && (

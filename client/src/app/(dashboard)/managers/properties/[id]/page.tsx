@@ -62,16 +62,16 @@ const PropertyTenants = () => {
 
       <Header
         title={property?.name || "Property Management"}
-        subtitle="Manage tenants, lease terms, and statutory tenancy agreements"
+        subtitle="Manage guests, rental terms, and active bookings"
       />
 
       <div className="w-full space-y-6">
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-1">Tenants & Leases</h2>
+              <h2 className="text-xl font-bold text-slate-900 mb-1">Guests &amp; Bookings</h2>
               <p className="text-sm text-slate-500">
-                Active student tenants, annual rent schedules, and compliance agreements.
+                Active guests, rental schedules, and confirmed bookings.
               </p>
             </div>
             {hasLeases && (

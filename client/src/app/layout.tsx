@@ -12,8 +12,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "KalRent | Campus Rental & Escrow Platform",
-  description: "Secure student accommodation rentals and escrow payments",
+  title: "KalRent | Vacation Rentals, Cabins, Beach Houses & Stays",
+  description: "Find vacation rentals, apartments, and private homes across Nigeria with KalRent Cover protection.",
 };
 
 export default function RootLayout({

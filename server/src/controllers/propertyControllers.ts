@@ -210,8 +210,8 @@ export const getProperties = async (
             SELECT 1 FROM "Lease" lease 
             WHERE lease."propertyId" = p.id 
             AND lease.status IN ('ACTIVE', 'PENDING_PAYMENT')
-            AND lease."startDate" <= ${eDate.toISOString()}
-            AND lease."endDate" >= ${sDate.toISOString()}
+            AND lease."startDate" <= ${eDate.toISOString()}::timestamp
+            AND lease."endDate" >= ${sDate.toISOString()}::timestamp
           )`
         );
       }
@@ -232,7 +232,7 @@ export const getProperties = async (
             Prisma.sql`EXISTS (
               SELECT 1 FROM "Lease" l 
               WHERE l."propertyId" = p.id 
-              AND l."startDate" <= ${date.toISOString()}
+              AND l."startDate" <= ${date.toISOString()}::timestamp
             )`
           );
         }

@@ -185,7 +185,7 @@ const NewProperty = () => {
     }
 
     if (data.agentFee > data.annualRent * 0.1) {
-      toast.error("Agent fee exceeds the statutory 10% ceiling.");
+      toast.error("Agent fee cannot exceed 10% of base rate.");
       return;
     }
 
@@ -336,19 +336,19 @@ const NewProperty = () => {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-                    Financial Schedule &amp; Capped Fees (NGN ₦)
+                    Pricing &amp; Caution Deposit (NGN ₦)
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Statutory protection guarantees: agent fees capped at 10% and caution deposits held in BaaS escrow.
+                    Transparent pricing schedule: fair fees and caution deposits securely protected under KalRent Cover.
                   </p>
                 </div>
 
                 <div className="bg-emerald-50 border border-emerald-200/80 rounded-xl p-4 flex items-start gap-3">
                   <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div className="text-xs text-emerald-950 space-y-0.5">
-                    <span className="font-bold block">Statutory Compliance Mandate:</span>
+                    <span className="font-bold block">Transparent Pricing Policy:</span>
                     <p>
-                      In accordance with Kwara State Tenancy Laws, agent commission is capped at 10% of annual rent (₦{maxAgentFee.toLocaleString()}). Platform fee is automatically calculated at 5%.
+                      Agent fee is capped at 10% of base rate (₦{maxAgentFee.toLocaleString()}). Caution deposits remain protected and fully refundable upon checkout.
                     </p>
                   </div>
                 </div>
@@ -356,7 +356,7 @@ const NewProperty = () => {
                 <div className="space-y-4">
                   <CustomFormField
                     name="annualRent"
-                    label="Annual Rent (₦)"
+                    label="Rental Rate (₦)"
                     type="number"
                     placeholder="e.g. 500000"
                   />
@@ -372,14 +372,14 @@ const NewProperty = () => {
                       {isAgentFeeOverCap && (
                         <span className="text-xs text-red-600 font-medium flex items-center gap-1 mt-1">
                           <AlertCircle className="w-3.5 h-3.5" />
-                          Exceeds 10% statutory ceiling
+                          Exceeds 10% ceiling
                         </span>
                       )}
                     </div>
 
                     <CustomFormField
                       name="cautionDeposit"
-                      label="Caution Deposit (₦ - Escrow Held)"
+                      label="Refundable Caution Deposit (₦)"
                       type="number"
                       placeholder="e.g. 50000"
                     />

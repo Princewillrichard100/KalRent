@@ -95,11 +95,11 @@ const PropertyDetails = ({ propertyId }: PropertyDetailsProps) => {
       {/* Upfront Breakdown & Policies */}
       <div className="space-y-3">
         <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-          Upfront Costs &amp; Tenancy Policies
+          Pricing Details &amp; Policies
         </h3>
         <p className="text-xs text-slate-500 flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          All caution deposits are held safely in BaaS escrow under Kwara State Tenancy Laws.
+          All caution deposits are fully refundable upon checkout inspection under KalRent Cover.
         </p>
 
         <Tabs defaultValue="breakdown" className="mt-4">
@@ -108,7 +108,7 @@ const PropertyDetails = ({ propertyId }: PropertyDetailsProps) => {
               Fee Schedule
             </TabsTrigger>
             <TabsTrigger value="policies" className="rounded-lg text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 shadow-2xs">
-              Campus Policies
+              Stay Policies
             </TabsTrigger>
           </TabsList>
 

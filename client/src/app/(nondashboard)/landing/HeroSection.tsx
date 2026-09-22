@@ -62,14 +62,14 @@ const HeroSection = () => {
         {/* Trust Pill */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-semibold mb-6 shadow-md">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Statutory Escrow-Protected Student Housing in Ilorin</span>
+          <span>Protected Bookings &amp; Stays Across Nigeria</span>
         </div>
 
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.15] mb-5">
-          Find Your Perfect Campus Hostel &amp; Home
+          Find Your Perfect Stay &amp; Home in Nigeria
         </h1>
         <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-          Verified student accommodations, 10% capped agent commission, and caution deposits quarantined safely in BaaS escrow.
+          Verified apartments, shortlets, and homes nationwide with KalRent Cover and transparent pricing.
         </p>
 
         {/* Search Bar */}
@@ -81,7 +81,7 @@ const HeroSection = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleLocationSearch()}
-              placeholder="Search by campus zone, landmark or street (e.g. Tanke)"
+              placeholder="Search destinations (e.g. Lekki, Maitama, Ikeja)..."
               className="w-full border-none shadow-none focus-visible:ring-0 text-slate-800 placeholder:text-slate-400 text-sm h-11 bg-transparent"
             />
           </div>

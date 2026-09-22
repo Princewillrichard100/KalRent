@@ -31,16 +31,16 @@ const DiscoverSection = () => {
     {
       icon: FileCheck2,
       step: "02",
-      title: "Apply & Escrow Lock",
+      title: "Reserve with KalRent Cover",
       description:
-        "Submit your application digitally. Caution deposits are protected in segregated BaaS escrow with instant tenancy agreement generation.",
+        "Submit your booking request. Payments and caution deposits are protected under KalRent Cover with instant reservation confirmation.",
     },
     {
       icon: KeyRound,
       step: "03",
-      title: "Inspect & Move In",
+      title: "Check In & Enjoy",
       description:
-        "Complete your digital move-in inspection. When your lease concludes, early inspection triggers guaranteed escrow refund.",
+        "Complete your smooth check-in. When your stay concludes, checkout clearance triggers prompt caution deposit refund.",
     },
   ];
 

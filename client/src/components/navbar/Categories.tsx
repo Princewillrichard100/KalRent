@@ -24,79 +24,54 @@ import { useCallback } from "react";
 
 export const CATEGORIES_LIST = [
   {
-    label: "Self-Con",
-    icon: Home,
-    description: "Private self-contained student room with private kitchen & bath.",
-  },
-  {
-    label: "Shared Hostel",
-    icon: Hotel,
-    description: "Budget-friendly student rooms with shared spaces.",
-  },
-  {
-    label: "Modern",
+    label: "Apartments",
     icon: Building2,
-    description: "Sleek and newly built student complexes.",
+    description: "Modern, fully equipped private apartments.",
   },
   {
-    label: "Countryside",
-    icon: Mountain,
-    description: "Quiet and serene locations near university borders.",
+    label: "Shortlets",
+    icon: Sparkles,
+    description: "Premium daily & weekly serviced stays.",
+  },
+  {
+    label: "Mansions",
+    icon: Castle,
+    description: "Stately luxury estates and expansive residences.",
+  },
+  {
+    label: "Beachfront",
+    icon: Palmtree,
+    description: "Properties with direct coastal access and sea breeze.",
+  },
+  {
+    label: "Villas",
+    icon: Home,
+    description: "Private detached vacation houses with gardens.",
+  },
+  {
+    label: "Penthouse",
+    icon: Gem,
+    description: "Top-floor suites with panoramic city skyline views.",
+  },
+  {
+    label: "Duplex",
+    icon: Warehouse,
+    description: "Spacious two-storey living spaces for groups and families.",
+  },
+  {
+    label: "Serviced Rooms",
+    icon: Hotel,
+    description: "Fully furnished private rooms with daily housekeeping.",
+  },
+  {
+    label: "City Centers",
+    icon: Compass,
+    description: "Heart-of-the-city stays close to business & nightlife.",
   },
   {
     label: "Pools",
     icon: Waves,
-    description: "Hostels with recreational pool amenities.",
-  },
-  {
-    label: "Islands",
-    icon: Compass,
-    description: "Secluded hostel clusters with 24/7 power.",
-  },
-  {
-    label: "Lake",
-    icon: Fish,
-    description: "Properties close to waterfront or scenic campus lakes.",
-  },
-  {
-    label: "Windmills",
-    icon: Wind,
-    description: "Naturally ventilated, cool student accommodations.",
-  },
-  {
-    label: "Beach",
-    icon: Palmtree,
-    description: "Relaxed campus living near relaxation spots.",
-  },
-  {
-    label: "Castles",
-    icon: Castle,
-    description: "Grand multi-storey gated student halls.",
-  },
-  {
-    label: "Camping",
-    icon: Tent,
-    description: "Budget backpacker and short-stay rooms.",
-  },
-  {
-    label: "Arctic",
-    icon: Snowflake,
-    description: "Fully air-conditioned premium student suites.",
-  },
-  {
-    label: "Desert",
-    icon: SunMedium,
-    description: "Warm, sunny chalets with private balconies.",
-  },
-  {
-    label: "Barns",
-    icon: Warehouse,
-    description: "Rustic, spacious loft-style student apartments.",
-  },
-  {
-    label: "Lux",
-    icon: Gem,
-    description: "Top-tier luxury student hostels with VIP concierge.",
+    description: "Stays featuring magnificent private or shared pools.",
   },
 ];
 

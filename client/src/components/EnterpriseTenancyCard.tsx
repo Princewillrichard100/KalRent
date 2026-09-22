@@ -229,10 +229,10 @@ export const EnterpriseTenancyCard: React.FC<EnterpriseTenancyCardProps> = ({
               </div>
               <div>
                 <DialogTitle className="text-lg font-bold text-slate-900">
-                  Escrow Custody Certificate
+                  Protected Deposit Certificate
                 </DialogTitle>
                 <DialogDescription className="text-xs text-slate-500">
-                  BaaS Statutory Trust Custody Guarantee
+                  KalRent Cover Caution Deposit Guarantee
                 </DialogDescription>
               </div>
             </div>
@@ -269,7 +269,7 @@ export const EnterpriseTenancyCard: React.FC<EnterpriseTenancyCardProps> = ({
             </div>
 
             <div className="bg-emerald-50 border border-emerald-200/80 rounded-xl p-3.5 text-[11px] text-emerald-900 leading-relaxed">
-              <strong>Statutory Warranty:</strong> This deposit is quarantined in a ring-fenced escrow custodian account. In strict compliance with the Kwara State Tenancy Laws and Evidence Act (2011), funds cannot be disbursed unilaterally and remain refundable upon vacancy inspection clearance.
+              <strong>Deposit Protection:</strong> This caution deposit is securely held under KalRent Cover. Funds are protected from unfair deductions and remain 100% refundable upon checkout inspection clearance.
             </div>
 
             <div className="text-center pt-2">

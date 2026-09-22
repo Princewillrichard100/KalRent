@@ -15,15 +15,21 @@ enum STEPS {
   INFO = 2,
 }
 
-const CAMPUS_ZONES = [
-  "Tanke",
-  "Sanrab",
-  "OkeOdo",
-  "Jalala",
-  "MarkJunction",
-  "University Road",
-  "Chapel Area",
-  "Tipper Garage",
+const NIGERIAN_POPULAR_HUBS = [
+  { name: "Lekki, Lagos", state: "Lagos" },
+  { name: "Victoria Island", state: "Lagos" },
+  { name: "Ikeja, Lagos", state: "Lagos" },
+  { name: "Ikoyi, Lagos", state: "Lagos" },
+  { name: "Maitama, Abuja", state: "Abuja" },
+  { name: "Wuse 2, Abuja", state: "Abuja" },
+  { name: "Jabi, Abuja", state: "Abuja" },
+  { name: "Port Harcourt", state: "Rivers" },
+  { name: "Ibadan", state: "Oyo" },
+  { name: "Enugu", state: "Enugu" },
+  { name: "Calabar", state: "Cross River" },
+  { name: "Asaba", state: "Delta" },
+  { name: "Benin City", state: "Edo" },
+  { name: "Ilorin", state: "Kwara" },
 ];
 
 export const SearchModal = () => {
@@ -32,13 +38,14 @@ export const SearchModal = () => {
   const searchModal = useSearchModal();
 
   const [step, setStep] = useState(STEPS.LOCATION);
-  const [campusZone, setCampusZone] = useState<string>("");
+  const [selectedHub, setSelectedHub] = useState<string>("");
   const [locationQuery, setLocationQuery] = useState<string>("");
-  const [bedCount, setBedCount] = useState(1);
-  const [bathCount, setBathCount] = useState(1);
+  const [guestCount, setGuestCount] = useState(1);
+  const [roomCount, setRoomCount] = useState(1);
+  const [bathroomCount, setBathroomCount] = useState(1);
   const [dateRange, setDateRange] = useState<Range>({
     startDate: new Date(),
-    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     key: "selection",
   });
 
@@ -57,27 +64,35 @@ export const SearchModal = () => {
 
     const currentParams = new URLSearchParams(searchParams ? searchParams.toString() : "");
 
-    if (campusZone) {
-      currentParams.set("campusZone", campusZone);
+    const finalLocation = locationQuery.trim() || selectedHub;
+    if (finalLocation) {
+      currentParams.set("location", finalLocation);
+      currentParams.set("locationValue", finalLocation);
     } else {
+      currentParams.delete("location");
+      currentParams.delete("locationValue");
       currentParams.delete("campusZone");
     }
 
-    if (locationQuery) {
-      currentParams.set("location", locationQuery);
+    if (guestCount > 1) {
+      currentParams.set("guestCount", guestCount.toString());
+      currentParams.set("beds", guestCount.toString());
     } else {
-      currentParams.delete("location");
-    }
-
-    if (bedCount > 1) {
-      currentParams.set("beds", bedCount.toString());
-    } else {
+      currentParams.delete("guestCount");
       currentParams.delete("beds");
     }
 
-    if (bathCount > 1) {
-      currentParams.set("baths", bathCount.toString());
+    if (roomCount > 1) {
+      currentParams.set("roomCount", roomCount.toString());
     } else {
+      currentParams.delete("roomCount");
+    }
+
+    if (bathroomCount > 1) {
+      currentParams.set("bathroomCount", bathroomCount.toString());
+      currentParams.set("baths", bathroomCount.toString());
+    } else {
+      currentParams.delete("bathroomCount");
       currentParams.delete("baths");
     }
 
@@ -90,14 +105,15 @@ export const SearchModal = () => {
 
     setStep(STEPS.LOCATION);
     searchModal.onClose();
-    router.push(`/search?${currentParams.toString()}`);
+    router.push(`/?${currentParams.toString()}`);
   }, [
     step,
     searchModal,
-    campusZone,
+    selectedHub,
     locationQuery,
-    bedCount,
-    bathCount,
+    guestCount,
+    roomCount,
+    bathroomCount,
     dateRange,
     onNext,
     router,
@@ -106,7 +122,7 @@ export const SearchModal = () => {
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.INFO) {
-      return "Search Hostels";
+      return "Search Stays";
     }
     return "Next";
   }, [step]);
@@ -119,34 +135,45 @@ export const SearchModal = () => {
   }, [step]);
 
   let bodyContent = (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <Heading
-        title="Where do you want to go?"
-        subtitle="Find the perfect campus hostel or location!"
+        title="Where do you want to stay in Nigeria?"
+        subtitle="Explore top cities, vibrant districts, and retreats nationwide."
       />
+
       <div>
-        <label className="text-sm font-semibold text-neutral-700 block mb-2">
-          Campus Zone
+        <label className="text-sm font-semibold text-neutral-800 block mb-2">
+          Popular Destinations
         </label>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {CAMPUS_ZONES.map((zone) => {
-            const isSelected = campusZone === zone;
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-[30vh] overflow-y-auto pr-1">
+          {NIGERIAN_POPULAR_HUBS.map((hub) => {
+            const isSelected = selectedHub === hub.name;
             return (
               <button
-                key={zone}
+                key={hub.name}
                 type="button"
-                onClick={() => setCampusZone(isSelected ? "" : zone)}
+                onClick={() => {
+                  if (isSelected) {
+                    setSelectedHub("");
+                    setLocationQuery("");
+                  } else {
+                    setSelectedHub(hub.name);
+                    setLocationQuery(hub.name);
+                  }
+                }}
                 className={`
-                  p-3 
+                  p-2.5 
                   rounded-xl 
                   border-2 
                   text-xs 
                   font-semibold 
                   flex 
-                  items-center 
-                  gap-1.5 
+                  flex-col 
+                  items-start 
+                  gap-0.5 
                   transition 
                   cursor-pointer
+                  text-left
                   ${
                     isSelected
                       ? "border-black bg-neutral-100"
@@ -154,8 +181,8 @@ export const SearchModal = () => {
                   }
                 `}
               >
-                <School className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
-                <span className="truncate">{zone}</span>
+                <span className="truncate w-full font-bold">{hub.name}</span>
+                <span className="text-[10px] text-neutral-500 font-normal">{hub.state}</span>
               </button>
             );
           })}
@@ -163,16 +190,19 @@ export const SearchModal = () => {
       </div>
 
       <div>
-        <label className="text-sm font-semibold text-neutral-700 block mb-1.5">
-          Or Type Address / Landmark
+        <label className="text-sm font-semibold text-neutral-800 block mb-1.5">
+          Or Type Any City, State, or Neighborhood
         </label>
         <div className="relative">
           <MapPin className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3.5" />
           <input
             type="text"
-            placeholder="e.g. Tanke Junction, Beside Mini Campus"
+            placeholder="e.g. Lekki Phase 1, Maitama Abuja, Port Harcourt"
             value={locationQuery}
-            onChange={(e) => setLocationQuery(e.target.value)}
+            onChange={(e) => {
+              setLocationQuery(e.target.value);
+              setSelectedHub("");
+            }}
             className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-neutral-300 focus:outline-none focus:border-black"
           />
         </div>
@@ -205,22 +235,22 @@ export const SearchModal = () => {
         <Counter
           title="Guests"
           subtitle="How many guests are coming?"
-          value={bedCount}
-          onChange={(value) => setBedCount(value)}
+          value={guestCount}
+          onChange={(value) => setGuestCount(value)}
         />
         <hr />
         <Counter
           title="Rooms"
           subtitle="How many rooms do you need?"
-          value={bedCount}
-          onChange={(value) => setBedCount(value)}
+          value={roomCount}
+          onChange={(value) => setRoomCount(value)}
         />
         <hr />
         <Counter
           title="Bathrooms"
           subtitle="How many bathrooms do you need?"
-          value={bathCount}
-          onChange={(value) => setBathCount(value)}
+          value={bathroomCount}
+          onChange={(value) => setBathroomCount(value)}
         />
       </div>
     );

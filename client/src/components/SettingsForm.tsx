@@ -63,7 +63,7 @@ const SettingsForm = ({
               <p className="text-xs text-slate-500">
                 {editMode
                   ? "Make changes below and click save."
-                  : "Profile details are locked for statutory lease integrity."}
+                  : "Profile details are verified for secure booking."}
               </p>
             </div>
           </div>
@@ -103,7 +103,7 @@ const SettingsForm = ({
               name="email"
               label="Email Address"
               type="email"
-              placeholder="e.g. user@unilorin.edu.ng"
+              placeholder="e.g. user@example.com"
               disabled={!editMode}
             />
             <CustomFormField
@@ -141,8 +141,8 @@ const SettingsForm = ({
       <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 max-w-3xl flex items-start gap-4">
         <Shield className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
         <div className="text-xs text-slate-600 leading-relaxed">
-          <span className="font-semibold text-slate-800">BaaS Tenancy Compliance: </span>
-          Your official name and contact number will be automatically populated on legally binding Residential Tenancy Agreements under the Kwara State Tenancy Regulations and Evidence Act 2011.
+          <span className="font-semibold text-slate-800">Account Security: </span>
+          Your verified name and contact information are used to validate your identity on reservations and payments under KalRent Cover.
         </div>
       </div>
     </div>

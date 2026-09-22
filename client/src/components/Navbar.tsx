@@ -37,9 +37,6 @@ export const Navbar = () => {
                   </div>
                   <div className="text-lg font-black tracking-tight text-slate-900 flex items-center">
                     KAL<span className="text-rose-500">RENT</span>
-                    <span className="ml-1.5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md hidden sm:inline-block">
-                      Escrow
-                    </span>
                   </div>
                 </div>
               </Link>

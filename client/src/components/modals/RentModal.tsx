@@ -10,17 +10,11 @@ import Counter from "@/components/inputs/Counter";
 import Heading from "@/components/Heading";
 import Input from "@/components/inputs/Input";
 import { useCreatePropertyMutation, useGetAuthUserQuery } from "@/state/api";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
+import { CATEGORIES_LIST } from "@/components/navbar/Categories";
 import {
-  Building,
-  Building2,
-  Home,
-  Hotel,
-  ShieldCheck,
   Upload,
-  Coins,
-  MapPin,
-  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 
 enum STEPS {
@@ -32,24 +26,23 @@ enum STEPS {
   PRICE = 5,
 }
 
-export const CATEGORIES = [
-  { label: "Self-Contained", icon: Home, description: "Private room with en-suite kitchen & bathroom." },
-  { label: "Single Room", icon: Building, description: "Single student room with shared facilities." },
-  { label: "Flat / Apartment", icon: Building2, description: "2 to 3 bedroom flats for roommates." },
-  { label: "Shared Hostel", icon: Hotel, description: "Student hostel room shared with roommates." },
-  { label: "Studio Apartment", icon: Sparkles, description: "Open-plan modern student living space." },
-  { label: "Executive Hall", icon: Building2, description: "Premium serviced accommodation close to gate." },
-];
-
-const CAMPUS_ZONES = [
-  "Tanke",
-  "Sanrab",
-  "OkeOdo",
-  "Jalala",
-  "MarkJunction",
-  "University Road",
-  "Chapel Area",
-  "Tipper Garage",
+const NIGERIAN_CITIES = [
+  "Lekki, Lagos",
+  "Victoria Island, Lagos",
+  "Ikeja, Lagos",
+  "Ikoyi, Lagos",
+  "Maitama, Abuja",
+  "Wuse 2, Abuja",
+  "Jabi, Abuja",
+  "Gwarinpa, Abuja",
+  "Port Harcourt, Rivers",
+  "Ibadan, Oyo",
+  "Enugu, Enugu",
+  "Calabar, Cross River",
+  "Asaba, Delta",
+  "Benin City, Edo",
+  "Abeokuta, Ogun",
+  "Ilorin, Kwara",
 ];
 
 export const RentModal = () => {
@@ -60,18 +53,19 @@ export const RentModal = () => {
   const [createProperty, { isLoading }] = useCreatePropertyMutation();
 
   const [step, setStep] = useState(STEPS.CATEGORY);
-  const [category, setCategory] = useState("Self-Contained");
-  const [campusZone, setCampusZone] = useState("Tanke");
+  const [category, setCategory] = useState("Apartments");
+  const [selectedCity, setSelectedCity] = useState("Lekki, Lagos");
   const [address, setAddress] = useState("");
   const [landmark, setLandmark] = useState("");
-  const [bedCount, setBedCount] = useState(1);
+  const [guestCount, setGuestCount] = useState(2);
+  const [roomCount, setRoomCount] = useState(1);
   const [bathCount, setBathCount] = useState(1);
   const [selectedPhotos, setSelectedPhotos] = useState<File[]>([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [annualRent, setAnnualRent] = useState(450000);
-  const [agentFee, setAgentFee] = useState(45000);
-  const [cautionDeposit, setCautionDeposit] = useState(50000);
+  const [rentalPrice, setRentalPrice] = useState(150000);
+  const [cleaningFee, setCleaningFee] = useState(15000);
+  const [securityDeposit, setSecurityDeposit] = useState(30000);
 
   const onBack = () => setStep((val) => val - 1);
   const onNext = () => setStep((val) => val + 1);
@@ -94,32 +88,46 @@ export const RentModal = () => {
       return;
     }
 
-    if (agentFee > annualRent * 0.1) {
-      toast.error("Agent fee cannot exceed the statutory 10% ceiling.");
-      return;
-    }
-
     try {
       const formData = new FormData();
-      formData.append("name", name || `${category} near ${campusZone}`);
-      formData.append("description", description || `Quality ${category} located in ${campusZone}, Ilorin.`);
+      const cityParts = selectedCity.split(",");
+      const cityName = cityParts[0]?.trim() || selectedCity;
+      const stateName = cityParts[1]?.trim() || "Nigeria";
+
+      formData.append("name", name || `${category} in ${selectedCity}`);
+      formData.append(
+        "description",
+        description || `Beautiful and serene ${category} located in ${selectedCity}. Includes 24/7 security and essential amenities.`
+      );
       formData.append("propertyType", category);
-      formData.append("campusZone", campusZone);
-      formData.append("landmark", landmark || `${campusZone} Gate`);
-      formData.append("address", address || `${campusZone}, Ilorin, Kwara State`);
-      formData.append("city", "Ilorin");
-      formData.append("state", "Kwara");
+      formData.append("campusZone", selectedCity);
+      formData.append("landmark", landmark || `${selectedCity}`);
+      formData.append("address", address || `${selectedCity}, Nigeria`);
+      formData.append("city", cityName);
+      formData.append("state", stateName);
       formData.append("country", "Nigeria");
-      formData.append("postalCode", "240001");
-      formData.append("beds", String(bedCount));
+      formData.append("postalCode", "100001");
+      formData.append("beds", String(roomCount));
       formData.append("baths", String(bathCount));
-      formData.append("annualRent", String(annualRent));
-      formData.append("agentFee", String(agentFee));
-      formData.append("cautionDeposit", String(cautionDeposit));
-      formData.append("platformFee", String(Math.round(annualRent * 0.05)));
+      formData.append("annualRent", String(rentalPrice));
+      formData.append("agentFee", String(cleaningFee));
+      formData.append("cautionDeposit", String(securityDeposit));
+      formData.append("platformFee", String(Math.round(rentalPrice * 0.05)));
       formData.append("isParkingIncluded", "true");
-      formData.append("amenities", JSON.stringify(["Water Supply", "Security Guard", "Prepaid Meter"]));
-      formData.append("highlights", JSON.stringify(["Close to Campus", "Verified Clean Water"]));
+      formData.append(
+        "amenities",
+        JSON.stringify([
+          "Air Conditioning",
+          "24/7 Power Supply",
+          "High-Speed Wi-Fi",
+          "Dedicated Security",
+          "Clean Water Supply",
+        ])
+      );
+      formData.append(
+        "highlights",
+        JSON.stringify(["Prime Location", "Protected Booking", "Instant Check-in"])
+      );
       formData.append("managerCognitoId", authUser.cognitoInfo.userId);
 
       selectedPhotos.forEach((file) => {
@@ -127,18 +135,18 @@ export const RentModal = () => {
       });
 
       await createProperty(formData).unwrap();
-      toast.success("Hostel listing created successfully!");
+      toast.success("Listing published successfully!");
       setStep(STEPS.CATEGORY);
       rentModal.onClose();
-      router.push("/managers/properties");
+      router.push("/properties");
     } catch (err: any) {
-      toast.error(err.message || "Failed to create property listing.");
+      toast.error(err.message || "Failed to publish listing.");
     }
   };
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.PRICE) {
-      return isLoading ? "Publishing..." : "Publish Hostel";
+      return isLoading ? "Publishing..." : "Publish Listing";
     }
     return "Next";
   }, [step, isLoading]);
@@ -156,7 +164,7 @@ export const RentModal = () => {
         title="Which of these best describes your place?"
         subtitle="Pick a category"
       />
-      <div 
+      <div
         className="
           grid 
           grid-cols-1 
@@ -166,7 +174,7 @@ export const RentModal = () => {
           overflow-y-auto
         "
       >
-        {CATEGORIES.map((item) => (
+        {CATEGORIES_LIST.map((item) => (
           <div key={item.label} className="col-span-1">
             <CategoryInput
               onClick={(cat) => setCategory(cat)}
@@ -185,23 +193,25 @@ export const RentModal = () => {
       <div className="flex flex-col gap-8">
         <Heading
           title="Where is your place located?"
-          subtitle="Help guests find you!"
+          subtitle="Help guests find your property across Nigeria"
         />
         <div>
-          <label className="text-sm font-semibold text-neutral-700 block mb-2">Campus Zone</label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {CAMPUS_ZONES.map((zone) => (
+          <label className="text-sm font-semibold text-neutral-800 block mb-2">
+            Select Destination / City
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[30vh] overflow-y-auto pr-1">
+            {NIGERIAN_CITIES.map((city) => (
               <button
-                key={zone}
+                key={city}
                 type="button"
-                onClick={() => setCampusZone(zone)}
+                onClick={() => setSelectedCity(city)}
                 className={`p-3 rounded-xl border-2 text-xs font-semibold text-center transition cursor-pointer ${
-                  campusZone === zone
-                    ? "border-black bg-neutral-100 font-bold"
+                  selectedCity === city
+                    ? "border-black bg-neutral-100 font-bold shadow-sm"
                     : "border-neutral-200 hover:border-neutral-400"
                 }`}
               >
-                {zone}
+                {city}
               </button>
             ))}
           </div>
@@ -209,7 +219,7 @@ export const RentModal = () => {
 
         <Input
           id="address"
-          label="Street Address"
+          label="Street Address / Neighborhood"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           required
@@ -217,7 +227,7 @@ export const RentModal = () => {
 
         <Input
           id="landmark"
-          label="Notable Landmark"
+          label="Notable Landmark or Nearest Spot"
           value={landmark}
           onChange={(e) => setLandmark(e.target.value)}
           required
@@ -231,26 +241,26 @@ export const RentModal = () => {
       <div className="flex flex-col gap-8">
         <Heading
           title="Share some basics about your place"
-          subtitle="What amenities do you have?"
+          subtitle="What amenities and capacity do you have?"
         />
-        <Counter 
-          onChange={(value) => setBedCount(value)}
-          value={bedCount}
-          title="Guests" 
+        <Counter
+          onChange={(value) => setGuestCount(value)}
+          value={guestCount}
+          title="Guests"
           subtitle="How many guests do you allow?"
         />
         <hr />
-        <Counter 
-          onChange={(value) => setBedCount(value)}
-          value={bedCount}
-          title="Rooms" 
-          subtitle="How many rooms do you have?"
+        <Counter
+          onChange={(value) => setRoomCount(value)}
+          value={roomCount}
+          title="Rooms"
+          subtitle="How many rooms / bedrooms do you have?"
         />
         <hr />
-        <Counter 
+        <Counter
           onChange={(value) => setBathCount(value)}
           value={bathCount}
-          title="Bathrooms" 
+          title="Bathrooms"
           subtitle="How many bathrooms do you have?"
         />
       </div>
@@ -261,8 +271,8 @@ export const RentModal = () => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="Add a photo of your place"
-          subtitle="Show guests what your place looks like!"
+          title="Add photos of your place"
+          subtitle="Show guests what makes your place special!"
         />
         <label className="border-2 border-dashed border-neutral-300 hover:border-neutral-500 p-12 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition bg-neutral-50">
           <Upload className="w-10 h-10 text-neutral-400 mb-2" />
@@ -302,7 +312,7 @@ export const RentModal = () => {
         />
         <Input
           id="title"
-          label="Title"
+          label="Listing Title"
           disabled={isLoading}
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -322,60 +332,59 @@ export const RentModal = () => {
   }
 
   if (step === STEPS.PRICE) {
-    const isFeeOverCeiling = agentFee > annualRent * 0.1;
-    const totalUpfront = annualRent + agentFee + cautionDeposit + Math.round(annualRent * 0.05);
+    const totalAmount = rentalPrice + cleaningFee + securityDeposit;
 
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
           title="Now, set your price"
-          subtitle="How much do you charge per year?"
+          subtitle="Set transparent pricing for your guests"
         />
         <Input
           id="price"
-          label="Annual Rent"
-          formatPrice 
-          type="number" 
+          label="Rate (₦)"
+          formatPrice
+          type="number"
           disabled={isLoading}
-          value={annualRent}
-          onChange={(e) => {
-            const val = Number(e.target.value);
-            setAnnualRent(val);
-            setAgentFee(Math.round(val * 0.1));
-          }}
+          value={rentalPrice}
+          onChange={(e) => setRentalPrice(Number(e.target.value))}
           required
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
-            id="agentFee"
-            label="Agent Fee (Max 10%)"
+            id="cleaningFee"
+            label="Cleaning Fee (₦)"
             formatPrice
             type="number"
             disabled={isLoading}
-            value={agentFee}
-            onChange={(e) => setAgentFee(Number(e.target.value))}
+            value={cleaningFee}
+            onChange={(e) => setCleaningFee(Number(e.target.value))}
             required
           />
           <Input
-            id="cautionDeposit"
-            label="Caution Deposit (Escrow)"
+            id="securityDeposit"
+            label="Refundable Caution Deposit (₦)"
             formatPrice
             type="number"
             disabled={isLoading}
-            value={cautionDeposit}
-            onChange={(e) => setCautionDeposit(Number(e.target.value))}
+            value={securityDeposit}
+            onChange={(e) => setSecurityDeposit(Number(e.target.value))}
             required
           />
         </div>
 
-        <div className="bg-neutral-50 border border-neutral-200 p-4 rounded-xl text-xs space-y-1.5">
+        <div className="bg-neutral-50 border border-neutral-200 p-4 rounded-xl text-xs space-y-2">
           <div className="flex justify-between font-bold text-neutral-900 text-sm">
-            <span>Total Tenant Upfront:</span>
-            <span>₦{totalUpfront.toLocaleString()}</span>
+            <span>Estimated Total:</span>
+            <span>₦{totalAmount.toLocaleString()}</span>
           </div>
-          <p className="text-neutral-500 text-xs">
-            Includes 5% platform fee (₦{(Math.round(annualRent * 0.05)).toLocaleString()}) & BaaS Escrow Guarantee.
+          <div className="flex items-center gap-1.5 text-neutral-600 text-xs">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>Protected Booking: Includes KalRent Cover & 24/7 guest support.</span>
+          </div>
+          <p className="text-neutral-500 text-[11px]">
+            Caution deposit is fully refundable to the guest upon checkout inspection.
           </p>
         </div>
       </div>
@@ -386,7 +395,7 @@ export const RentModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={rentModal.isOpen}
-      title="Airbnb your home!"
+      title="KalRent your home"
       actionLabel={actionLabel}
       onSubmit={onSubmit}
       secondaryActionLabel={secondaryActionLabel}

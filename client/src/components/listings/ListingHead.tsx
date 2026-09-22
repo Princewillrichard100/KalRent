@@ -56,12 +56,12 @@ export const ListingHead: React.FC<ListingHeadProps> = ({
             {campusZone && (
               <>
                 <span>•</span>
-                <span className="font-semibold text-neutral-800">{campusZone} Campus Zone</span>
+                <span className="font-semibold text-neutral-800">{campusZone}</span>
               </>
             )}
             <span>•</span>
             <span className="text-emerald-700 font-semibold flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4" /> BaaS Escrow Verified
+              <ShieldCheck className="w-4 h-4" /> Verified Listing
             </span>
           </div>
         </div>

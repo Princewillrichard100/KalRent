@@ -10,34 +10,34 @@ export const SearchPill = () => {
   const searchModal = useSearchModal();
   const params = useSearchParams();
 
-  const campusZone = params?.get("campusZone");
+  const location = params?.get("location") || params?.get("locationValue") || params?.get("campusZone");
   const startDate = params?.get("startDate");
   const endDate = params?.get("endDate");
-  const beds = params?.get("beds");
+  const guestCount = params?.get("guestCount") || params?.get("beds");
 
   const locationLabel = useMemo(() => {
-    if (campusZone) {
-      return campusZone;
+    if (location) {
+      return location;
     }
-    return "Any Campus Zone";
-  }, [campusZone]);
+    return "Anywhere in Nigeria";
+  }, [location]);
 
   const durationLabel = useMemo(() => {
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
       const diff = differenceInDays(end, start);
-      return `${diff} Days`;
+      return `${diff} ${diff === 1 ? "Night" : "Nights"}`;
     }
-    return "Any Term";
+    return "Any Week";
   }, [startDate, endDate]);
 
-  const bedsLabel = useMemo(() => {
-    if (beds) {
-      return `${beds} ${Number(beds) === 1 ? "Bed" : "Beds"}`;
+  const guestsLabel = useMemo(() => {
+    if (guestCount) {
+      return `${guestCount} ${Number(guestCount) === 1 ? "Guest" : "Guests"}`;
     }
-    return "Add Beds";
-  }, [beds]);
+    return "Add Guests";
+  }, [guestCount]);
 
   return (
     <div
@@ -64,7 +64,7 @@ export const SearchPill = () => {
           {durationLabel}
         </div>
         <div className="text-xs pl-4 pr-2 text-slate-500 flex flex-row items-center gap-3">
-          <div className="hidden sm:block text-slate-600 font-medium">{bedsLabel}</div>
+          <div className="hidden sm:block text-slate-600 font-medium">{guestsLabel}</div>
           <div className="p-2 bg-rose-500 rounded-full text-white shadow-xs">
             <Search className="w-3.5 h-3.5" strokeWidth={2.5} />
           </div>

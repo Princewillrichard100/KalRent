@@ -50,7 +50,7 @@ const Card = ({
           )}
           <span className="bg-emerald-700/85 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
             <ShieldCheck className="w-3 h-3 shrink-0" />
-            Escrow Protected
+            Protected Booking
           </span>
           {property.isParkingIncluded && (
             <span className="bg-white/90 backdrop-blur-xs text-slate-800 text-xs font-medium px-2 py-0.5 rounded-lg">

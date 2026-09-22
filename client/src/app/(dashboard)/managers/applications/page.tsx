@@ -49,7 +49,7 @@ const Applications = () => {
       await updateApplicationStatus({ id, status }).unwrap();
       toast.success(
         status === "APPROVED"
-          ? "Application approved! Lease and statutory agreement generated."
+          ? "Application approved! Rental agreement confirmed."
           : "Application updated."
       );
     } catch {

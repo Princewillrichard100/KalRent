@@ -81,7 +81,7 @@ const ApplicationModal = ({
                 Apply for Tenancy
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-500">
-                Direct booking backed by BaaS escrow protection
+                Protected Booking backed by KalRent Cover
               </DialogDescription>
             </div>
           </div>
@@ -91,15 +91,15 @@ const ApplicationModal = ({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <CustomFormField
               name="name"
-              label="Student Name"
+              label="Full Name"
               type="text"
               placeholder="e.g. Richard Princewill"
             />
             <CustomFormField
               name="email"
-              label="Student Email Address"
+              label="Email Address"
               type="email"
-              placeholder="e.g. student@unilorin.edu.ng"
+              placeholder="e.g. guest@example.com"
             />
             <CustomFormField
               name="phoneNumber"
@@ -109,13 +109,13 @@ const ApplicationModal = ({
             />
             <CustomFormField
               name="message"
-              label="Introduction or Notes for Manager (Optional)"
+              label="Introduction or Notes for Host (Optional)"
               type="textarea"
-              placeholder="State your department, level, or planned move-in date..."
+              placeholder="State your planned check-in date, purpose of stay, etc..."
             />
 
             <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-[11px] text-slate-600 leading-relaxed">
-              Upon manager approval, you will receive an invitation to review the tenancy schedule and deposit funds into BaaS escrow.
+              Upon host approval, you will receive a prompt to review reservation details and confirm your stay safely.
             </div>
 
             <Button

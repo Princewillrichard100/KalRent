@@ -36,7 +36,7 @@ export const ListingInfo: React.FC<ListingInfoProps> = ({
       <div className="flex flex-row items-center justify-between pb-6 border-b border-neutral-200">
         <div className="flex flex-col gap-1">
           <div className="text-xl font-bold text-neutral-900">
-            Hosted by {user?.name || "Verified Campus Manager"}
+            Hosted by {user?.name || "Verified Host"}
           </div>
           <div className="flex flex-row items-center gap-3 font-light text-neutral-500 text-xs">
             <span>{bedCount} {bedCount === 1 ? "Bedroom" : "Bedrooms"}</span>
@@ -64,34 +64,31 @@ export const ListingInfo: React.FC<ListingInfoProps> = ({
         </div>
         <div className="flex flex-col">
           <div className="text-sm font-bold text-neutral-900">
-            {category?.label || propertyType || "Student Accommodation"}
+            {category?.label || propertyType || "Entire Place"}
           </div>
           <div className="text-neutral-500 text-xs mt-0.5 leading-relaxed">
             {category?.description ||
-              "Verified student rental adhering to Kwara State Tenancy Regulations and certified inspection rules."}
+              "Verified residential accommodation with quality living and safety inspection standards."}
           </div>
         </div>
       </div>
 
-      {/* AirCover / BaaS Escrow Guarantee Card */}
+      {/* KalRent Cover Guarantee Card */}
       <div className="pb-6 border-b border-neutral-200">
-        <div className="flex items-center gap-1.5 mb-2">
-          <span className="text-lg font-black text-rose-500 tracking-tighter">air</span>
-          <span className="text-lg font-black text-neutral-900 tracking-tighter">cover</span>
-          <span className="ml-2 text-xs font-bold px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded-md border border-emerald-200">
-            BaaS Escrow Protected
-          </span>
+        <div className="flex items-center gap-1 mb-2">
+          <span className="text-lg font-black text-rose-500 tracking-tight">kalrent</span>
+          <span className="text-lg font-black text-neutral-900 tracking-tight">cover</span>
         </div>
         <p className="text-xs text-neutral-500 leading-relaxed max-w-xl">
-          Every KalRent booking includes comprehensive Caution Deposit Escrow Protection against landlord disputes, lockouts, or unauthorized fee markups under the Evidence Act 2011.
+          Every booking includes free protection from Host cancellations, listing inaccuracies, and other issues like trouble checking in.
         </p>
       </div>
 
       {/* Rich Description */}
       <div className="pb-6 border-b border-neutral-200">
-        <h3 className="text-base font-bold text-neutral-900 mb-3">About this accommodation</h3>
+        <h3 className="text-base font-bold text-neutral-900 mb-3">About this space</h3>
         <p className="text-xs text-neutral-600 leading-relaxed whitespace-pre-line">
-          {description || "No specific description provided by the manager."}
+          {description || "No specific description provided by the host."}
         </p>
       </div>
 
@@ -110,7 +107,7 @@ export const ListingInfo: React.FC<ListingInfoProps> = ({
               </div>
             ))
           ) : (
-            <p className="text-xs text-neutral-400">Essential student amenities included.</p>
+            <p className="text-xs text-neutral-400">Essential amenities included.</p>
           )}
         </div>
       </div>
