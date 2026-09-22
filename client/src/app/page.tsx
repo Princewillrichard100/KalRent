@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Container from "@/components/Container";
 import ListingSectionRow, { SectionData } from "@/components/listings/ListingSectionRow";
+import ListingCard from "@/components/listings/ListingCard";
 import { useGetAuthUserQuery, useGetPropertiesQuery } from "@/state/api";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import EmptyState from "@/components/EmptyState";
@@ -131,25 +132,9 @@ export default function Home() {
       <main className="h-full w-full pt-28 md:pt-44 pb-20">
         <Container>
           {isLoading ? (
-            <div className="space-y-12">
-              {[1, 2, 3].map((sectionIdx) => (
-                <div key={sectionIdx} className="space-y-4 animate-pulse">
-                  <div className="h-7 bg-neutral-200 rounded w-1/4"></div>
-                  <div className="h-4 bg-neutral-100 rounded w-1/3 mb-4"></div>
-                  <div className="flex gap-6 overflow-hidden">
-                    {[1, 2, 3, 4].map((cardIdx) => (
-                      <div
-                        key={cardIdx}
-                        className="min-w-[280px] flex flex-col gap-3"
-                      >
-                        <div className="aspect-square w-full rounded-2xl bg-neutral-200"></div>
-                        <div className="h-4 bg-neutral-200 rounded w-3/4"></div>
-                        <div className="h-3.5 bg-neutral-100 rounded w-1/2"></div>
-                        <div className="h-4 bg-neutral-200 rounded w-1/3"></div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            <div className="flex flex-col space-y-4">
+              {[1, 2, 3].map((idx) => (
+                <ListingSectionRow key={idx} isLoading={true} />
               ))}
             </div>
           ) : isError || !properties || properties.length === 0 ? (

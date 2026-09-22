@@ -101,6 +101,35 @@ export const CAMPUS_ZONE_COORDINATES: Record<string, [number, number]> = {
   Other: [4.6, 8.48],
 };
 
+export const AMENITY_MAPPING: Record<string, string> = {
+  washerdryer: "WasherDryer",
+  washer: "WasherDryer",
+  airconditioning: "AirConditioning",
+  "air conditioning": "AirConditioning",
+  ac: "AirConditioning",
+  dishwasher: "Dishwasher",
+  highspeedinternet: "HighSpeedInternet",
+  "high speed internet": "HighSpeedInternet",
+  "high-speed internet": "HighSpeedInternet",
+  "high-speed wi-fi": "WiFi",
+  "high speed wi-fi": "WiFi",
+  wifi: "WiFi",
+  "wi-fi": "WiFi",
+  hardwoodfloors: "HardwoodFloors",
+  walkinclosets: "WalkInClosets",
+  microwave: "Microwave",
+  refrigerator: "Refrigerator",
+  pool: "Pool",
+  gym: "Gym",
+  parking: "Parking",
+  petsallowed: "PetsAllowed",
+  "allows pets": "PetsAllowed",
+  "free parking": "Parking",
+  "24/7 power supply": "WiFi",
+  "dedicated security": "Parking",
+  "clean water supply": "WasherDryer",
+};
+
 export const getProperties = async (
   req: Request,
   res: Response
@@ -140,6 +169,7 @@ export const getProperties = async (
       sw_lat,
       sw_lng,
       bbox,
+      isParkingIncluded,
     } = req.query;
 
     let parsedMinLat = minLat ? parseFloat(minLat as string) : undefined;
@@ -286,8 +316,37 @@ export const getProperties = async (
     }
 
     if (amenities && amenities !== "any") {
-      const amenitiesArray = (amenities as string).split(",");
-      whereConditions.push(Prisma.sql`p.amenities @> ${amenitiesArray}`);
+      const rawList = (amenities as string).split(",").map((s) => s.trim()).filter(Boolean);
+      const mappedAmenities: string[] = [];
+      let wantsParking = false;
+
+      rawList.forEach((item) => {
+        const lower = item.toLowerCase();
+        if (lower === "parking" || lower === "free parking" || lower === "freeparking") {
+          wantsParking = true;
+        } else {
+          const mapped = AMENITY_MAPPING[lower] || item;
+          if (mapped && !mappedAmenities.includes(mapped)) {
+            mappedAmenities.push(mapped);
+          }
+        }
+      });
+
+      if (mappedAmenities.length > 0) {
+        whereConditions.push(Prisma.sql`p.amenities::text[] @> ${mappedAmenities}::text[]`);
+      }
+
+      if (wantsParking) {
+        whereConditions.push(
+          Prisma.sql`(p."isParkingIncluded" = true OR 'Parking' = ANY(p.amenities::text[]))`
+        );
+      }
+    }
+
+    if (String(isParkingIncluded) === "true") {
+      whereConditions.push(
+        Prisma.sql`(p."isParkingIncluded" = true OR 'Parking' = ANY(p.amenities::text[]))`
+      );
     }
 
     if (availableFrom && availableFrom !== "any") {
@@ -529,33 +588,6 @@ const normalizeCampusZone = (raw?: string): any => {
     (z) => z.toLowerCase() === raw.trim().toLowerCase()
   );
   return match || "Other";
-};
-
-const AMENITY_MAPPING: Record<string, string> = {
-  washerdryer: "WasherDryer",
-  washer: "WasherDryer",
-  airconditioning: "AirConditioning",
-  "air conditioning": "AirConditioning",
-  ac: "AirConditioning",
-  dishwasher: "Dishwasher",
-  highspeedinternet: "HighSpeedInternet",
-  "high speed internet": "HighSpeedInternet",
-  "high-speed internet": "HighSpeedInternet",
-  "high-speed wi-fi": "WiFi",
-  "high speed wi-fi": "WiFi",
-  wifi: "WiFi",
-  "wi-fi": "WiFi",
-  hardwoodfloors: "HardwoodFloors",
-  walkinclosets: "WalkInClosets",
-  microwave: "Microwave",
-  refrigerator: "Refrigerator",
-  pool: "Pool",
-  gym: "Gym",
-  parking: "Parking",
-  petsallowed: "PetsAllowed",
-  "24/7 power supply": "WiFi",
-  "dedicated security": "Parking",
-  "clean water supply": "WasherDryer",
 };
 
 const normalizeAmenities = (rawAmenities: any): any[] => {

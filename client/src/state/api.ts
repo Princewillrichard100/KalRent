@@ -93,8 +93,9 @@ export const api = createApi({
         const params = cleanParams({
           location: filters.location,
           locationValue: filters.locationValue,
-          priceMin: filters.priceRange?.[0],
-          priceMax: filters.priceRange?.[1],
+          priceMin: (filters as any).priceMin ?? filters.priceRange?.[0],
+          priceMax: (filters as any).priceMax ?? filters.priceRange?.[1],
+          isParkingIncluded: (filters as any).isParkingIncluded,
           beds: filters.beds,
           baths: filters.baths,
           propertyType: filters.propertyType,
@@ -137,9 +138,13 @@ export const api = createApi({
             ]
           : [{ type: "Properties", id: "LIST" }],
       async onQueryStarted(_, { queryFulfilled }) {
-        await withToast(queryFulfilled, {
-          error: "Failed to fetch properties.",
-        });
+        try {
+          await withToast(queryFulfilled, {
+            error: "Failed to fetch properties.",
+          });
+        } catch (_) {
+          // Handled gracefully by RTK Query isError state and toast
+        }
       },
     }),
 

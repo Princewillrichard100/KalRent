@@ -30,7 +30,97 @@ const SingleListing = () => {
   });
 
   if (isLoading || !property) {
-    return <Loading />;
+    return (
+      <Container className="py-8">
+        <div className="max-w-screen-lg mx-auto flex flex-col gap-6">
+          {/* Skeleton Title & Location Header */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <div className="h-8 w-72 bg-neutral-200 animate-pulse rounded-lg" />
+                <div className="h-4 w-48 bg-neutral-100 animate-pulse rounded-md mt-2" />
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="h-8 w-20 bg-neutral-100 animate-pulse rounded-lg" />
+                <div className="h-8 w-20 bg-neutral-100 animate-pulse rounded-lg" />
+              </div>
+            </div>
+
+            {/* Skeleton 5-Photo Showcase Grid (Locked dimensions: h-[350px] sm:h-[420px] md:h-[480px]) */}
+            <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-2 h-[350px] sm:h-[420px] md:h-[480px] rounded-2xl overflow-hidden bg-neutral-100">
+              <div className="col-span-1 md:col-span-2 row-span-2 bg-neutral-200 animate-pulse" />
+              <div className="hidden md:block col-span-1 row-span-1 bg-neutral-200 animate-pulse" />
+              <div className="hidden md:block col-span-1 row-span-1 bg-neutral-200 animate-pulse" />
+              <div className="hidden md:block col-span-1 row-span-1 bg-neutral-200 animate-pulse" />
+              <div className="hidden md:block col-span-1 row-span-1 bg-neutral-200 animate-pulse" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
+            {/* Left: Info Skeletons */}
+            <div className="col-span-4 flex flex-col gap-8">
+              {/* Host profile skeleton */}
+              <div className="flex flex-row items-center justify-between pb-6 border-b border-neutral-200">
+                <div className="flex flex-col gap-2">
+                  <div className="h-6 w-48 bg-neutral-200 animate-pulse rounded" />
+                  <div className="h-4 w-32 bg-neutral-100 animate-pulse rounded" />
+                </div>
+                <div className="w-14 h-14 rounded-full bg-neutral-200 animate-pulse" />
+              </div>
+
+              {/* Kalrent Cover skeleton */}
+              <div className="pb-6 border-b border-neutral-200 space-y-2">
+                <div className="h-5 w-32 bg-neutral-200 animate-pulse rounded" />
+                <div className="h-4 w-3/4 bg-neutral-100 animate-pulse rounded" />
+              </div>
+
+              {/* Description skeleton */}
+              <div className="pb-6 border-b border-neutral-200 space-y-2">
+                <div className="h-5 w-40 bg-neutral-200 animate-pulse rounded" />
+                <div className="h-3.5 w-full bg-neutral-100 animate-pulse rounded" />
+                <div className="h-3.5 w-5/6 bg-neutral-100 animate-pulse rounded" />
+                <div className="h-3.5 w-2/3 bg-neutral-100 animate-pulse rounded" />
+              </div>
+
+              {/* Amenities skeleton */}
+              <div className="space-y-3">
+                <div className="h-5 w-44 bg-neutral-200 animate-pulse rounded" />
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="h-8 bg-neutral-100 animate-pulse rounded-lg" />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Sticky Booking Card Skeleton */}
+            <div className="col-span-3 order-first md:order-last mb-10 md:mb-0">
+              <div className="sticky top-28">
+                <div className="bg-white rounded-2xl border border-neutral-200 p-6 shadow-xl flex flex-col gap-4">
+                  <div className="flex justify-between items-baseline">
+                    <div className="h-8 w-36 bg-neutral-200 animate-pulse rounded-lg" />
+                    <div className="h-6 w-28 bg-neutral-100 animate-pulse rounded-full" />
+                  </div>
+                  <hr className="border-neutral-100" />
+                  <div className="h-14 w-full bg-neutral-100 animate-pulse rounded-xl" />
+                  <div className="h-12 w-full bg-neutral-200 animate-pulse rounded-xl" />
+                  <div className="space-y-2 pt-2">
+                    <div className="flex justify-between">
+                      <div className="h-4 w-24 bg-neutral-100 animate-pulse rounded" />
+                      <div className="h-4 w-16 bg-neutral-100 animate-pulse rounded" />
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="h-4 w-28 bg-neutral-100 animate-pulse rounded" />
+                      <div className="h-4 w-16 bg-neutral-100 animate-pulse rounded" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    );
   }
 
   const images =
