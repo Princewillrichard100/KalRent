@@ -5,6 +5,7 @@ import Heading from "@/components/Heading";
 import EmptyState from "@/components/EmptyState";
 import Loading from "@/components/Loading";
 import { useGetAuthUserQuery, useGetManagerPropertiesQuery } from "@/state/api";
+import { Building2 } from "lucide-react";
 import React from "react";
 
 const Properties = () => {

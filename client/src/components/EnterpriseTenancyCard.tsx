@@ -11,6 +11,7 @@ import {
   AlertCircle,
   FileCheck2,
   Lock,
+  Check,
 } from "lucide-react";
 import { downloadAgreement } from "@/lib/downloadAgreement";
 import {

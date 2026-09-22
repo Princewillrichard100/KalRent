@@ -40,7 +40,7 @@ const ApplicationModal = ({
     if (authUser?.userInfo) {
       form.reset({
         name: authUser.userInfo.name || "",
-        email: (authUser.userInfo as any).email || authUser.cognitoInfo?.email || "",
+        email: (authUser.userInfo as any).email || (authUser.cognitoInfo as any)?.email || "",
         phoneNumber: (authUser.userInfo as any).phoneNumber || "",
         message: "",
       });
