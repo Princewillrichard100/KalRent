@@ -18,9 +18,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.740.0",
     "@aws-sdk/lib-storage": "^3.740.0",
-    "@prisma/client": "^6.3.0",
-    "@supabase/ssr": "^0.12.6",
-    "@supabase/supabase-js": "^2.115.0",
+    "@prisma/client": "6.3.0",
     "@terraformer/wkt": "^2.2.1",
     "axios": "^1.7.9",
     "body-parser": "^1.20.3",
@@ -32,8 +30,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "pdfkit": "^0.20.2",
-    "prisma": "^6.3.0",
-    "uuid": "^11.0.5"
+    "prisma": "6.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
