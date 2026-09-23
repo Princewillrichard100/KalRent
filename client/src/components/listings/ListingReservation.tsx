@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Calendar, { Range } from "@/components/inputs/Calendar";
 import { ShieldCheck, CalendarRange } from "lucide-react";
 
@@ -30,12 +30,24 @@ export const ListingReservation: React.FC<ListingReservationProps> = ({
 }) => {
   const [showCalendar, setShowCalendar] = useState(false);
 
-  const calculatedCleaningFee = agentFee || Math.round(annualRent * 0.05);
-  const calculatedServiceFee = platformFee || Math.round(annualRent * 0.05);
-  const calculatedCautionDeposit = cautionDeposit || Math.round(annualRent * 0.1);
+  const durationDays = useMemo(() => {
+    if (!dateRange.startDate || !dateRange.endDate) return 365;
+    const diffTime = dateRange.endDate.getTime() - dateRange.startDate.getTime();
+    const days = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    return days > 0 ? days : 365;
+  }, [dateRange.startDate, dateRange.endDate]);
+
+  const effectiveBaseRent = useMemo(() => {
+    if (durationDays === 365) return annualRent;
+    return Math.round((annualRent / 365) * durationDays);
+  }, [annualRent, durationDays]);
+
+  const calculatedCleaningFee = agentFee || Math.round(effectiveBaseRent * 0.05);
+  const calculatedServiceFee = platformFee || Math.round(effectiveBaseRent * 0.05);
+  const calculatedCautionDeposit = cautionDeposit || Math.round(effectiveBaseRent * 0.1);
 
   const total =
-    annualRent +
+    effectiveBaseRent +
     calculatedCleaningFee +
     calculatedServiceFee +
     calculatedCautionDeposit;
@@ -137,8 +149,10 @@ export const ListingReservation: React.FC<ListingReservationProps> = ({
       {/* Financial Breakdown */}
       <div className="space-y-3 text-sm">
         <div className="flex justify-between text-neutral-600">
-          <span className="underline">Base rent</span>
-          <span>₦{annualRent.toLocaleString()}</span>
+          <span className="underline">
+            Base rent {durationDays !== 365 ? `(${durationDays} days)` : "(1 year)"}
+          </span>
+          <span>₦{effectiveBaseRent.toLocaleString()}</span>
         </div>
 
         <div className="flex justify-between text-neutral-600">

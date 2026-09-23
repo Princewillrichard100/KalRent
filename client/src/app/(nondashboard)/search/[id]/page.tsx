@@ -12,7 +12,7 @@ import PropertyLocation from "./PropertyLocation";
 import ApplicationModal from "./ApplicationModal";
 import Loading from "@/components/Loading";
 import { Range } from "@/components/inputs/Calendar";
-import { addYears } from "date-fns";
+import { addYears, eachDayOfInterval } from "date-fns";
 import { useLoginModal } from "@/hooks/useLoginModal";
 
 const SingleListing = () => {
@@ -28,6 +28,26 @@ const SingleListing = () => {
     endDate: addYears(new Date(), 1),
     key: "selection",
   });
+
+  const disabledDates = React.useMemo(() => {
+    let dates: Date[] = [];
+    if (property?.leases) {
+      property.leases.forEach((lease: any) => {
+        try {
+          if (lease.startDate && lease.endDate) {
+            const range = eachDayOfInterval({
+              start: new Date(lease.startDate),
+              end: new Date(lease.endDate),
+            });
+            dates = [...dates, ...range];
+          }
+        } catch (e) {
+          // ignore invalid lease dates
+        }
+      });
+    }
+    return dates;
+  }, [property?.leases]);
 
   if (isLoading || !property) {
     return (
@@ -179,6 +199,7 @@ const SingleListing = () => {
                 cautionDeposit={property.cautionDeposit}
                 platformFee={property.platformFee}
                 dateRange={dateRange}
+                disabledDates={disabledDates}
                 onChangeDate={(range) => setDateRange(range)}
                 onSubmit={handleApplyClick}
               />
