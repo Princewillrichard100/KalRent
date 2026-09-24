@@ -1,0 +1,32 @@
+# KalRent Complete Data & System Architecture (kalrent.com.ng)
+
+## Mission
+Eliminating rental scams and ghost listings across Nigerian urban centers through verified property data, power reliability metrics (NEPA Bands A/B/C), flood risk indexing, and secure rental escrow payments.
+
+## Taxonomy & Structure
+KalRent organizes Nigerian rental real estate into a 4-tier taxonomy:
+1. State level (e.g. Lagos, Abuja, Kwara, Oyo, Rivers, Enugu)
+2. City / Neighborhood / Local Government (e.g. Lekki, Yaba, Maitama, Tanke)
+3. Property Types:
+   - `apartment`: Standard multi-unit residential flats (2-3 bedrooms)
+   - `1-bedroom-flat`: Mini-flat containing living room, kitchen, bedroom, and bathroom
+   - `2-bedroom-flat`: Dual bedroom apartment with ensuite baths
+   - `3-bedroom-flat`: Executive family apartment with visitor toilet
+   - `self-contain`: Single-room studio accommodation with private kitchen/toilet
+   - `duplex`: Multi-floor semi-detached or fully detached residential home
+   - `room`: Student accommodation or single room in shared flat
+4. Single Property Units:
+   - Canonical URL: `/property/[slug]-[id]`
+   - Schema: Schema.org/SingleFamilyResidence or Schema.org/Apartment with ISO 4217 Currency Code NGN and Country NG.
+
+## Direct Answer Intelligence (GEO Metrics)
+- Lagos Lekki 2-Bedroom Flat Average: ₦4,500,000/yr (Move-in ~₦5,850,000)
+- Lagos Yaba 2-Bedroom Flat Average: ₦3,200,000/yr (Move-in ~₦4,160,000)
+- Abuja Maitama 2-Bedroom Flat Average: ₦15,000,000/yr (Move-in ~₦19,500,000)
+- Kwara Tanke Self-Contain Student Average: ₦350,000/yr (Move-in ~₦455,000)
+- Oyo Bodija 2-Bedroom Flat Average: ₦2,200,000/yr (Move-in ~₦2,860,000)
+
+## Security & Verification Standards
+- Zero unverified listings.
+- Automated tenant lease generation.
+- Landlord verification via national identity & deed of ownership check.
