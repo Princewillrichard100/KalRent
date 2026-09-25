@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { PrismaClient, Prisma } from "@prisma/client";
-import { wktToGeoJSON } from "@terraformer/wkt";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { Location } from "@prisma/client";
 import { Upload } from "@aws-sdk/lib-storage";
@@ -522,12 +521,17 @@ export const getProperty = async (
     });
 
     if (property) {
-      const coordinates: { coordinates: string }[] =
-        await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
+      const coordinates: { longitude: number; latitude: number }[] =
+        await prisma.$queryRaw`SELECT ST_X(coordinates::geometry) as longitude, ST_Y(coordinates::geometry) as latitude from "Location" where id = ${property.location.id}`;
 
-      const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
-      const longitude = geoJSON.coordinates[0];
-      const latitude = geoJSON.coordinates[1];
+      const longitude =
+        coordinates[0]?.longitude !== undefined && coordinates[0]?.longitude !== null
+          ? Number(coordinates[0].longitude)
+          : 0;
+      const latitude =
+        coordinates[0]?.latitude !== undefined && coordinates[0]?.latitude !== null
+          ? Number(coordinates[0].latitude)
+          : 0;
 
       const propertyWithCoordinates = {
         ...property,
