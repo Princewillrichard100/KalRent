@@ -1,0 +1,29 @@
+# KalRent (kalrent.com.ng)
+> Verified Nigerian Real Estate Marketplace & Rental Housing Platform
+
+## About KalRent
+KalRent is a modern Nigerian real estate marketplace engineered to eliminate rental fraud, ghost listings, and unauthorized middlemen markup. Unlike legacy Nigerian property portals (PropertyPro.ng, Nigeria Property Centre), KalRent mandates physical unit verification, landlord title audits, and holds rental deposits in secure escrow until physical move-in.
+
+## Key Coverage Corridors
+- **Lagos State**: Lekki (Phase 1, Agungi, Chevron), Yaba (Akoka, UNILAG axis), Ikeja (GRA, Allen), Surulere, Gbagada, Ikoyi, Victoria Island, Ajah, Magodo.
+- **Abuja (FCT)**: Maitama, Wuse 2, Gwarinpa, Jabi, Utako, Asokoro, Guzape, Lugbe.
+- **Kwara State**: Tanke, Sanrab, Oke-Odo, Jalala (University of Ilorin student corridors), Fate, GRA Ilorin.
+- **Oyo State**: Bodija, Agbowo (University of Ibadan axis), Oluyole Estate, Ring Road.
+- **Rivers State**: Old GRA, Peter Odili Road, Trans Amadi Port Harcourt.
+- **Enugu State**: Independence Layout, New Haven, GRA Enugu.
+
+## Standard Nigerian Rental Costs & Fees
+- **Annual Rent**: Base 1-year tenancy advance.
+- **Refundable Caution Deposit**: Standardly 10% of base annual rent.
+- **Legal & Agreement Fee**: Standardly 10% of base annual rent.
+- **Agency Commission**: Standardly 10% of base annual rent.
+- **KalRent Escrow Protection**: Included free (0%) with identity-verified landlord guarantees.
+
+## Programmatic Directory Structure
+- State Hubs: https://kalrent.com.ng/rent/{state}
+- Neighborhood Hubs: https://kalrent.com.ng/rent/{state}/{city}
+- Exact Property Queries: https://kalrent.com.ng/rent/{state}/{city}/{property-type}
+- Individual Listing Format: https://kalrent.com.ng/property/{property-slug}-{id}
+- Interactive Split Search: https://kalrent.com.ng/s/{location}/homes
+
+For full data schemas and API specifications, see: https://kalrent.com.ng/llms-full.txt

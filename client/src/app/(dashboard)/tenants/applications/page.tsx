@@ -54,7 +54,7 @@ const Applications = () => {
         await openPaystackPopup({
           key: paystackKey,
           email:
-            authUser?.cognitoInfo?.email ||
+            (authUser?.cognitoInfo as any)?.email ||
             (authUser?.userInfo as any)?.email ||
             "tenant@kalrent.com",
           amount: Math.round(res.totalAmount * 100),
@@ -68,13 +68,13 @@ const Applications = () => {
                 "Escrow payment verified! Your tenancy is now active."
               );
             } catch {
-              toast.info("Payment confirmed, refreshing tenancy status...");
+              toast("Payment confirmed, refreshing tenancy status...", { icon: "ℹ️" });
             } finally {
               refetch();
             }
           },
           onClose: () => {
-            toast.info("Payment window closed.");
+            toast("Payment window closed.", { icon: "ℹ️" });
           },
         });
       } else if (res.authorization_url) {
@@ -173,8 +173,9 @@ const Applications = () => {
                             application.property?.name
                           );
                         } else {
-                          toast.info(
-                            "Tenancy agreement will be ready once your application is approved."
+                          toast(
+                            "Tenancy agreement will be ready once your application is approved.",
+                            { icon: "ℹ️" }
                           );
                         }
                       }}

@@ -94,7 +94,7 @@ export const PriceHistogram: React.FC<PriceHistogramProps> = ({
     <div className="col-span-1 sm:col-span-2 bg-[#F7F7F7]/90 border border-neutral-200/90 rounded-3xl p-5 sm:p-7 select-none my-3 shadow-xs">
       <div className="mb-4">
         <h3 className="text-base sm:text-lg font-bold text-neutral-900 tracking-tight">
-          See what's in your price range
+          See what&apos;s in your price range
         </h3>
         <p className="text-xs text-neutral-500 font-normal">
           Trip price, includes all fees

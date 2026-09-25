@@ -376,9 +376,9 @@ export const Navbar = () => {
         />
       )}
 
-      <header className="fixed top-0 left-0 w-full z-40 bg-white border-b border-slate-200/80 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-2xs">
+      <header className="fixed top-0 left-0 w-full z-40 bg-white border-b border-slate-200/80 transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] shadow-2xs">
         <div
-          className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] ${
             isCompactNavbar ? "py-3" : "py-3.5"
           }`}
         >
@@ -411,7 +411,7 @@ export const Navbar = () => {
                   <div
                     className={`
                       flex items-center gap-6 
-                      transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+                      transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                       ${
                         isCompactNavbar
                           ? "opacity-0 scale-90 -translate-y-2 pointer-events-none absolute"
@@ -475,7 +475,7 @@ export const Navbar = () => {
                   {/* 2. Compact Search Pill (Active when scrolled or on search/dashboard) */}
                   <div
                     className={`
-                      transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+                      transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                       ${
                         isCompactNavbar
                           ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
@@ -523,7 +523,7 @@ export const Navbar = () => {
               <div
                 className={`
                   hidden md:block relative
-                  transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] 
+                  transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] 
                   origin-top
                   ${
                     isScrolled
