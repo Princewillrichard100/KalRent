@@ -80,11 +80,12 @@ export async function fetchLiveProperties(filters: {
   try {
     const res = await fetch(`${baseUrl}/properties?${params.toString()}`, {
       next: { revalidate: 3600 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
+      signal: typeof AbortSignal !== "undefined" && "timeout" in AbortSignal ? AbortSignal.timeout(1500) : undefined,
+    }).catch(() => null);
+    if (!res || !res.ok) return [];
+    const data = await res.json().catch(() => []);
     return Array.isArray(data) ? data : [];
-  } catch (error) {
+  } catch {
     return [];
   }
 }
@@ -94,9 +95,10 @@ export async function fetchSingleProperty(id: number): Promise<Property | null> 
   try {
     const res = await fetch(`${baseUrl}/properties/${id}`, {
       next: { revalidate: 3600 },
-    });
-    if (!res.ok) return null;
-    return await res.json();
+      signal: typeof AbortSignal !== "undefined" && "timeout" in AbortSignal ? AbortSignal.timeout(1500) : undefined,
+    }).catch(() => null);
+    if (!res || !res.ok) return null;
+    return await res.json().catch(() => null);
   } catch {
     return null;
   }
