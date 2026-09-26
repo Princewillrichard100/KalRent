@@ -27,7 +27,18 @@ export const authMiddleware = (allowedRoles: string[]) => {
     }
 
     try {
-      const decoded = jwt.decode(token) as DecodedToken;
+      const decoded = jwt.decode(token) as DecodedToken | null;
+      if (!decoded || !decoded.sub) {
+        res.status(401).json({ message: "Invalid token structure" });
+        return;
+      }
+
+      // Verify token expiration if exp claim exists
+      if (decoded.exp && Math.floor(Date.now() / 1000) >= decoded.exp) {
+        res.status(401).json({ message: "Token has expired" });
+        return;
+      }
+
       const userRole = decoded["custom:role"] || "";
       req.user = {
         id: decoded.sub,
@@ -40,8 +51,7 @@ export const authMiddleware = (allowedRoles: string[]) => {
         return;
       }
     } catch (err) {
-      console.error("Failed to decode token:", err);
-      res.status(400).json({ message: "Invalid token" });
+      res.status(401).json({ message: "Invalid token" });
       return;
     }
 
