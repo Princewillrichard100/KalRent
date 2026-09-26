@@ -37,8 +37,11 @@ const Counter: React.FC<CounterProps> = ({
         </div>
       </div>
       <div className="flex flex-row items-center gap-4">
-        <div
+        <button
+          type="button"
           onClick={onReduce}
+          disabled={value <= 1}
+          aria-label={`Decrease ${title.toLowerCase()}`}
           className="
             w-10
             h-10
@@ -49,24 +52,34 @@ const Counter: React.FC<CounterProps> = ({
             items-center
             justify-center
             text-neutral-600
-            cursor-pointer
-            hover:opacity-80
             transition
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-neutral-800
+            disabled:opacity-30
+            disabled:cursor-not-allowed
+            enabled:cursor-pointer
+            enabled:hover:border-neutral-800
+            enabled:hover:text-neutral-800
           "
         >
           <AiOutlineMinus />
-        </div>
+        </button>
         <div 
           className="
             font-light 
             text-xl 
             text-neutral-600
+            w-6
+            text-center
           "
         >
           {value}
         </div>
-        <div
+        <button
+          type="button"
           onClick={onAdd}
+          aria-label={`Increase ${title.toLowerCase()}`}
           className="
             w-10
             h-10
@@ -78,12 +91,16 @@ const Counter: React.FC<CounterProps> = ({
             justify-center
             text-neutral-600
             cursor-pointer
-            hover:opacity-80
             transition
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-neutral-800
+            hover:border-neutral-800
+            hover:text-neutral-800
           "
         >
           <AiOutlinePlus />
-        </div>
+        </button>
       </div>
     </div>
    );
