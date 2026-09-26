@@ -28,7 +28,12 @@ export interface ListingCardProps {
   onClick?: () => void;
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({
+/**
+ * ⚡ Performance Optimization: Memoized ListingCard
+ * Prevents re-rendering all listing cards in ListingFeed on map interactions,
+ * parent state updates (e.g., hover states, filtering, loading triggers), or pagination.
+ */
+const ListingCard: React.FC<ListingCardProps> = React.memo(({
   data,
   isLoading = false,
   reservation,
@@ -235,6 +240,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ListingCard.displayName = "ListingCard";
 
 export default ListingCard;

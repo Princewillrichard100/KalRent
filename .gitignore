@@ -22,3 +22,4 @@ client/.env
 server/.env
 client/.next/
 node_modules
+*.tsbuildinfo
