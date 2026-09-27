@@ -27,7 +27,19 @@ export const authMiddleware = (allowedRoles: string[]) => {
     }
 
     try {
-      const decoded = jwt.decode(token) as DecodedToken;
+      const decoded = jwt.decode(token) as DecodedToken | null;
+
+      if (!decoded || typeof decoded !== "object" || !decoded.sub) {
+        res.status(401).json({ message: "Invalid or malformed token" });
+        return;
+      }
+
+      // Check token expiration
+      if (decoded.exp && decoded.exp < Math.floor(Date.now() / 1000)) {
+        res.status(401).json({ message: "Token has expired" });
+        return;
+      }
+
       const userRole = decoded["custom:role"] || "";
       req.user = {
         id: decoded.sub,
