@@ -24,6 +24,7 @@ import {
 import Container from "./Container";
 import SearchPill from "./navbar/SearchPill";
 import UserMenu from "./navbar/UserMenu";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useRentModal } from "@/hooks/useRentModal";
 import { useLoginModal } from "@/hooks/useLoginModal";
@@ -371,12 +372,12 @@ export const Navbar = () => {
       {/* Background click overlay when dropdown is open */}
       {activeDropdown && (
         <div
-          className="fixed inset-0 z-30 bg-black/10 transition-opacity"
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-[2px] transition-opacity"
           onClick={() => setActiveDropdown(null)}
         />
       )}
 
-      <header className="fixed top-0 left-0 w-full z-40 bg-white border-b border-slate-200/80 transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] shadow-2xs">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-sm transform-gpu will-change-transform transition-colors duration-200">
         <div
           className={`transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] ${
             isCompactNavbar ? "py-3" : "py-3.5"
@@ -394,11 +395,11 @@ export const Navbar = () => {
                 )}
                 <Link href="/" className="cursor-pointer">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-500 to-rose-600 flex items-center justify-center shadow-xs">
-                      <Building2 className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-xs">
+                      <Building2 className="w-4 h-4 text-primary-foreground" />
                     </div>
-                    <div className="text-lg font-black tracking-tight text-slate-900 flex items-center">
-                      KAL<span className="text-rose-500">RENT</span>
+                    <div className="text-lg font-black tracking-tight text-foreground flex items-center">
+                      KAL<span className="text-primary">RENT</span>
                     </div>
                   </div>
                 </Link>
@@ -414,8 +415,8 @@ export const Navbar = () => {
                       transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                       ${
                         isCompactNavbar
-                          ? "opacity-0 scale-90 -translate-y-2 pointer-events-none absolute"
-                          : "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                          ? "opacity-0 scale-90 -translate-y-2 pointer-events-none absolute invisible"
+                          : "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
                       }
                     `}
                   >
@@ -424,8 +425,8 @@ export const Navbar = () => {
                       onClick={() => setActiveTab("all")}
                       className={`flex items-center gap-2 text-sm font-semibold transition pb-1 border-b-2 cursor-pointer ${
                         activeTab === "all"
-                          ? "text-black border-black"
-                          : "text-neutral-500 hover:text-neutral-800 border-transparent"
+                          ? "text-foreground border-foreground"
+                          : "text-muted-foreground hover:text-foreground border-transparent"
                       }`}
                     >
                       <Globe className="w-4 h-4" />
@@ -437,8 +438,8 @@ export const Navbar = () => {
                       onClick={() => setActiveTab("homes")}
                       className={`flex items-center gap-2 text-sm font-semibold transition pb-1 border-b-2 cursor-pointer ${
                         activeTab === "homes"
-                          ? "text-black border-black"
-                          : "text-neutral-500 hover:text-neutral-800 border-transparent"
+                          ? "text-foreground border-foreground"
+                          : "text-muted-foreground hover:text-foreground border-transparent"
                       }`}
                     >
                       <HomeIcon className="w-4 h-4" />
@@ -450,8 +451,8 @@ export const Navbar = () => {
                       onClick={() => setActiveTab("experiences")}
                       className={`flex items-center gap-2 text-sm font-semibold transition pb-1 border-b-2 cursor-pointer ${
                         activeTab === "experiences"
-                          ? "text-black border-black"
-                          : "text-neutral-500 hover:text-neutral-800 border-transparent"
+                          ? "text-foreground border-foreground"
+                          : "text-muted-foreground hover:text-foreground border-transparent"
                       }`}
                     >
                       <Sparkles className="w-4 h-4" />
@@ -463,8 +464,8 @@ export const Navbar = () => {
                       onClick={() => setActiveTab("services")}
                       className={`flex items-center gap-2 text-sm font-semibold transition pb-1 border-b-2 cursor-pointer ${
                         activeTab === "services"
-                          ? "text-black border-black"
-                          : "text-neutral-500 hover:text-neutral-800 border-transparent"
+                          ? "text-foreground border-foreground"
+                          : "text-muted-foreground hover:text-foreground border-transparent"
                       }`}
                     >
                       <Bell className="w-4 h-4" />
@@ -478,8 +479,8 @@ export const Navbar = () => {
                       transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                       ${
                         isCompactNavbar
-                          ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-                          : "opacity-0 scale-90 translate-y-2 pointer-events-none absolute"
+                          ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
+                          : "opacity-0 scale-90 translate-y-2 pointer-events-none absolute invisible"
                       }
                     `}
                   >
@@ -488,12 +489,12 @@ export const Navbar = () => {
                 </div>
               )}
 
-              {/* Right: Host CTA + Globe + User Menu */}
+              {/* Right: Host CTA + Globe + ThemeToggle + User Menu */}
               <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={handleHostClick}
-                  className="hidden md:block text-xs font-semibold text-neutral-800 hover:bg-neutral-100 px-3.5 py-2.5 rounded-full transition cursor-pointer"
+                  className="hidden md:block text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted px-3.5 py-2.5 rounded-full transition cursor-pointer"
                 >
                   Become a host
                 </button>
@@ -501,11 +502,13 @@ export const Navbar = () => {
                 <button
                   type="button"
                   onClick={handleHostClick}
-                  className="hidden sm:flex p-2.5 rounded-full hover:bg-neutral-100 transition cursor-pointer text-neutral-700"
+                  className="hidden sm:flex p-2.5 rounded-full hover:bg-muted transition cursor-pointer text-muted-foreground hover:text-foreground"
                   aria-label="Language & region"
                 >
                   <Globe className="w-4 h-4" />
                 </button>
+
+                <ThemeToggle />
 
                 <UserMenu currentUser={authUser} />
               </div>
@@ -537,13 +540,15 @@ export const Navbar = () => {
                     className={`
                       relative flex items-center 
                       rounded-full 
-                      border border-neutral-200/90 
+                      border border-border 
+                      shadow-sm
+                      text-foreground
                       transition-all duration-200
                       max-w-[880px] w-full
                       ${
                         activeDropdown
-                          ? "bg-neutral-100 shadow-md"
-                          : "bg-white shadow-md hover:shadow-lg divide-x divide-neutral-200/80"
+                          ? "bg-muted shadow-md"
+                          : "bg-card hover:bg-secondary/60 divide-x divide-border"
                       }
                     `}
                   >
@@ -557,16 +562,16 @@ export const Navbar = () => {
                         flex-[1.3] text-left pl-8 pr-5 py-3.5 rounded-full transition cursor-pointer relative z-10
                         ${
                           activeDropdown === "where"
-                            ? "bg-white shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-neutral-900"
-                            : "hover:bg-neutral-200/40 text-neutral-800"
+                            ? "bg-card shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-foreground"
+                            : "hover:bg-muted text-foreground"
                         }
                       `}
                     >
-                      <div className="text-[13px] font-bold text-neutral-900 tracking-tight">Where</div>
+                      <div className="text-[13px] font-bold text-foreground tracking-tight">Where</div>
                       <div className={`text-[15px] leading-5 truncate max-w-[260px] ${
                         selectedLocation || (whereInput.trim() && whereInput.trim() !== "Search destinations") || paramLocation
-                          ? "text-neutral-900 font-semibold"
-                          : "text-neutral-500 font-normal"
+                          ? "text-foreground font-semibold"
+                          : "text-muted-foreground font-normal"
                       }`}>
                         {displayLocation}
                       </div>
@@ -582,16 +587,16 @@ export const Navbar = () => {
                         flex-1 text-left pl-7 pr-4 py-3.5 rounded-full transition cursor-pointer relative z-10
                         ${
                           activeDropdown === "when"
-                            ? "bg-white shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-neutral-900"
-                            : "hover:bg-neutral-200/40 text-neutral-800"
+                            ? "bg-card shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-foreground"
+                            : "hover:bg-muted text-foreground"
                         }
                       `}
                     >
-                      <div className="text-[13px] font-bold text-neutral-900 tracking-tight">When</div>
+                      <div className="text-[13px] font-bold text-foreground tracking-tight">When</div>
                       <div className={`text-[15px] leading-5 truncate max-w-[200px] ${
                         displayDates !== "Add dates"
-                          ? "text-neutral-900 font-semibold"
-                          : "text-neutral-500 font-normal"
+                          ? "text-foreground font-semibold"
+                          : "text-muted-foreground font-normal"
                       }`}>
                         {displayDates}
                       </div>
@@ -607,16 +612,16 @@ export const Navbar = () => {
                         flex-1 text-left pl-7 pr-4 py-3.5 rounded-full transition cursor-pointer relative z-10
                         ${
                           activeDropdown === "who"
-                            ? "bg-white shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-neutral-900"
-                            : "hover:bg-neutral-200/40 text-neutral-800"
+                            ? "bg-card shadow-[0_4px_16px_rgba(0,0,0,0.12)] text-foreground"
+                            : "hover:bg-muted text-foreground"
                         }
                       `}
                     >
-                      <div className="text-[13px] font-bold text-neutral-900 tracking-tight">Who</div>
+                      <div className="text-[13px] font-bold text-foreground tracking-tight">Who</div>
                       <div className={`text-[15px] leading-5 truncate max-w-[160px] ${
                         displayGuests !== "Add guests"
-                          ? "text-neutral-900 font-semibold"
-                          : "text-neutral-500 font-normal"
+                          ? "text-foreground font-semibold"
+                          : "text-muted-foreground font-normal"
                       }`}>
                         {displayGuests}
                       </div>
@@ -629,8 +634,8 @@ export const Navbar = () => {
                         onClick={handleExecuteSearch}
                         className="
                           flex items-center gap-2.5 
-                          bg-[#FF385C] hover:bg-[#E00B41] 
-                          text-white 
+                          bg-primary hover:opacity-90 
+                          text-primary-foreground 
                           font-semibold 
                           text-[15px] 
                           px-6 py-3.5 
@@ -660,10 +665,10 @@ export const Navbar = () => {
                         className="
                           absolute top-full left-0 mt-3 
                           w-[440px] 
-                          bg-white 
+                          bg-card 
                           rounded-3xl 
-                          shadow-[0_16px_36px_rgba(0,0,0,0.18)] 
-                          border border-neutral-200/90 
+                          shadow-[0_16px_36px_rgba(0,0,0,0.3)] 
+                          border border-border 
                           p-5 
                           z-50 
                           animate-in fade-in zoom-in-95 duration-200
@@ -671,7 +676,7 @@ export const Navbar = () => {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="relative flex items-center mb-4">
-                          <MapPin className="w-4 h-4 text-neutral-400 absolute left-3.5" />
+                          <MapPin className="w-4 h-4 text-muted-foreground absolute left-3.5" />
                           <input
                             type="text"
                             autoFocus
@@ -689,10 +694,14 @@ export const Navbar = () => {
                               text-sm 
                               font-medium 
                               rounded-xl 
+                              bg-muted
                               border 
-                              border-neutral-300 
+                              border-border 
+                              text-foreground
+                              placeholder:text-muted-foreground
                               focus:outline-none 
-                              focus:border-black
+                              focus:ring-1
+                              focus:ring-primary
                             "
                           />
                           {whereInput.length > 0 && (
@@ -703,7 +712,7 @@ export const Navbar = () => {
                                 setDebouncedWhere("");
                                 setSelectedLocation(null);
                               }}
-                              className="absolute right-3 p-1 rounded-full text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100"
+                              className="absolute right-3 p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
                             >
                               <X className="w-4 h-4" />
                             </button>
@@ -711,24 +720,24 @@ export const Navbar = () => {
                         </div>
 
                         {shouldFetchAutocomplete ? (
-                          <div className="flex flex-col max-h-[300px] overflow-y-auto divide-y divide-neutral-100">
+                          <div className="flex flex-col max-h-[300px] overflow-y-auto divide-y divide-border">
                             {suggestions.length > 0 ? (
                               suggestions.map((suggestion) => (
                                 <button
                                   key={suggestion.id || suggestion.place_id}
                                   type="button"
                                   onClick={() => handleSelectSuggestion(suggestion)}
-                                  className="flex items-center gap-3 p-2.5 hover:bg-neutral-50 rounded-xl transition text-left cursor-pointer"
+                                  className="flex items-center gap-3 p-2.5 hover:bg-muted rounded-xl transition text-left cursor-pointer"
                                 >
-                                  <div className="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center shrink-0">
-                                    <MapPin className="w-4 h-4 text-neutral-600" />
+                                  <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center shrink-0 border border-border">
+                                    <MapPin className="w-4 h-4 text-muted-foreground" />
                                   </div>
                                   <div className="flex flex-col min-w-0 flex-1">
-                                    <span className="font-semibold text-neutral-800 text-xs truncate">
+                                    <span className="font-semibold text-foreground text-xs truncate">
                                       {suggestion.display_name}
                                     </span>
                                     {suggestion.secondary_text && (
-                                      <span className="text-[11px] text-neutral-500 truncate">
+                                      <span className="text-[11px] text-muted-foreground truncate">
                                         {suggestion.secondary_text}
                                       </span>
                                     )}
@@ -736,18 +745,18 @@ export const Navbar = () => {
                                 </button>
                               ))
                             ) : !isAutocompleteLoading ? (
-                              <div className="py-6 text-center text-xs text-neutral-500">
+                              <div className="py-6 text-center text-xs text-muted-foreground">
                                 No matching destinations found.
                               </div>
                             ) : (
-                              <div className="py-6 flex justify-center text-neutral-400">
+                              <div className="py-6 flex justify-center text-muted-foreground">
                                 <Loader2 className="w-5 h-5 animate-spin" />
                               </div>
                             )}
                           </div>
                         ) : (
                           <div>
-                            <div className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2.5 px-1">
+                            <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2.5 px-1">
                               Suggested destinations
                             </div>
                             <div className="flex flex-col max-h-[300px] overflow-y-auto">
@@ -768,16 +777,16 @@ export const Navbar = () => {
                                     key={hub.name}
                                     type="button"
                                     onClick={() => handleSelectPopularHub(hub)}
-                                    className="flex items-center gap-4 p-2.5 hover:bg-neutral-100 rounded-xl transition text-left cursor-pointer"
+                                    className="flex items-center gap-4 p-2.5 hover:bg-muted rounded-xl transition text-left cursor-pointer"
                                   >
-                                    <div className="w-12 h-12 rounded-xl bg-neutral-100/80 border border-neutral-200/50 flex items-center justify-center shrink-0">
-                                      <IconComponent className="w-5 h-5 text-neutral-700" strokeWidth={1.5} />
+                                    <div className="w-12 h-12 rounded-xl bg-muted border border-border flex items-center justify-center shrink-0">
+                                      <IconComponent className="w-5 h-5 text-foreground" strokeWidth={1.5} />
                                     </div>
                                     <div className="flex flex-col">
-                                      <span className="text-[15px] font-medium text-neutral-800">
+                                      <span className="text-[15px] font-medium text-foreground">
                                         {hub.name}
                                       </span>
-                                      <span className="text-[13px] text-neutral-500">
+                                      <span className="text-[13px] text-muted-foreground">
                                         {hub.state}
                                       </span>
                                     </div>
@@ -795,10 +804,10 @@ export const Navbar = () => {
                       <div
                         className="
                           absolute top-full left-1/2 -translate-x-1/2 mt-3 
-                          bg-white 
+                          bg-card 
                           rounded-3xl 
-                          shadow-[0_16px_36px_rgba(0,0,0,0.18)] 
-                          border border-neutral-200/90 
+                          shadow-[0_16px_36px_rgba(0,0,0,0.3)] 
+                          border border-border 
                           p-5 
                           z-50 
                           animate-in fade-in zoom-in-95 duration-200
@@ -806,10 +815,10 @@ export const Navbar = () => {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between mb-3 px-2">
-                          <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+                          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                             Select Dates
                           </span>
-                          <span className="text-xs font-semibold text-neutral-800">
+                          <span className="text-xs font-semibold text-foreground">
                             {displayDates}
                           </span>
                         </div>
@@ -821,7 +830,7 @@ export const Navbar = () => {
                           />
                         </div>
 
-                        <div className="mt-3 flex justify-between items-center pt-3 border-t border-neutral-100">
+                        <div className="mt-3 flex justify-between items-center pt-3 border-t border-border">
                           <button
                             type="button"
                             onClick={() =>
@@ -831,14 +840,14 @@ export const Navbar = () => {
                                 key: "selection",
                               })
                             }
-                            className="text-xs font-semibold text-neutral-500 hover:underline cursor-pointer"
+                            className="text-xs font-semibold text-muted-foreground hover:text-foreground hover:underline cursor-pointer"
                           >
                             Reset dates
                           </button>
                           <button
                             type="button"
                             onClick={() => setActiveDropdown("who")}
-                            className="text-xs font-bold bg-neutral-900 hover:bg-black text-white px-4 py-2 rounded-xl transition cursor-pointer"
+                            className="text-xs font-bold bg-primary hover:opacity-90 text-primary-foreground px-4 py-2 rounded-xl transition cursor-pointer"
                           >
                             Next: Guests →
                           </button>
@@ -852,10 +861,10 @@ export const Navbar = () => {
                         className="
                           absolute top-full right-0 mt-3 
                           w-84 
-                          bg-white 
+                          bg-card 
                           rounded-3xl 
-                          shadow-[0_16px_36px_rgba(0,0,0,0.18)] 
-                          border border-neutral-200/90 
+                          shadow-[0_16px_36px_rgba(0,0,0,0.3)] 
+                          border border-border 
                           p-6 
                           z-50 
                           animate-in fade-in zoom-in-95 duration-200
@@ -869,7 +878,7 @@ export const Navbar = () => {
                           value={adultCount}
                           onChange={(val) => setAdultCount(Math.max(1, val))}
                         />
-                        <hr className="border-neutral-100" />
+                        <hr className="border-border" />
                         <Counter
                           title="Children"
                           subtitle="Ages 2–12"
@@ -880,7 +889,7 @@ export const Navbar = () => {
                           <button
                             type="button"
                             onClick={handleExecuteSearch}
-                            className="text-xs font-bold bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-xl shadow-xs transition cursor-pointer"
+                            className="text-xs font-bold bg-primary hover:opacity-90 text-primary-foreground px-5 py-2.5 rounded-xl shadow-xs transition cursor-pointer"
                           >
                             Apply & Search
                           </button>

@@ -64,7 +64,7 @@ export const RegisterModal = () => {
       toast.success("Verification code sent! Please check your email.");
       setStep(STEPS.CONFIRM);
     } catch (err: any) {
-      console.error("Sign up error:", err);
+      console.warn("Sign up rejection:", err?.name, err?.message);
       toast.error(err.message || "Failed to create account.");
     } finally {
       setIsLoading(false);
@@ -99,7 +99,7 @@ export const RegisterModal = () => {
       registerModal.onClose();
       window.location.reload();
     } catch (err: any) {
-      console.error("Confirmation error:", err);
+      console.warn("Confirmation rejection:", err?.name, err?.message);
       toast.error(err.message || "Invalid verification code.");
     } finally {
       setIsLoading(false);
@@ -118,15 +118,17 @@ export const RegisterModal = () => {
   let bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading
-        title="Welcome to Airbnb"
+        title="Welcome to KalRent"
         subtitle="Create an account!"
       />
       <div className="flex flex-row gap-3 py-1">
         <button
           type="button"
           onClick={() => setRole("tenant")}
-          className={`flex-1 py-2 px-3 rounded-lg border-2 text-xs font-semibold transition ${
-            role === "tenant" ? "border-black bg-neutral-100" : "border-neutral-200"
+          className={`flex-1 py-2 px-3 rounded-lg border text-xs font-semibold transition cursor-pointer ${
+            role === "tenant"
+              ? "border-primary bg-primary/10 text-foreground"
+              : "border-border text-muted-foreground hover:bg-muted"
           }`}
         >
           Student / Tenant
@@ -134,8 +136,10 @@ export const RegisterModal = () => {
         <button
           type="button"
           onClick={() => setRole("manager")}
-          className={`flex-1 py-2 px-3 rounded-lg border-2 text-xs font-semibold transition ${
-            role === "manager" ? "border-black bg-neutral-100" : "border-neutral-200"
+          className={`flex-1 py-2 px-3 rounded-lg border text-xs font-semibold transition cursor-pointer ${
+            role === "manager"
+              ? "border-primary bg-primary/10 text-foreground"
+              : "border-border text-muted-foreground hover:bg-muted"
           }`}
         >
           Host / Manager
@@ -196,7 +200,7 @@ export const RegisterModal = () => {
         />
         <div 
           onClick={handleResendCode}
-          className="text-neutral-500 text-xs hover:underline cursor-pointer"
+          className="text-muted-foreground text-xs hover:underline cursor-pointer"
         >
           Didn&apos;t receive code? Resend
         </div>
@@ -206,20 +210,21 @@ export const RegisterModal = () => {
 
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
-      <hr />
+      <hr className="border-border" />
       <div 
         className="
-          text-neutral-500 
+          text-muted-foreground 
           text-center 
           mt-4 
-          font-light
+          text-sm
         "
       >
         <p>Already have an account?
           <span 
             onClick={onToggle} 
             className="
-              text-neutral-800
+              text-foreground
+              font-semibold
               cursor-pointer 
               hover:underline
               ml-1

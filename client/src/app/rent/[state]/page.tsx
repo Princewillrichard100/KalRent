@@ -104,7 +104,7 @@ export default async function StatePage({ params }: StatePageProps) {
   ];
 
   return (
-    <div className="py-10">
+    <div className="py-10 bg-background text-foreground min-h-screen">
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: "/" },
@@ -123,12 +123,12 @@ export default async function StatePage({ params }: StatePageProps) {
       <Container>
         {/* Header Block */}
         <div className="max-w-4xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold mb-4">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4 border border-primary/20">
+            <ShieldCheck className="w-4 h-4 text-primary" />
             <span>Verified Market Intelligence • {stateData.name}</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
             Houses &amp; Apartments for Rent in {stateData.name}
           </h1>
 
@@ -141,7 +141,7 @@ export default async function StatePage({ params }: StatePageProps) {
             listingCount={stats.listingCount}
           />
 
-          <p className="mt-4 text-base text-neutral-600 leading-relaxed">
+          <p className="mt-4 text-base text-muted-foreground leading-relaxed">
             {stateData.description}
           </p>
         </div>
@@ -150,10 +150,10 @@ export default async function StatePage({ params }: StatePageProps) {
         <div className="mb-14">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-neutral-900">
+              <h2 className="text-2xl font-bold text-foreground">
                 Popular Rental Neighborhoods in {stateData.name}
               </h2>
-              <p className="text-sm text-neutral-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Select a neighborhood to explore verified local listings and power reliability.
               </p>
             </div>
@@ -164,27 +164,27 @@ export default async function StatePage({ params }: StatePageProps) {
               <Link
                 key={n.slug}
                 href={`/rent/${stateSlug}/${n.slug}`}
-                className="group p-5 rounded-2xl bg-white border border-neutral-200/80 hover:border-emerald-500/80 hover:shadow-md transition duration-200 flex flex-col justify-between"
+                className="group p-5 rounded-2xl bg-card border border-border hover:border-primary/80 hover:shadow-md transition duration-200 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-bold text-lg text-neutral-900 group-hover:text-emerald-700 transition">
+                    <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition">
                       {n.city}
                     </h3>
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded bg-neutral-100 text-neutral-700">
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded bg-secondary text-secondary-foreground border border-border">
                       {n.powerBand.split(" ")[0]}
                     </span>
                   </div>
-                  <p className="text-xs text-neutral-500 leading-relaxed line-clamp-2">
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                     {n.description}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between">
-                  <div className="text-xs text-neutral-600">
-                    From <span className="font-bold text-neutral-900">{formatNaira(n.medianRents["1-bedroom-flat"])}</span>/yr
+                <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+                  <div className="text-xs text-muted-foreground">
+                    From <span className="font-bold text-foreground">{formatNaira(n.medianRents["1-bedroom-flat"])}</span>/yr
                   </div>
-                  <ArrowRight className="w-4 h-4 text-emerald-700 group-hover:translate-x-1 transition" />
+                  <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition" />
                 </div>
               </Link>
             ))}
@@ -200,17 +200,17 @@ export default async function StatePage({ params }: StatePageProps) {
         />
 
         {/* FAQs Section */}
-        <div className="mt-16 pt-12 border-t border-neutral-200 max-w-3xl">
-          <h2 className="text-2xl font-bold text-neutral-900 mb-6">
+        <div className="mt-16 pt-12 border-t border-border max-w-3xl">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             Frequently Asked Questions about Renting in {stateData.name}
           </h2>
           <div className="space-y-6">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white p-5 rounded-xl border border-neutral-200/80">
-                <h3 className="font-bold text-base text-neutral-900 mb-2">
+              <div key={i} className="bg-card p-5 rounded-xl border border-border">
+                <h3 className="font-bold text-base text-foreground mb-2">
                   {faq.question}
                 </h3>
-                <p className="text-sm text-neutral-600 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {faq.answer}
                 </p>
               </div>

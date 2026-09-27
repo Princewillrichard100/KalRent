@@ -115,33 +115,33 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     (activeFilters.priceMin || activeFilters.priceMax ? 1 : 0);
 
   return (
-    <div className="w-full bg-white border-b border-neutral-200/90 relative z-20 select-none">
+    <div className="w-full bg-background border-b border-border relative z-20 select-none">
       <div className="flex items-center gap-3 px-4 sm:px-8 py-3 max-w-[1920px] mx-auto">
         {/* Filters Master Button */}
         <button
           type="button"
           onClick={onOpenAdvancedModal}
           className={`
-            shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold
-            border transition cursor-pointer shadow-sm
+            shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-normal
+            border transition-colors cursor-pointer shadow-xs
             ${
               totalActiveFilters > 0
-                ? "border-neutral-900 bg-neutral-900 text-white"
-                : "border-neutral-300 bg-white text-neutral-800 hover:border-neutral-900"
+                ? "border-primary bg-primary text-primary-foreground font-semibold"
+                : "bg-card hover:bg-secondary border border-border text-foreground"
             }
           `}
         >
           <SlidersHorizontal className="w-3.5 h-3.5 stroke-[2.2]" />
           <span>Filters</span>
           {totalActiveFilters > 0 && (
-            <span className="w-4 h-4 rounded-full bg-white text-neutral-900 text-[10px] font-bold flex items-center justify-center ml-0.5">
+            <span className="w-4 h-4 rounded-full bg-primary-foreground text-primary text-[10px] font-bold flex items-center justify-center ml-0.5">
               {totalActiveFilters}
             </span>
           )}
         </button>
 
         {/* Vertical divider */}
-        <div className="h-5 w-[1px] bg-neutral-200 shrink-0 hidden sm:block" />
+        <div className="h-5 w-[1px] bg-border shrink-0 hidden sm:block" />
 
         {/* Scrollable Capsule Carousel Container */}
         <div className="relative flex-1 min-w-0 flex items-center">
@@ -149,7 +149,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <button
               type="button"
               onClick={() => scroll("left")}
-              className="absolute left-0 z-10 w-7 h-7 rounded-full bg-white/95 border border-neutral-200 shadow-md flex items-center justify-center text-neutral-700 hover:scale-105 transition cursor-pointer"
+              className="absolute left-0 z-10 w-7 h-7 rounded-full bg-card hover:bg-secondary border border-border shadow-md flex items-center justify-center text-foreground hover:scale-105 transition cursor-pointer"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -170,11 +170,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                   type="button"
                   onClick={() => toggleCapsule(capsule)}
                   className={`
-                    border text-xs px-4 py-2 rounded-full whitespace-nowrap transition cursor-pointer select-none shrink-0 font-medium
+                    whitespace-nowrap transition-colors cursor-pointer select-none shrink-0
                     ${
                       active
-                        ? "border-neutral-900 bg-neutral-900 text-white shadow-sm font-semibold"
-                        : "border-neutral-200 text-neutral-700 bg-white hover:border-neutral-900"
+                        ? "bg-secondary border border-border text-secondary-foreground text-xs font-semibold rounded-full px-4 py-2 shadow-xs"
+                        : "bg-card hover:bg-secondary border border-border text-foreground text-xs font-normal rounded-full px-4 py-2"
                     }
                   `}
                 >
@@ -188,7 +188,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <button
               type="button"
               onClick={() => scroll("right")}
-              className="absolute right-0 z-10 w-7 h-7 rounded-full bg-white/95 border border-neutral-200 shadow-md flex items-center justify-center text-neutral-700 hover:scale-105 transition cursor-pointer"
+              className="absolute right-0 z-10 w-7 h-7 rounded-full bg-card border border-border shadow-md flex items-center justify-center text-foreground hover:scale-105 transition cursor-pointer"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-4 h-4" />

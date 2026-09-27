@@ -56,8 +56,8 @@ export const Pagination: React.FC<PaginationProps> = ({
             w-8 h-8 rounded-full flex items-center justify-center transition
             ${
               currentPage === 1
-                ? "text-neutral-300 cursor-not-allowed"
-                : "text-neutral-800 hover:bg-neutral-100 cursor-pointer"
+                ? "text-muted-foreground/40 cursor-not-allowed"
+                : "text-foreground hover:bg-muted cursor-pointer"
             }
           `}
           aria-label="Previous page"
@@ -71,7 +71,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             return (
               <span
                 key={`ellipsis-${idx}`}
-                className="w-8 h-8 flex items-center justify-center text-xs font-semibold text-neutral-500"
+                className="w-8 h-8 flex items-center justify-center text-xs font-semibold text-muted-foreground"
               >
                 ...
               </span>
@@ -89,8 +89,8 @@ export const Pagination: React.FC<PaginationProps> = ({
                 w-8 h-8 rounded-full flex items-center justify-center text-xs transition cursor-pointer
                 ${
                   isActive
-                    ? "bg-neutral-900 text-white font-bold shadow-sm"
-                    : "text-neutral-800 hover:bg-neutral-100 font-semibold"
+                    ? "bg-primary text-primary-foreground font-bold shadow-sm"
+                    : "text-foreground hover:bg-muted font-semibold"
                 }
               `}
               aria-current={isActive ? "page" : undefined}
@@ -109,8 +109,8 @@ export const Pagination: React.FC<PaginationProps> = ({
             w-8 h-8 rounded-full flex items-center justify-center transition
             ${
               currentPage === totalPages
-                ? "text-neutral-300 cursor-not-allowed"
-                : "text-neutral-800 hover:bg-neutral-100 cursor-pointer"
+                ? "text-muted-foreground/40 cursor-not-allowed"
+                : "text-foreground hover:bg-muted cursor-pointer"
             }
           `}
           aria-label="Next page"
@@ -121,7 +121,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
       {/* Summary caption */}
       <div className="mt-4 text-center">
-        <p className="text-xs text-neutral-600 font-medium">
+        <p className="text-xs text-muted-foreground font-medium">
           {totalCount > 0 ? (
             <>
               {startItem} – {endItem} of {totalCount > 100 ? `${totalCount}+` : totalCount} places to stay
@@ -130,7 +130,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             "0 places to stay"
           )}
         </p>
-        <p className="text-[11px] text-neutral-400 mt-1">
+        <p className="text-[11px] text-muted-foreground/80 mt-1">
           Additional fees apply. Taxes may be added.
         </p>
       </div>

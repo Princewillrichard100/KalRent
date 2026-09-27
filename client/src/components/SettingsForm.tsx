@@ -52,15 +52,15 @@ const SettingsForm = ({
         subtitle="Manage your personal contact information, verified identity, and notification preferences"
       />
 
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-8 max-w-3xl">
-        <div className="flex items-center justify-between pb-6 mb-6 border-b border-slate-100">
+      <div className="bg-card rounded-2xl border border-border shadow-xs p-6 sm:p-8 max-w-3xl">
+        <div className="flex items-center justify-between pb-6 mb-6 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-base">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base">
               <User className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-base">Account Information</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="font-bold text-foreground text-base">Account Information</h3>
+              <p className="text-xs text-muted-foreground">
                 {editMode
                   ? "Make changes below and click save."
                   : "Profile details are verified for secure booking."}
@@ -70,18 +70,18 @@ const SettingsForm = ({
           <span
             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${
               editMode
-                ? "bg-amber-50 text-amber-700 border-amber-200"
-                : "bg-slate-50 text-slate-600 border-slate-200"
+                ? "bg-primary/10 text-primary border-primary/20"
+                : "bg-muted text-muted-foreground border-border"
             }`}
           >
             {editMode ? (
               <>
-                <Edit3 className="w-3.5 h-3.5 text-amber-600" />
+                <Edit3 className="w-3.5 h-3.5 text-primary" />
                 <span>Editing Mode</span>
               </>
             ) : (
               <>
-                <Lock className="w-3.5 h-3.5 text-slate-400" />
+                <Lock className="w-3.5 h-3.5 text-muted-foreground" />
                 <span>Locked</span>
               </>
             )}
@@ -113,12 +113,12 @@ const SettingsForm = ({
               disabled={!editMode}
             />
 
-            <div className="pt-4 flex items-center justify-between border-t border-slate-100">
+            <div className="pt-4 flex items-center justify-between border-t border-border">
               <Button
                 type="button"
                 variant="outline"
                 onClick={toggleEditMode}
-                className="border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl px-5 cursor-pointer"
+                className="border-border text-foreground hover:bg-muted rounded-xl px-5 cursor-pointer"
               >
                 {editMode ? "Cancel" : "Edit Profile"}
               </Button>
@@ -127,7 +127,7 @@ const SettingsForm = ({
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-6 cursor-pointer shadow-xs"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 cursor-pointer shadow-xs"
                 >
                   <Check className="w-4 h-4 mr-1.5" />
                   {isSubmitting ? "Saving..." : "Save Changes"}
@@ -138,10 +138,10 @@ const SettingsForm = ({
         </Form>
       </div>
 
-      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 max-w-3xl flex items-start gap-4">
-        <Shield className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-        <div className="text-xs text-slate-600 leading-relaxed">
-          <span className="font-semibold text-slate-800">Account Security: </span>
+      <div className="bg-muted/50 border border-border rounded-2xl p-6 max-w-3xl flex items-start gap-4">
+        <Shield className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+        <div className="text-xs text-muted-foreground leading-relaxed">
+          <span className="font-semibold text-foreground">Account Security: </span>
           Your verified name and contact information are used to validate your identity on reservations and payments under KalRent Cover.
         </div>
       </div>

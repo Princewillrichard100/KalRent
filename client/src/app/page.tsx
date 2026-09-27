@@ -126,7 +126,7 @@ export default function Home() {
   }, [properties]);
 
   return (
-    <div className="h-full w-full min-h-screen bg-white">
+    <div className="h-full w-full min-h-screen bg-background">
       <Navbar />
 
       <main className="h-full w-full pt-28 md:pt-44 pb-20">

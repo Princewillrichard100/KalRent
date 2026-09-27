@@ -10,17 +10,17 @@ const FooterSection = () => {
           {/* Brand & Mission */}
           <div className="md:col-span-2 space-y-4">
             <Link href="/" className="inline-flex items-center gap-2" scroll={false}>
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-xs">
-                <Building2 className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-xs">
+                <Building2 className="w-4 h-4 text-primary-foreground" />
               </div>
               <span className="text-xl font-black text-white tracking-tight">
-                KAL<span className="text-emerald-400">RENT</span>
+                KAL<span className="text-primary">RENT</span>
               </span>
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
               The modern rental and stay accommodation platform across Nigeria. Verified listings, transparent pricing, and KalRent Cover protection.
             </p>
-            <div className="flex items-center gap-2 pt-2 text-xs text-emerald-400">
+            <div className="flex items-center gap-2 pt-2 text-xs text-primary">
               <ShieldCheck className="w-4 h-4 shrink-0" />
               <span>Protected Booking Guarantee</span>
             </div>
@@ -33,27 +33,27 @@ const FooterSection = () => {
             </h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/search?location=Lekki" className="hover:text-emerald-400 transition-colors">
+                <Link href="/search?location=Lekki" className="hover:text-primary transition-colors">
                   Lekki &amp; Victoria Island
                 </Link>
               </li>
               <li>
-                <Link href="/search?location=Maitama" className="hover:text-emerald-400 transition-colors">
+                <Link href="/search?location=Maitama" className="hover:text-primary transition-colors">
                   Maitama &amp; Wuse 2, Abuja
                 </Link>
               </li>
               <li>
-                <Link href="/search?location=Ikeja" className="hover:text-emerald-400 transition-colors">
+                <Link href="/search?location=Ikeja" className="hover:text-primary transition-colors">
                   Ikeja &amp; Ikoyi, Lagos
                 </Link>
               </li>
               <li>
-                <Link href="/search?location=PortHarcourt" className="hover:text-emerald-400 transition-colors">
+                <Link href="/search?location=PortHarcourt" className="hover:text-primary transition-colors">
                   Port Harcourt, Rivers
                 </Link>
               </li>
               <li>
-                <Link href="/search?location=Ibadan" className="hover:text-emerald-400 transition-colors">
+                <Link href="/search?location=Ibadan" className="hover:text-primary transition-colors">
                   Ibadan, Oyo
                 </Link>
               </li>
@@ -67,7 +67,7 @@ const FooterSection = () => {
             </h4>
             <ul className="space-y-2">
               <li className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <ShieldCheck className="w-3.5 h-3.5 text-primary" />
                 <span>KalRent Cover Protection</span>
               </li>
               <li className="flex items-center gap-1.5">
@@ -79,7 +79,7 @@ const FooterSection = () => {
                 <span>Verified GPS Listings</span>
               </li>
               <li>
-                <Link href="/search" className="hover:text-emerald-400 transition-colors">
+                <Link href="/search" className="hover:text-primary transition-colors">
                   Find Verified Stays
                 </Link>
               </li>

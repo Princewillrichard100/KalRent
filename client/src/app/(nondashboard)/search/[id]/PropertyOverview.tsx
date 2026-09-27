@@ -42,7 +42,7 @@ const PropertyOverview = ({ propertyId }: PropertyOverviewProps) => {
             {property.location?.city || "Ilorin"}
           </span>
           <span>/</span>
-          <span className="text-emerald-700 font-semibold">{property.campusZone}</span>
+          <span className="text-primary font-semibold">{property.campusZone}</span>
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-3">
@@ -51,7 +51,7 @@ const PropertyOverview = ({ propertyId }: PropertyOverviewProps) => {
 
         <div className="flex flex-wrap justify-between items-center gap-3 text-xs">
           <span className="flex items-center text-slate-600 font-medium">
-            <MapPin className="w-4 h-4 mr-1.5 text-emerald-600 shrink-0" />
+            <MapPin className="w-4 h-4 mr-1.5 text-primary shrink-0" />
             {property.landmark ? `${property.landmark}, ` : ""}
             {property.campusZone}, {property.location?.city || "Ilorin"}
           </span>
@@ -65,8 +65,8 @@ const PropertyOverview = ({ propertyId }: PropertyOverviewProps) => {
               </span>
             </span>
 
-            <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="inline-flex items-center gap-1 text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-lg font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
               Verified Listing
             </span>
           </div>

@@ -18,13 +18,13 @@ const CardCompact = ({
   return (
     <div
       id={`property-${property.id}`}
-      className={`bg-white rounded-2xl border transition-all duration-200 w-full flex h-40 mb-5 overflow-hidden ${
+      className={`bg-card rounded-2xl border transition-all duration-200 w-full flex h-40 mb-5 overflow-hidden text-card-foreground ${
         isHovered
-          ? "border-emerald-500 ring-2 ring-emerald-500/40 shadow-lg scale-[1.01]"
-          : "border-slate-200/80 shadow-xs hover:shadow-md"
+          ? "border-primary ring-2 ring-primary/40 shadow-lg scale-[1.01]"
+          : "border-border/80 shadow-xs hover:border-border hover:shadow-md"
       }`}
     >
-      <div className="relative w-1/3">
+      <div className="relative w-1/3 bg-muted">
         <Image
           src={imgSrc}
           alt={property.name}
@@ -35,17 +35,17 @@ const CardCompact = ({
         />
         <div className="absolute bottom-2 left-2 flex gap-1 flex-col">
           {property.distanceKm !== undefined && (
-            <span className="bg-emerald-600/95 backdrop-blur-xs text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md w-fit shadow-xs flex items-center gap-0.5">
+            <span className="bg-primary/95 backdrop-blur-xs text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-md w-fit shadow-xs flex items-center gap-0.5">
               <MapPin className="w-2.5 h-2.5 shrink-0" />
               {property.distanceKm} km
             </span>
           )}
           {property.campusZone && (
-            <span className="bg-slate-900/85 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md w-fit">
+            <span className="bg-background/85 backdrop-blur-xs text-foreground text-[11px] font-semibold px-2 py-0.5 rounded-md w-fit border border-border">
               {property.campusZone}
             </span>
           )}
-          <span className="bg-emerald-700/80 backdrop-blur-xs text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md w-fit">
+          <span className="bg-primary/80 backdrop-blur-xs text-primary-foreground text-[10px] font-semibold px-1.5 py-0.5 rounded-md w-fit">
             Protected
           </span>
         </div>
@@ -53,11 +53,11 @@ const CardCompact = ({
       <div className="w-2/3 p-3.5 flex flex-col justify-between">
         <div>
           <div className="flex justify-between items-start">
-            <h2 className="text-base font-bold text-slate-900 truncate pr-2">
+            <h2 className="text-base font-bold text-foreground truncate pr-2">
               {propertyLink ? (
                 <Link
                   href={propertyLink}
-                  className="hover:underline hover:text-emerald-700 transition-colors"
+                  className="hover:underline hover:text-primary transition-colors"
                   scroll={false}
                 >
                   {property.name}
@@ -68,53 +68,53 @@ const CardCompact = ({
             </h2>
             {showFavoriteButton && (
               <button
-                className="bg-white/90 hover:bg-white rounded-full p-1.5 shadow-2xs transition-transform active:scale-95"
+                className="bg-card/90 hover:bg-card border border-border rounded-full p-1.5 shadow-2xs transition-transform active:scale-95"
                 onClick={onFavoriteToggle}
               >
                 <Heart
                   className={`w-3.5 h-3.5 ${
-                    isFavorite ? "text-red-500 fill-red-500" : "text-slate-500"
+                    isFavorite ? "text-primary fill-primary" : "text-muted-foreground"
                   }`}
                 />
               </button>
             )}
           </div>
-          <p className="text-slate-500 mb-1 text-xs truncate">
+          <p className="text-muted-foreground mb-1 text-xs truncate">
             {property.landmark ? `${property.landmark}, ` : ""}
             {property?.location?.address || property.campusZone}
           </p>
           <div className="flex text-xs items-center">
             <Star className="w-3 h-3 text-amber-400 fill-amber-400 mr-1" />
-            <span className="font-semibold text-slate-800">
+            <span className="font-semibold text-foreground">
               {property.averageRating.toFixed(1)}
             </span>
-            <span className="text-slate-400 ml-1">
+            <span className="text-muted-foreground ml-1">
               ({property.numberOfReviews})
             </span>
           </div>
         </div>
         <div className="flex justify-between items-end text-xs">
-          <div className="flex gap-2.5 text-slate-600 font-medium">
+          <div className="flex gap-2.5 text-muted-foreground font-medium">
             <span className="flex items-center">
-              <Bed className="w-3.5 h-3.5 mr-1 text-slate-400" />
+              <Bed className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
               {property.beds}
             </span>
             <span className="flex items-center">
-              <Bath className="w-3.5 h-3.5 mr-1 text-slate-400" />
+              <Bath className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
               {property.baths}
             </span>
             <span className="flex items-center">
-              <House className="w-3.5 h-3.5 mr-1 text-slate-400" />
+              <House className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
               {property.propertyType}
             </span>
           </div>
 
           <div className="text-right">
-            <p className="text-base font-extrabold text-slate-900 tracking-tight">
+            <p className="text-base font-extrabold text-foreground tracking-tight">
               ₦{property.annualRent?.toLocaleString()}
-              <span className="text-slate-500 text-[11px] font-normal"> /yr</span>
+              <span className="text-muted-foreground text-[11px] font-normal"> /yr</span>
             </p>
-            <p className="text-[11px] font-semibold text-emerald-800">
+            <p className="text-[11px] font-semibold text-primary">
               Total: ₦
               {(
                 (property.annualRent || 0) +

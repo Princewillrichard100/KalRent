@@ -19,14 +19,14 @@ const ContactWidget = ({ onOpenModal }: ContactWidgetProps) => {
   return (
     <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs h-fit min-w-[300px] space-y-4">
       {/* Trust Guarantee Header */}
-      <div className="bg-emerald-50/80 border border-emerald-200/60 rounded-xl p-3 flex items-center gap-2.5 text-xs text-emerald-900">
-        <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+      <div className="bg-primary/10 border border-primary/15 rounded-xl p-3 flex items-center gap-2.5 text-xs text-primary">
+        <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
         <span className="font-semibold">Protected Booking Guarantee</span>
       </div>
 
       {/* Contact Property */}
       <div className="flex items-center gap-4 border border-slate-200 rounded-xl p-3.5 bg-slate-50">
-        <div className="flex items-center justify-center w-10 h-10 bg-emerald-600 text-white rounded-xl shadow-xs shrink-0">
+        <div className="flex items-center justify-center w-10 h-10 bg-primary text-primary-foreground rounded-xl shadow-xs shrink-0">
           <Phone className="w-4 h-4" />
         </div>
         <div>
@@ -40,7 +40,7 @@ const ContactWidget = ({ onOpenModal }: ContactWidgetProps) => {
       </div>
 
       <Button
-        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl h-11 text-xs shadow-xs cursor-pointer transition-all"
+        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-11 text-xs shadow-xs cursor-pointer transition-all"
         onClick={handleButtonClick}
       >
         {authUser ? "Apply for Tenancy (Instant Escrow)" : "Sign In to Submit Application"}
@@ -49,11 +49,11 @@ const ContactWidget = ({ onOpenModal }: ContactWidgetProps) => {
       <hr className="border-slate-100 my-3" />
       <div className="space-y-1.5 text-xs text-slate-500">
         <div className="flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+          <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
           <span>Languages: English, Yoruba</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+          <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
           <span>Move-in inspection warranty included</span>
         </div>
         <div className="text-[11px] text-slate-400 pt-1">

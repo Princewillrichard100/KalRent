@@ -50,9 +50,9 @@ const PropertyDetails = ({ propertyId }: PropertyDetailsProps) => {
             return (
               <div
                 key={amenity}
-                className="flex items-center gap-3 p-3.5 border border-slate-200/80 bg-white rounded-xl shadow-2xs hover:border-emerald-300 transition-colors"
+                className="flex items-center gap-3 p-3.5 border border-slate-200/80 bg-white rounded-xl shadow-2xs hover:border-primary transition-colors"
               >
-                <div className="p-2 rounded-lg bg-emerald-50 text-emerald-700 shrink-0">
+                <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
                   <Icon className="w-4 h-4" />
                 </div>
                 <span className="text-xs font-semibold text-slate-700">
@@ -77,9 +77,9 @@ const PropertyDetails = ({ propertyId }: PropertyDetailsProps) => {
               return (
                 <div
                   key={highlight}
-                  className="flex items-center gap-3 p-3.5 border border-slate-200/80 bg-white rounded-xl shadow-2xs hover:border-emerald-300 transition-colors"
+                  className="flex items-center gap-3 p-3.5 border border-slate-200/80 bg-white rounded-xl shadow-2xs hover:border-primary transition-colors"
                 >
-                  <div className="p-2 rounded-lg bg-teal-50 text-teal-700 shrink-0">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
                     <Icon className="w-4 h-4" />
                   </div>
                   <span className="text-xs font-semibold text-slate-700">
@@ -98,7 +98,7 @@ const PropertyDetails = ({ propertyId }: PropertyDetailsProps) => {
           Pricing Details &amp; Policies
         </h3>
         <p className="text-xs text-slate-500 flex items-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
           All caution deposits are fully refundable upon checkout inspection under KalRent Cover.
         </p>
 
@@ -124,13 +124,13 @@ const PropertyDetails = ({ propertyId }: PropertyDetailsProps) => {
               </div>
               <div className="flex justify-between py-1.5 border-b border-slate-200">
                 <span className="text-slate-600 font-medium">Caution Deposit (Refundable Escrow)</span>
-                <span className="font-bold text-emerald-700">₦{property.cautionDeposit?.toLocaleString()}</span>
+                <span className="font-bold text-primary">₦{property.cautionDeposit?.toLocaleString()}</span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-slate-200">
                 <span className="text-slate-600 font-medium">Platform &amp; Legal Verification (5%)</span>
                 <span className="font-bold text-slate-900">₦{property.platformFee?.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between items-center py-2.5 bg-emerald-100/60 px-3 rounded-xl mt-2 text-emerald-950">
+              <div className="flex justify-between items-center py-2.5 bg-primary/10 px-3 rounded-xl mt-2 text-primary">
                 <span className="font-bold">Total Upfront Required</span>
                 <span className="text-sm font-black">₦{totalUpfront.toLocaleString()}</span>
               </div>

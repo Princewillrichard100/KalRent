@@ -19,41 +19,41 @@ const Card = ({
   return (
     <div
       id={`property-${property.id}`}
-      className={`bg-white rounded-2xl border transition-all duration-200 w-full mb-5 ${
+      className={`bg-card rounded-2xl border transition-all duration-200 w-full mb-5 text-card-foreground ${
         isHovered
-          ? "border-emerald-500 ring-2 ring-emerald-500/40 shadow-lg scale-[1.01]"
-          : "border-slate-200/80 shadow-xs hover:shadow-md"
+          ? "border-primary ring-2 ring-primary/40 shadow-lg scale-[1.01]"
+          : "border-border/80 shadow-xs hover:border-border hover:shadow-md"
       }`}
     >
       <div className="relative">
-        <div className="w-full h-48 relative">
+        <div className="w-full h-48 relative bg-muted">
           <Image
             src={imgSrc}
             alt={property.name}
             fill
-            className="object-cover"
+            className="object-cover rounded-t-2xl"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             onError={() => setImgSrc("/placeholder.jpg")}
           />
         </div>
         <div className="absolute bottom-3 left-3 flex gap-1.5 flex-wrap">
           {property.distanceKm !== undefined && (
-            <span className="bg-emerald-600/95 backdrop-blur-xs text-white text-xs font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
+            <span className="bg-primary/95 backdrop-blur-xs text-primary-foreground text-xs font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
               <MapPin className="w-3 h-3 shrink-0" />
               {property.distanceKm} km away
             </span>
           )}
           {property.campusZone && (
-            <span className="bg-slate-900/85 backdrop-blur-xs text-white text-xs font-semibold px-2.5 py-0.5 rounded-lg">
+            <span className="bg-background/85 backdrop-blur-xs text-foreground text-xs font-semibold px-2.5 py-0.5 rounded-lg border border-border">
               {property.campusZone}
             </span>
           )}
-          <span className="bg-emerald-700/85 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
+          <span className="bg-primary/85 backdrop-blur-xs text-primary-foreground text-[11px] font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-xs">
             <ShieldCheck className="w-3 h-3 shrink-0" />
             Protected Booking
           </span>
           {property.isParkingIncluded && (
-            <span className="bg-white/90 backdrop-blur-xs text-slate-800 text-xs font-medium px-2 py-0.5 rounded-lg">
+            <span className="bg-card/90 backdrop-blur-xs text-card-foreground border border-border text-xs font-medium px-2 py-0.5 rounded-lg">
               Parking
             </span>
           )}
@@ -65,11 +65,11 @@ const Card = ({
         )}
       </div>
       <div className="p-4">
-        <h2 className="text-lg font-bold mb-1 text-slate-900 tracking-tight">
+        <h2 className="text-lg font-bold mb-1 text-foreground tracking-tight">
           {propertyLink ? (
             <Link
               href={propertyLink}
-              className="hover:underline hover:text-emerald-700 transition-colors"
+              className="hover:underline hover:text-primary transition-colors"
               scroll={false}
             >
               {property.name}
@@ -78,7 +78,7 @@ const Card = ({
             property.name
           )}
         </h2>
-        <p className="text-slate-500 mb-2.5 text-xs truncate">
+        <p className="text-muted-foreground mb-2.5 text-xs truncate">
           {property.landmark ? `${property.landmark}, ` : ""}
           {property?.location?.address || property.campusZone},{" "}
           {property?.location?.city || "Ilorin"}
@@ -86,21 +86,21 @@ const Card = ({
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center">
             <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 mr-1" />
-            <span className="font-semibold text-xs text-slate-800">
+            <span className="font-semibold text-xs text-foreground">
               {property.averageRating.toFixed(1)}
             </span>
-            <span className="text-slate-500 ml-1 text-xs">
+            <span className="text-muted-foreground ml-1 text-xs">
               ({property.numberOfReviews})
             </span>
           </div>
-          <p className="text-lg font-extrabold text-slate-900 tracking-tight">
+          <p className="text-lg font-extrabold text-foreground tracking-tight">
             ₦{property.annualRent?.toLocaleString()}{" "}
-            <span className="text-slate-500 text-xs font-normal"> /yr</span>
+            <span className="text-muted-foreground text-xs font-normal"> /yr</span>
           </p>
         </div>
-        <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 mb-3 text-xs text-slate-600 flex justify-between items-center">
-          <span className="text-slate-600 font-medium">Total Upfront:</span>
-          <span className="font-bold text-emerald-800 text-xs">
+        <div className="bg-muted border border-border rounded-xl p-2.5 mb-3 text-xs text-muted-foreground flex justify-between items-center">
+          <span className="text-foreground font-medium">Total Upfront:</span>
+          <span className="font-bold text-primary text-xs">
             ₦
             {(
               (property.annualRent || 0) +
@@ -110,18 +110,18 @@ const Card = ({
             ).toLocaleString()}
           </span>
         </div>
-        <hr className="border-slate-100" />
-        <div className="flex justify-between items-center gap-4 text-slate-600 mt-3 text-xs font-medium">
+        <hr className="border-border" />
+        <div className="flex justify-between items-center gap-4 text-muted-foreground mt-3 text-xs font-medium">
           <span className="flex items-center">
-            <Bed className="w-3.5 h-3.5 mr-1 text-slate-400" />
+            <Bed className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
             {property.beds} Bed
           </span>
           <span className="flex items-center">
-            <Bath className="w-3.5 h-3.5 mr-1 text-slate-400" />
+            <Bath className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
             {property.baths} Bath
           </span>
           <span className="flex items-center">
-            <House className="w-3.5 h-3.5 mr-1 text-slate-400" />
+            <House className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
             {property.propertyType}
           </span>
         </div>

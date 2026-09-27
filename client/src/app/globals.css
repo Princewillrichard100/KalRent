@@ -15,70 +15,113 @@ body,
   height: 100%;
   width: 100%;
   @apply text-sm;
-  @apply bg-white;
-  @apply dark:bg-black;
+  @apply bg-background text-foreground;
 }
 
 @layer base {
+  /* Light Theme (Clean Minimal) */
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222.2 47% 11%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 47% 11%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 47% 11%;
-    --primary: 160 84% 39%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 22 55% 42%;            /* Warm Terracotta / Rust */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 160 84% 39%;
-    --radius: 0.75rem;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 22 55% 42%;
+    --radius: 0.875rem;
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222.2 47% 11%;
-    --sidebar-primary: 160 84% 39%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 22 55% 42%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96.1%;
-    --sidebar-accent-foreground: 222.2 47% 11%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 22 55% 42%;
   }
 
+  /* Gemini Dark Mode (Deep Slate Canvas) */
   .dark {
-    --background: 222.2 84% 3.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 240 3% 8%;          /* #131314 */
+    --foreground: 0 0% 90%;           /* #E3E3E3 */
+    --card: 240 3% 13%;               /* #1E1F20 */
+    --card-foreground: 0 0% 90%;
+    --popover: 240 3% 14%;            /* #212124 */
+    --popover-foreground: 0 0% 90%;
+    --primary: 22 55% 46%;            /* Warm Terracotta / Rust */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 3% 18%;          /* #282A2C */
+    --secondary-foreground: 0 0% 95%;
+    --muted: 240 3% 15%;              /* #242528 */
+    --muted-foreground: 240 2% 65%;   /* #A1A1AA */
+    --accent: 240 3% 20%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 15.5%;
-    --ring: 224.3 76.3% 48%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3% 18%;             /* Subtle divider */
+    --input: 240 3% 20%;
+    --ring: 22 55% 46%;
+    --sidebar-background: 240 3% 13%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 22 55% 46%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 240 3% 18%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 240 3% 18%;
+    --sidebar-ring: 22 55% 46%;
+  }
+
+  /* Warm Sand / Taupe Theme */
+  .sand {
+    --background: 28 26% 89%;         /* Soft warm linen canvas */
+    --foreground: 24 20% 16%;         /* Deep espresso brown text */
+    --card: 28 24% 94%;               /* Lighter sandstone card surface */
+    --card-foreground: 24 20% 16%;
+    --popover: 28 24% 94%;
+    --popover-foreground: 24 20% 16%;
+    --primary: 22 55% 42%;            /* Terracotta primary accent */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 28 20% 82%;          /* The warm taupe tone (~#C2AC99) */
+    --secondary-foreground: 24 20% 14%;
+    --muted: 28 20% 84%;
+    --muted-foreground: 24 10% 40%;
+    --accent: 28 20% 82%;
+    --accent-foreground: 24 20% 14%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 28 16% 78%;             /* Subtle earthy divider */
+    --input: 28 16% 78%;
+    --ring: 22 55% 42%;
+    --sidebar-background: 28 24% 94%;
+    --sidebar-foreground: 24 20% 16%;
+    --sidebar-primary: 22 55% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 28 20% 82%;
+    --sidebar-accent-foreground: 24 20% 14%;
+    --sidebar-border: 28 16% 78%;
+    --sidebar-ring: 22 55% 42%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html, body {
+    @apply bg-background text-foreground antialiased min-h-screen;
+    /* Prevents scroll chaining and jitter across OS engines */
+    overscroll-behavior-y: none;
   }
 }
 
@@ -88,13 +131,13 @@ body,
 
 /* Airbnb-style Map Price Pill Markers */
 .airbnb-marker-pill {
-  @apply bg-white text-slate-900 font-bold text-xs px-2.5 py-1 rounded-full shadow-md border border-slate-300 transition-all duration-150 cursor-pointer select-none flex items-center justify-center whitespace-nowrap;
+  @apply bg-card text-foreground font-bold text-xs px-2.5 py-1 rounded-full shadow-md border border-border transition-all duration-150 cursor-pointer select-none flex items-center justify-center whitespace-nowrap;
 }
 
 .airbnb-marker-pill:hover,
 .airbnb-marker-pill.is-hovered,
 .airbnb-marker-pill.is-selected {
-  @apply bg-slate-900 text-white border-slate-900 scale-110 shadow-lg z-30;
+  @apply bg-primary text-primary-foreground border-primary scale-110 shadow-lg z-30;
 }
 
 /* Micro-card popup styling */
@@ -103,27 +146,27 @@ body,
 }
 
 .mapboxgl-popup-content {
-  @apply !bg-white !text-slate-900 !rounded-2xl !p-0 !shadow-xl !border !border-slate-200/80 !overflow-hidden max-w-[260px];
+  @apply !bg-card !text-card-foreground !rounded-2xl !p-0 !shadow-xl !border !border-border !overflow-hidden max-w-[260px];
 }
 
 .mapboxgl-popup-close-button {
-  @apply !text-slate-700 !bg-white/80 !rounded-full !w-6 !h-6 !top-2 !right-2 !flex !items-center !justify-center !shadow-sm hover:!bg-white !z-10;
+  @apply !text-muted-foreground !bg-card/80 !rounded-full !w-6 !h-6 !top-2 !right-2 !flex !items-center !justify-center !shadow-sm hover:!bg-card !z-10;
 }
 
 .mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
-  @apply !border-b-white;
+  @apply !border-b-card;
 }
 
 .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-  @apply !border-t-white;
+  @apply !border-t-card;
 }
 
 .mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-  @apply !border-r-white;
+  @apply !border-r-card;
 }
 
 .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-  @apply !border-l-white;
+  @apply !border-l-card;
 }
 
 .airbnb-popup-card {
@@ -131,7 +174,7 @@ body,
 }
 
 .airbnb-popup-img-wrap {
-  @apply relative w-full h-28 bg-slate-100 overflow-hidden;
+  @apply relative w-full h-28 bg-muted overflow-hidden;
 }
 
 .airbnb-popup-img {
@@ -139,7 +182,7 @@ body,
 }
 
 .airbnb-popup-distance {
-  @apply absolute bottom-2 left-2 bg-emerald-700/90 backdrop-blur-sm text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md;
+  @apply absolute bottom-2 left-2 bg-primary/90 backdrop-blur-sm text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-md;
 }
 
 .airbnb-popup-info {
@@ -147,19 +190,19 @@ body,
 }
 
 .airbnb-popup-zone {
-  @apply text-[10px] uppercase font-bold text-emerald-700 tracking-wider;
+  @apply text-[10px] uppercase font-bold text-primary tracking-wider;
 }
 
 .airbnb-popup-title {
-  @apply font-bold text-xs text-slate-900 hover:text-emerald-700 hover:underline truncate block;
+  @apply font-bold text-xs text-foreground hover:text-primary hover:underline truncate block;
 }
 
 .airbnb-popup-price {
-  @apply text-sm font-extrabold text-slate-900;
+  @apply text-sm font-extrabold text-foreground;
 }
 
 .airbnb-popup-meta {
-  @apply text-[11px] text-slate-500 font-medium;
+  @apply text-[11px] text-muted-foreground font-medium;
 }
 
 .marker-popup {
@@ -317,13 +360,13 @@ body,
 }
 
 .airbnb-price-pill {
-  background-color: #ffffff;
-  color: #171717;
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   font-weight: 800;
   padding: 4px 10px;
   border-radius: 9999px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(229, 229, 229, 0.9);
+  border: 1px solid hsl(var(--border));
   font-size: 12px;
   letter-spacing: -0.02em;
   line-height: 1;
@@ -349,15 +392,15 @@ body,
 
 .airbnb-price-pill:hover,
 .airbnb-price-pill.is-hovered {
-  background-color: #111827 !important;
-  color: #ffffff !important;
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
   transform: scale(1.15) translate3d(0, 0, 0) !important;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35) !important;
 }
 
 .airbnb-price-pill.is-selected {
-  background-color: #111827 !important;
-  color: #ffffff !important;
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
   transform: scale(1.18) translate3d(0, 0, 0) !important;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
 }
@@ -369,8 +412,7 @@ body,
 }
 
 .listing-card-item.is-hovered {
-  background-color: rgba(245, 245, 245, 0.95);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  background-color: hsl(var(--muted) / 0.5);
 }
 
 /* Mapbox Popup Overrides for Floating Preview Card */

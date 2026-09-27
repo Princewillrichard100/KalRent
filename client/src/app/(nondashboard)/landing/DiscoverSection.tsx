@@ -54,7 +54,7 @@ const DiscoverSection = () => {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-8">
         <motion.div variants={itemVariants} className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
             How It Works
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -72,12 +72,12 @@ const DiscoverSection = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 text-left relative overflow-hidden group hover:border-emerald-300 hover:shadow-md transition-all duration-200"
+                className="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 text-left relative overflow-hidden group hover:border-primary hover:shadow-md transition-all duration-200"
               >
-                <div className="absolute top-4 right-4 text-3xl font-black text-slate-200 group-hover:text-emerald-100 transition-colors">
+                <div className="absolute top-4 right-4 text-3xl font-black text-slate-200 group-hover:text-primary transition-colors">
                   {item.step}
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center mb-6 text-emerald-600 shadow-2xs">
+                <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center mb-6 text-primary shadow-2xs">
                   <Icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight">

@@ -6,6 +6,7 @@ import ToasterProvider from "@/providers/ToasterProvider";
 import ModalsProvider from "@/components/modals/ModalsProvider";
 
 import RootJsonLd from "@/components/seo/schema/RootJsonLd";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -57,18 +58,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={outfit.variable}>
+    <html lang="en" className={outfit.variable} suppressHydrationWarning>
       <head>
         <RootJsonLd />
       </head>
       <body
-        className="font-sans antialiased text-slate-900 bg-slate-50 [text-rendering:optimizeLegibility] min-h-screen"
+        className="font-sans antialiased bg-background text-foreground [text-rendering:optimizeLegibility] min-h-screen"
       >
-        <Providers>
-          <ToasterProvider />
-          <ModalsProvider />
-          {children}
-        </Providers>
+        <ThemeProvider>
+          <Providers>
+            <ToasterProvider />
+            <ModalsProvider />
+            {children}
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

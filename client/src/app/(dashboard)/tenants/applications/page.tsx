@@ -147,7 +147,7 @@ const Applications = () => {
                             handleProceedPayment(application.lease?.id)
                           }
                           disabled={isInitializingPayment}
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition-colors whitespace-nowrap cursor-pointer text-sm"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition-colors whitespace-nowrap cursor-pointer text-sm"
                         >
                           <ShieldCheck className="w-4 h-4" />
                           Proceed to Secure Escrow Payment

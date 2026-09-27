@@ -12,16 +12,16 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow hover:bg-primary/90 active:scale-[0.99]",
         trust:
-          "bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 active:scale-[0.98] focus-visible:ring-emerald-500 font-semibold",
+          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98] focus-visible:ring-ring font-semibold",
         caution:
           "bg-amber-600 text-white shadow-sm hover:bg-amber-700 active:scale-[0.98] focus-visible:ring-amber-500 font-semibold",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.99]",
         outline:
-          "border border-slate-200 bg-white shadow-xs hover:bg-slate-100 hover:text-slate-900 active:scale-[0.99]",
+          "border border-border bg-card text-foreground shadow-xs hover:bg-muted hover:text-foreground active:scale-[0.99]",
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 active:scale-[0.99]",
-        ghost: "hover:bg-slate-100 hover:text-slate-900",
+        ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

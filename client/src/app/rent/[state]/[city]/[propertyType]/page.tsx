@@ -140,7 +140,7 @@ export default async function PropertyTypePage({ params }: PropertyTypePageProps
   ];
 
   return (
-    <div className="py-10">
+    <div className="py-10 bg-background text-foreground min-h-screen">
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: "/" },
@@ -162,12 +162,12 @@ export default async function PropertyTypePage({ params }: PropertyTypePageProps
       <Container>
         {/* Header Block */}
         <div className="max-w-4xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold mb-4">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4 border border-primary/20">
+            <ShieldCheck className="w-4 h-4 text-primary" />
             <span>Anti-Scam Escrow Protection Active</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
             {propertyType.name} for Rent in {neighborhood.city}, {stateData.name}
           </h1>
 
@@ -182,7 +182,7 @@ export default async function PropertyTypePage({ params }: PropertyTypePageProps
             floodRisk={neighborhood.floodRisk}
           />
 
-          <p className="mt-4 text-base text-neutral-600 leading-relaxed">
+          <p className="mt-4 text-base text-muted-foreground leading-relaxed">
             Looking for a verified {propertyType.name.toLowerCase()} in {neighborhood.city}? KalRent connects prospective tenants directly with identity-verified landlords and licensed agents, eliminating ghost listings and unauthorized middlemen fees.
           </p>
         </div>
@@ -195,10 +195,10 @@ export default async function PropertyTypePage({ params }: PropertyTypePageProps
               <Link
                 key={pt.slug}
                 href={`/rent/${stateSlug}/${citySlug}/${pt.slug}`}
-                className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition border ${
                   isActive
-                    ? "bg-neutral-900 text-white"
-                    : "bg-white border border-neutral-200 text-neutral-700 hover:border-emerald-600 hover:text-emerald-700"
+                    ? "bg-secondary text-secondary-foreground border-border font-bold shadow-xs"
+                    : "bg-card border-border text-foreground hover:bg-secondary/60 hover:text-primary"
                 }`}
               >
                 {pt.name}
@@ -230,17 +230,17 @@ export default async function PropertyTypePage({ params }: PropertyTypePageProps
         />
 
         {/* Dynamic FAQ Section */}
-        <div className="mt-16 pt-12 border-t border-neutral-200 max-w-3xl">
-          <h2 className="text-2xl font-bold text-neutral-900 mb-6">
+        <div className="mt-16 pt-12 border-t border-border max-w-3xl">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             Frequently Asked Questions: {propertyType.name} in {neighborhood.city}
           </h2>
           <div className="space-y-6">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white p-5 rounded-xl border border-neutral-200/80">
-                <h3 className="font-bold text-base text-neutral-900 mb-2">
+              <div key={i} className="bg-card p-5 rounded-xl border border-border">
+                <h3 className="font-bold text-base text-foreground mb-2">
                   {faq.question}
                 </h3>
-                <p className="text-sm text-neutral-600 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {faq.answer}
                 </p>
               </div>

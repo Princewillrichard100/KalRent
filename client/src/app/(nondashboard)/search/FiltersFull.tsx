@@ -283,7 +283,7 @@ const FiltersFull = () => {
         <div className="flex gap-3 mt-6 pt-2 border-t border-slate-100">
           <Button
             onClick={handleSubmit}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold h-11 shadow-xs cursor-pointer"
+            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-xs font-bold h-11 shadow-xs cursor-pointer"
           >
             Apply Filters
           </Button>

@@ -63,17 +63,17 @@ export function ListingFeed({
     <div className="flex flex-col w-full">
       {/* Header Info */}
       <div className="flex justify-between items-center mb-4 px-1">
-        <h1 className="text-xl sm:text-2xl font-bold text-neutral-950 transition-opacity duration-200">
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground transition-opacity duration-200">
           {isSmoothLoading ? (
-            <span className="inline-block w-48 sm:w-64 h-7 bg-neutral-200 animate-pulse rounded-md" />
+            <span className="inline-block w-48 sm:w-64 h-7 bg-muted animate-pulse rounded-md" />
           ) : (
             `${
               totalCount > 1000 ? "Over 1,000" : totalCount
             } ${totalCount === 1 ? "home" : "homes"} within map area`
           )}
         </h1>
-        <div className="flex items-center gap-1.5 text-xs text-neutral-600 font-medium bg-neutral-50 border border-neutral-200/80 px-2.5 py-1.5 rounded-full shadow-sm select-none">
-          <Tag className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium bg-card border border-border px-2.5 py-1.5 rounded-full shadow-sm select-none">
+          <Tag className="w-3.5 h-3.5 text-primary fill-primary" />
           <span>Prices include all fees</span>
         </div>
       </div>
@@ -89,13 +89,13 @@ export function ListingFeed({
           </div>
         ) : listings.length === 0 && !isSmoothLoading ? (
           <div className="py-20 text-center">
-            <div className="w-12 h-12 rounded-full bg-neutral-100 text-neutral-500 flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 rounded-full bg-muted text-muted-foreground flex items-center justify-center mx-auto mb-3">
               <SearchX className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-neutral-900 text-sm mb-1">
+            <h3 className="font-bold text-foreground text-sm mb-1">
               No homes found in this map area
             </h3>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-muted-foreground">
               Try adjusting your filters, zooming out, or panning to an adjacent neighborhood.
             </p>
           </div>
@@ -103,7 +103,7 @@ export function ListingFeed({
           <>
             {/* Subsequent fetches (map pan / filter updates): Smooth Semi-Transparent Skeleton Layer */}
             <div
-              className={`absolute inset-0 z-20 bg-white/50 backdrop-blur-[1px] grid grid-cols-1 sm:grid-cols-2 gap-5 xl:gap-6 pointer-events-none transition-all duration-200 ease-out ${
+              className={`absolute inset-0 z-20 bg-background/50 backdrop-blur-[1px] grid grid-cols-1 sm:grid-cols-2 gap-5 xl:gap-6 pointer-events-none transition-all duration-200 ease-out ${
                 isSmoothLoading
                   ? "opacity-100 visible"
                   : "opacity-0 invisible"

@@ -132,15 +132,15 @@ const ListingCard: React.FC<ListingCardProps> = ({
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`listing-card-item col-span-1 group transition-all duration-150 rounded-2xl p-1.5 -m-1.5 ${
+      className={`listing-card-item col-span-1 group relative flex flex-col rounded-2xl overflow-hidden bg-card/60 hover:bg-card border border-border/50 hover:border-border transition-all duration-300 p-2.5 ${
         isSkeleton ? "pointer-events-none cursor-default" : "cursor-pointer"
       } ${isHovered ? "is-hovered" : ""}`}
     >
       <div className="flex flex-col gap-2 w-full">
-        {/* 1. Exact locked aspect-[20/19] container */}
-        <div className="aspect-[20/19] w-full relative overflow-hidden rounded-2xl bg-neutral-200/80">
+        {/* 1. Aspect-[4/3] container */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-muted">
           {isSkeleton ? (
-            <div className="w-full h-full animate-pulse bg-neutral-200" />
+            <div className="w-full h-full animate-pulse bg-muted" />
           ) : (
             <>
               <Image
@@ -164,20 +164,20 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
 
         {/* 2. Unified Text rows with locked line-height bounds */}
-        <div className="flex flex-col gap-0.5 pt-0.5">
+        <div className="flex flex-col gap-0.5 pt-0.5 px-0.5">
           {/* Row 1: Title & Rating on one baseline (Locked h-5) */}
           <div className="flex justify-between items-center h-5">
             {isSkeleton ? (
               <>
-                <div className="h-3.5 w-3/5 bg-neutral-200 animate-pulse rounded" />
-                <div className="h-3.5 w-10 bg-neutral-200 animate-pulse rounded" />
+                <div className="h-3.5 w-3/5 bg-muted animate-pulse rounded" />
+                <div className="h-3.5 w-10 bg-muted animate-pulse rounded" />
               </>
             ) : (
               <>
-                <span className="font-semibold text-neutral-900 text-sm truncate">{titleHeader}</span>
-                <span className="text-xs text-neutral-800 shrink-0 ml-2 font-normal flex items-center gap-0.5">
+                <span className="text-sm font-medium text-foreground tracking-tight line-clamp-1 truncate">{titleHeader}</span>
+                <span className="text-xs text-foreground shrink-0 ml-2 font-normal flex items-center gap-0.5">
                   ★ {data.averageRating ? Number(data.averageRating).toFixed(2) : "4.84"}{" "}
-                  <span className="text-neutral-500 font-normal">
+                  <span className="text-muted-foreground font-normal">
                     ({data.numberOfReviews || 18})
                   </span>
                 </span>
@@ -186,18 +186,18 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
 
           {/* Row 2: Subtitle 1 - Specs / Distance (Locked h-4) */}
-          <div className="h-4 text-xs text-neutral-500 font-normal flex items-center leading-none">
+          <div className="h-4 text-xs text-muted-foreground font-normal flex items-center leading-none">
             {isSkeleton ? (
-              <div className="h-3 w-2/5 bg-neutral-200 animate-pulse rounded" />
+              <div className="h-3 w-2/5 bg-muted animate-pulse rounded" />
             ) : (
               <span className="truncate">{subtitleSpecs}</span>
             )}
           </div>
 
           {/* Row 3: Subtitle 2 - Dates window / Availability (Locked h-4) */}
-          <div className="h-4 text-xs text-neutral-500 font-normal flex items-center leading-none">
+          <div className="h-4 text-xs text-muted-foreground font-normal flex items-center leading-none">
             {isSkeleton ? (
-              <div className="h-3 w-1/3 bg-neutral-200 animate-pulse rounded" />
+              <div className="h-3 w-1/3 bg-muted animate-pulse rounded" />
             ) : (
               <span className="truncate">
                 {reservationDate || "Flexible move-in"}
@@ -208,13 +208,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
           {/* Row 4: Bold Price line (Locked h-5) */}
           <div className="h-5 text-sm flex items-center gap-1 pt-0.5">
             {isSkeleton ? (
-              <div className="h-3.5 w-1/4 bg-neutral-200 animate-pulse rounded" />
+              <div className="h-3.5 w-1/4 bg-muted animate-pulse rounded" />
             ) : (
               <>
-                <span className="font-semibold text-neutral-900 leading-none">
+                <span className="text-sm font-semibold text-foreground leading-none">
                   ₦{price?.toLocaleString()}
                 </span>
-                <span className="text-xs text-neutral-600 font-normal leading-none">
+                <span className="text-xs text-muted-foreground font-normal leading-none">
                   {reservation ? "total" : "/ year"}
                 </span>
               </>

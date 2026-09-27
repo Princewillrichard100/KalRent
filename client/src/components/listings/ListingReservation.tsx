@@ -53,32 +53,32 @@ export const ListingReservation: React.FC<ListingReservationProps> = ({
     calculatedCautionDeposit;
 
   return (
-    <div className="bg-white rounded-2xl border border-neutral-200 p-6 shadow-xl flex flex-col gap-4 sticky top-28">
+    <div className="bg-card rounded-2xl border border-border p-6 shadow-xl flex flex-col gap-4 sticky top-28 text-card-foreground">
       {/* Price Header */}
       <div className="flex flex-row items-baseline justify-between">
         <div className="flex flex-row items-baseline gap-1">
-          <span className="text-2xl font-bold text-neutral-900">
+          <span className="text-2xl font-bold text-foreground">
             ₦{annualRent?.toLocaleString()}
           </span>
-          <span className="font-light text-neutral-500 text-sm">/ year</span>
+          <span className="font-light text-muted-foreground text-sm">/ year</span>
         </div>
 
-        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
           <ShieldCheck className="w-3.5 h-3.5" />
           Protected Booking
         </span>
       </div>
 
-      <hr className="border-neutral-100" />
+      <hr className="border-border" />
 
       {/* Date Picker Button / Dropdown */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs font-semibold text-neutral-700">
+        <div className="flex items-center justify-between text-xs font-semibold text-foreground">
           <span>Dates</span>
           <button
             type="button"
             onClick={() => setShowCalendar(!showCalendar)}
-            className="text-rose-500 hover:underline cursor-pointer flex items-center gap-1 font-semibold"
+            className="text-primary hover:underline cursor-pointer flex items-center gap-1 font-semibold"
           >
             <CalendarRange className="w-3.5 h-3.5" />
             <span>{showCalendar ? "Close" : "Change Dates"}</span>
@@ -87,18 +87,18 @@ export const ListingReservation: React.FC<ListingReservationProps> = ({
 
         <div
           onClick={() => setShowCalendar(!showCalendar)}
-          className="p-3 border border-neutral-300 rounded-xl text-xs flex items-center justify-between cursor-pointer hover:border-black transition"
+          className="p-3 border border-border rounded-xl text-xs flex items-center justify-between cursor-pointer hover:border-primary/50 bg-muted/40 transition"
         >
           <div>
-            <span className="text-neutral-400 block text-[10px] uppercase font-bold">Check-in</span>
-            <span className="font-semibold text-neutral-800">
+            <span className="text-muted-foreground block text-[10px] uppercase font-bold">Check-in</span>
+            <span className="font-semibold text-foreground">
               {dateRange.startDate ? dateRange.startDate.toLocaleDateString() : "Select Date"}
             </span>
           </div>
-          <div className="text-neutral-300 font-bold">→</div>
+          <div className="text-muted-foreground font-bold">→</div>
           <div>
-            <span className="text-neutral-400 block text-[10px] uppercase font-bold">Checkout</span>
-            <span className="font-semibold text-neutral-800">
+            <span className="text-muted-foreground block text-[10px] uppercase font-bold">Checkout</span>
+            <span className="font-semibold text-foreground">
               {dateRange.endDate ? dateRange.endDate.toLocaleDateString() : "Select Date"}
             </span>
           </div>
@@ -124,9 +124,9 @@ export const ListingReservation: React.FC<ListingReservationProps> = ({
           w-full 
           py-3.5 
           rounded-xl 
-          bg-rose-500 
-          hover:bg-rose-600 
-          text-white 
+          bg-primary 
+          hover:bg-primary/90 
+          text-primary-foreground 
           font-bold 
           text-base 
           transition 
@@ -140,46 +140,46 @@ export const ListingReservation: React.FC<ListingReservationProps> = ({
         Reserve
       </button>
 
-      <div className="text-xs text-neutral-500 text-center">
+      <div className="text-xs text-muted-foreground text-center">
         You won&apos;t be charged yet
       </div>
 
-      <hr className="border-neutral-100" />
+      <hr className="border-border" />
 
       {/* Financial Breakdown */}
       <div className="space-y-3 text-sm">
-        <div className="flex justify-between text-neutral-600">
+        <div className="flex justify-between text-muted-foreground">
           <span className="underline">
             Base rent {durationDays !== 365 ? `(${durationDays} days)` : "(1 year)"}
           </span>
-          <span>₦{effectiveBaseRent.toLocaleString()}</span>
+          <span className="text-foreground font-medium">₦{effectiveBaseRent.toLocaleString()}</span>
         </div>
 
-        <div className="flex justify-between text-neutral-600">
+        <div className="flex justify-between text-muted-foreground">
           <span className="underline">Cleaning fee</span>
-          <span>₦{calculatedCleaningFee.toLocaleString()}</span>
+          <span className="text-foreground font-medium">₦{calculatedCleaningFee.toLocaleString()}</span>
         </div>
 
-        <div className="flex justify-between text-neutral-600">
+        <div className="flex justify-between text-muted-foreground">
           <span className="underline">Service fee</span>
-          <span>₦{calculatedServiceFee.toLocaleString()}</span>
+          <span className="text-foreground font-medium">₦{calculatedServiceFee.toLocaleString()}</span>
         </div>
 
-        <div className="flex justify-between text-neutral-600">
+        <div className="flex justify-between text-muted-foreground">
           <span className="underline">Refundable caution deposit</span>
-          <span>₦{calculatedCautionDeposit.toLocaleString()}</span>
+          <span className="text-foreground font-medium">₦{calculatedCautionDeposit.toLocaleString()}</span>
         </div>
       </div>
 
-      <hr className="border-neutral-200" />
+      <hr className="border-border" />
 
       {/* Total Amount */}
-      <div className="flex flex-row items-center justify-between font-bold text-base text-neutral-900">
+      <div className="flex flex-row items-center justify-between font-bold text-base text-foreground">
         <div>Total before taxes</div>
-        <div className="text-lg text-neutral-900">₦{total.toLocaleString()}</div>
+        <div className="text-lg text-foreground">₦{total.toLocaleString()}</div>
       </div>
 
-      <p className="text-[11px] text-neutral-400 text-center leading-normal mt-1">
+      <p className="text-[11px] text-muted-foreground text-center leading-normal mt-1">
         Caution deposit is fully refundable to you upon checkout.
       </p>
     </div>

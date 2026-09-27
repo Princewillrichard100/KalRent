@@ -60,8 +60,8 @@ const HeroSection = () => {
         className="relative z-10 text-center w-full max-w-4xl mx-auto px-4 sm:px-8 py-16"
       >
         {/* Trust Pill */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-semibold mb-6 shadow-md">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-6 shadow-md">
+          <ShieldCheck className="w-3.5 h-3.5 text-primary" />
           <span>Protected Bookings &amp; Stays Across Nigeria</span>
         </div>
 
@@ -75,7 +75,7 @@ const HeroSection = () => {
         {/* Search Bar */}
         <div className="max-w-2xl mx-auto bg-white/95 p-2 rounded-2xl shadow-2xl border border-white/20 backdrop-blur-md flex flex-col sm:flex-row items-center gap-2">
           <div className="relative w-full flex items-center pl-3">
-            <MapPin className="w-4 h-4 text-emerald-600 shrink-0 mr-2" />
+            <MapPin className="w-4 h-4 text-primary shrink-0 mr-2" />
             <Input
               type="text"
               value={searchQuery}
@@ -87,7 +87,7 @@ const HeroSection = () => {
           </div>
           <Button
             onClick={() => handleLocationSearch()}
-            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl px-7 h-11 transition-all shadow-md flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl px-7 h-11 transition-all shadow-md flex items-center justify-center gap-2 shrink-0 cursor-pointer"
           >
             <Search className="w-4 h-4" />
             <span>Search Hostels</span>
@@ -104,7 +104,7 @@ const HeroSection = () => {
             <button
               key={zone.name}
               onClick={() => handleLocationSearch(zone.query)}
-              className="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700 text-slate-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-500 transition-all font-medium cursor-pointer shadow-xs"
+              className="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700 text-slate-200 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-medium cursor-pointer shadow-xs"
             >
               {zone.name}
             </button>

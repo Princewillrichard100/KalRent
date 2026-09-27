@@ -51,7 +51,7 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
   return (
     <Sidebar
       collapsible="icon"
-      className="fixed left-0 bg-white shadow-lg"
+      className="fixed left-0 bg-sidebar border-r border-sidebar-border shadow-lg"
       style={{
         top: `${NAVBAR_HEIGHT}px`,
         height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
@@ -69,13 +69,13 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
               {open ? (
                 <>
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <h1 className="text-base font-bold text-slate-800">
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
+                    <h1 className="text-base font-bold text-sidebar-foreground">
                       {userType === "manager" ? "Manager Portal" : "Student Portal"}
                     </h1>
                   </div>
                   <button
-                    className="hover:bg-slate-100 p-2 rounded-xl text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                    className="hover:bg-sidebar-accent p-2 rounded-xl text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors cursor-pointer"
                     onClick={() => toggleSidebar()}
                     aria-label="Close sidebar"
                   >
@@ -84,7 +84,7 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
                 </>
               ) : (
                 <button
-                  className="hover:bg-slate-100 p-2 rounded-xl text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                  className="hover:bg-sidebar-accent p-2 rounded-xl text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors cursor-pointer"
                   onClick={() => toggleSidebar()}
                   aria-label="Open sidebar"
                 >
@@ -108,8 +108,8 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
                   className={cn(
                     "flex items-center px-4 py-3 rounded-xl transition-all text-xs font-semibold cursor-pointer",
                     isActive
-                      ? "bg-emerald-50 text-emerald-800 font-bold shadow-2xs"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                      ? "bg-sidebar-primary/10 text-sidebar-primary font-bold shadow-2xs"
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                     !open && "justify-center px-2"
                   )}
                 >
@@ -118,7 +118,7 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
                       <link.icon
                         className={cn(
                           "h-4 w-4 shrink-0 transition-colors",
-                          isActive ? "text-emerald-600" : "text-slate-400"
+                          isActive ? "text-sidebar-primary" : "text-sidebar-foreground/50"
                         )}
                       />
                       {open && <span>{link.label}</span>}

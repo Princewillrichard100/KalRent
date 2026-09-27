@@ -114,7 +114,7 @@ export default async function CityPage({ params }: CityPageProps) {
   ];
 
   return (
-    <div className="py-10">
+    <div className="py-10 bg-background text-foreground min-h-screen">
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: "/" },
@@ -135,12 +135,12 @@ export default async function CityPage({ params }: CityPageProps) {
       <Container>
         {/* Header Block */}
         <div className="max-w-4xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold mb-4">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4 border border-primary/20">
+            <ShieldCheck className="w-4 h-4 text-primary" />
             <span>Zero Ghost Listings Guarantee • {neighborhood.city}, {stateData.name}</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
             Apartments &amp; Flats for Rent in {neighborhood.city}, {stateData.name}
           </h1>
 
@@ -155,14 +155,14 @@ export default async function CityPage({ params }: CityPageProps) {
             floodRisk={neighborhood.floodRisk}
           />
 
-          <p className="mt-4 text-base text-neutral-600 leading-relaxed">
+          <p className="mt-4 text-base text-muted-foreground leading-relaxed">
             {neighborhood.description}
           </p>
         </div>
 
         {/* Property Type Sub-Filters */}
         <div className="mb-10">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-400 mb-3">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">
             Explore by Property Type in {neighborhood.city}
           </h2>
           <div className="flex flex-wrap gap-2.5">
@@ -172,12 +172,12 @@ export default async function CityPage({ params }: CityPageProps) {
                 <Link
                   key={pt.slug}
                   href={`/rent/${stateSlug}/${citySlug}/${pt.slug}`}
-                  className="px-4 py-2.5 rounded-xl bg-white border border-neutral-200/90 hover:border-emerald-600 hover:text-emerald-700 transition flex items-center gap-2 text-xs font-semibold shadow-2xs group"
+                  className="px-4 py-2.5 rounded-xl bg-card border border-border hover:border-primary hover:text-primary transition flex items-center gap-2 text-xs font-semibold shadow-2xs group text-foreground"
                 >
-                  <Home className="w-3.5 h-3.5 text-neutral-400 group-hover:text-emerald-600" />
+                  <Home className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary" />
                   <span>{pt.name}</span>
                   {medianPrice && (
-                    <span className="text-[11px] font-normal text-neutral-500 group-hover:text-emerald-600">
+                    <span className="text-[11px] font-normal text-muted-foreground group-hover:text-primary">
                       (~{formatNaira(medianPrice)})
                     </span>
                   )}
@@ -210,17 +210,17 @@ export default async function CityPage({ params }: CityPageProps) {
         />
 
         {/* Dynamic FAQ Section */}
-        <div className="mt-16 pt-12 border-t border-neutral-200 max-w-3xl">
-          <h2 className="text-2xl font-bold text-neutral-900 mb-6">
+        <div className="mt-16 pt-12 border-t border-border max-w-3xl">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             Frequently Asked Questions about Renting in {neighborhood.city}
           </h2>
           <div className="space-y-6">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white p-5 rounded-xl border border-neutral-200/80">
-                <h3 className="font-bold text-base text-neutral-900 mb-2">
+              <div key={i} className="bg-card p-5 rounded-xl border border-border">
+                <h3 className="font-bold text-base text-foreground mb-2">
                   {faq.question}
                 </h3>
-                <p className="text-sm text-neutral-600 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {faq.answer}
                 </p>
               </div>

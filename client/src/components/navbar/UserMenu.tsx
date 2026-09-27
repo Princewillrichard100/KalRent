@@ -76,12 +76,13 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
             py-3 
             px-4 
             rounded-full 
-            hover:bg-neutral-100 
+            text-foreground
+            hover:bg-muted 
             transition 
             cursor-pointer
           "
         >
-          {isManager ? "Add Listing" : "Airbnb your home"}
+          {isManager ? "Add Listing" : "KalRent your home"}
         </div>
         <div 
           onClick={toggleOpen}
@@ -89,8 +90,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
             p-4
             md:py-1
             md:px-2
-            border-[1px] 
-            border-neutral-200 
+            border
+            border-border 
+            bg-card
+            text-foreground
             flex 
             flex-row 
             items-center 
@@ -112,11 +115,14 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
         <div 
           className="
             absolute 
-            rounded-xl 
-            shadow-md
+            rounded-2xl 
+            shadow-xl
+            border
+            border-border
             w-[40vw]
             md:w-3/4 
-            bg-white 
+            bg-card 
+            text-card-foreground
             overflow-hidden 
             right-0 
             top-12 
@@ -137,7 +143,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                       }}
                     />
                     <MenuItem 
-                      label="Airbnb my home" 
+                      label="KalRent my home" 
                       onClick={() => {
                         setIsOpen(false);
                         rentModal.onOpen();
@@ -175,7 +181,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                       }}
                     />
                     <MenuItem 
-                      label="Airbnb my home" 
+                      label="KalRent my home" 
                       onClick={() => {
                         setIsOpen(false);
                         rentModal.onOpen();
@@ -190,7 +196,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                     router.push(`/${currentUser.userRole?.toLowerCase()}s/settings`);
                   }}
                 />
-                <hr />
+                <hr className="border-border" />
                 <MenuItem 
                   label="Logout" 
                   onClick={handleSignOut}

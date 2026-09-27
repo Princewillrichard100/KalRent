@@ -62,31 +62,32 @@ export const SearchPill = () => {
         }
       }}
       className="
+        bg-card 
         border 
-        border-slate-200 
+        border-border 
+        rounded-full 
+        shadow-sm 
+        text-foreground 
+        hover:bg-secondary/60 
+        transition-all 
         w-full 
         md:w-auto 
-        py-1.5
-        px-1
-        rounded-full 
-        shadow-xs 
-        hover:shadow-md 
-        transition 
+        py-1.5 
+        px-1 
         cursor-pointer
-        bg-white
       "
     >
       <div className="flex flex-row items-center justify-between">
-        <div className="text-sm font-semibold pl-3 pr-4 text-neutral-900 truncate max-w-[170px] flex items-center gap-2">
-          <Home className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+        <div className="text-sm font-semibold pl-3 pr-4 text-foreground truncate max-w-[170px] flex items-center gap-2">
+          <Home className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
           <span className="truncate">{locationLabel}</span>
         </div>
-        <div className="hidden sm:block text-sm font-semibold px-4 border-x border-neutral-200 flex-1 text-center text-neutral-800">
+        <div className="hidden sm:block text-sm font-semibold px-4 border-x border-border flex-1 text-center text-foreground">
           {durationLabel}
         </div>
-        <div className="text-sm pl-4 pr-2 text-neutral-500 flex flex-row items-center gap-3">
-          <div className="hidden sm:block text-neutral-500 font-normal">{guestsLabel}</div>
-          <div className="p-2.5 bg-rose-500 rounded-full text-white shadow-xs">
+        <div className="text-sm pl-4 pr-2 text-muted-foreground flex flex-row items-center gap-3">
+          <div className="hidden sm:block text-muted-foreground font-normal">{guestsLabel}</div>
+          <div className="p-2.5 bg-primary rounded-full text-primary-foreground shadow-xs">
             <Search className="w-4 h-4" strokeWidth={2.5} />
           </div>
         </div>

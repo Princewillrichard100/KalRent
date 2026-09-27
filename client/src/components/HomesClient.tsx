@@ -49,10 +49,10 @@ export const HomesClient: React.FC<HomesClientProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-pulse">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex flex-col gap-3">
-              <div className="aspect-square w-full rounded-2xl bg-neutral-200"></div>
-              <div className="h-4 bg-neutral-200 rounded w-2/3"></div>
-              <div className="h-3.5 bg-neutral-100 rounded w-1/2"></div>
-              <div className="h-4 bg-neutral-200 rounded w-1/3 mt-1"></div>
+              <div className="aspect-square w-full rounded-2xl bg-muted"></div>
+              <div className="h-4 bg-muted rounded w-2/3"></div>
+              <div className="h-3.5 bg-muted/80 rounded w-1/2"></div>
+              <div className="h-4 bg-muted rounded w-1/3 mt-1"></div>
             </div>
           ))}
         </div>
@@ -74,7 +74,7 @@ export const HomesClient: React.FC<HomesClientProps> = ({
   }
 
   return (
-    <div className="relative w-full h-[calc(100vh-80px)] overflow-hidden bg-white">
+    <div className="relative w-full h-[calc(100vh-80px)] overflow-hidden bg-background">
       {/* ========================================================================= */}
       {/* 1. DESKTOP VIEW (lg:flex) */}
       {/* ========================================================================= */}
@@ -82,18 +82,18 @@ export const HomesClient: React.FC<HomesClientProps> = ({
         {showMapDesktop ? (
           // Split-Screen Layout: 58% Listings | 42% Sticky Interactive Map
           <>
-            <div className="w-[58%] h-full overflow-y-auto px-6 xl:px-8 py-5 border-r border-neutral-200/80">
-              <div className="text-xs font-semibold text-neutral-500 mb-4 px-1">
+            <div className="w-[58%] h-full overflow-y-auto px-6 xl:px-8 py-5 border-r border-border">
+              <div className="text-xs font-semibold text-muted-foreground mb-4 px-1">
                 Over {properties.length} verified {properties.length === 1 ? "home" : "homes"} found
               </div>
 
               {properties.length === 0 ? (
                 <div className="py-20 text-center">
-                  <div className="w-12 h-12 rounded-full bg-neutral-100 text-neutral-500 flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 rounded-full bg-muted text-muted-foreground flex items-center justify-center mx-auto mb-3">
                     <SearchX className="w-6 h-6" />
                   </div>
-                  <h3 className="font-bold text-neutral-900 text-sm mb-1">No homes found in this area</h3>
-                  <p className="text-xs text-neutral-500">Try zooming out or searching another destination.</p>
+                  <h3 className="font-bold text-foreground text-sm mb-1">No homes found in this area</h3>
+                  <p className="text-xs text-muted-foreground">Try zooming out or searching another destination.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-5 xl:gap-6 pb-24">
@@ -122,7 +122,7 @@ export const HomesClient: React.FC<HomesClientProps> = ({
         ) : (
           // Full-Width Grid (When user toggles off map on desktop)
           <div className="w-full h-full overflow-y-auto px-6 md:px-12 py-6">
-            <div className="text-xs font-semibold text-neutral-500 mb-4 px-1">
+            <div className="text-xs font-semibold text-muted-foreground mb-4 px-1">
               Over {properties.length} verified {properties.length === 1 ? "home" : "homes"} found
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6 xl:gap-7 pb-24">
@@ -157,7 +157,7 @@ export const HomesClient: React.FC<HomesClientProps> = ({
         ) : (
           // Full-screen Listings list on mobile
           <div className="w-full h-full overflow-y-auto px-4 sm:px-6 py-4">
-            <div className="text-xs font-semibold text-neutral-500 mb-3 px-1">
+            <div className="text-xs font-semibold text-muted-foreground mb-3 px-1">
               {properties.length} {properties.length === 1 ? "home" : "homes"} available
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pb-24">
@@ -184,8 +184,8 @@ export const HomesClient: React.FC<HomesClientProps> = ({
           className="
             lg:hidden
             flex items-center gap-2 
-            bg-neutral-900 hover:bg-black 
-            text-white 
+            bg-primary hover:bg-primary/90 
+            text-primary-foreground 
             font-semibold 
             text-sm 
             px-5 py-3 
@@ -216,8 +216,8 @@ export const HomesClient: React.FC<HomesClientProps> = ({
           className="
             hidden lg:flex 
             items-center gap-2 
-            bg-neutral-900 hover:bg-black 
-            text-white 
+            bg-primary hover:bg-primary/90 
+            text-primary-foreground 
             font-semibold 
             text-sm 
             px-5 py-3 

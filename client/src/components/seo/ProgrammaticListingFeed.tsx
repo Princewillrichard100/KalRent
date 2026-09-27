@@ -19,27 +19,27 @@ export default function ProgrammaticListingFeed({
 }: ProgrammaticListingFeedProps) {
   if (properties.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-neutral-200/80 p-8 text-center max-w-2xl mx-auto my-8 shadow-sm">
-        <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+      <div className="bg-card rounded-2xl border border-border p-8 text-center max-w-2xl mx-auto my-8 shadow-sm">
+        <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
           <Search className="w-7 h-7" />
         </div>
-        <h3 className="text-xl font-bold text-neutral-900 mb-2">
+        <h3 className="text-xl font-bold text-foreground mb-2">
           New Verified {propertyTypeName} Listings Coming Soon in {locationName}
         </h3>
-        <p className="text-sm text-neutral-600 mb-6 leading-relaxed">
+        <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
           KalRent rigorously inspects and title-checks every landlord before publishing. Unlike legacy classified sites, we reject ghost listings and fake agent adverts.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href={searchUrl}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 text-white font-semibold text-sm hover:bg-neutral-800 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition"
           >
             <span>Search Live Map for Nearby Homes</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             href="/rent"
-            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-xl border border-neutral-200 text-neutral-700 font-semibold text-sm hover:bg-neutral-50 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-xl border border-border text-foreground font-semibold text-sm hover:bg-muted transition"
           >
             Browse All Locations
           </Link>
@@ -52,16 +52,16 @@ export default function ProgrammaticListingFeed({
     <div id="listings-feed" className="my-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-2xl font-bold text-neutral-900">
+          <h3 className="text-2xl font-bold text-foreground">
             Available {propertyTypeName} in {locationName}
           </h3>
-          <p className="text-sm text-neutral-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {properties.length} verified listings available with KalRent Escrow protection.
           </p>
         </div>
         <Link
           href={searchUrl}
-          className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 underline underline-offset-4"
+          className="text-xs font-semibold text-primary hover:text-primary/80 underline underline-offset-4"
         >
           View on Split Map →
         </Link>

@@ -46,7 +46,7 @@ export const HeartButton: React.FC<HeartButtonProps> = ({
           drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]
           ${
             hasFavorited
-              ? "fill-rose-500 text-rose-500 stroke-rose-500"
+              ? "fill-primary text-primary stroke-primary"
               : "fill-black/35 text-white stroke-white"
           }
         `}

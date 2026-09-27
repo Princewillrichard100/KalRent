@@ -73,7 +73,7 @@ const ApplicationModal = ({
       <DialogContent className="bg-white rounded-2xl max-w-md p-6 shadow-xl border border-slate-200">
         <DialogHeader className="mb-2">
           <div className="flex items-center gap-2 mb-1">
-            <div className="p-2 bg-emerald-50 text-emerald-700 rounded-xl">
+            <div className="p-2 bg-primary/10 text-primary rounded-xl">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -121,7 +121,7 @@ const ApplicationModal = ({
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl w-full h-11 text-xs shadow-xs cursor-pointer transition-all flex items-center justify-center gap-2"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl w-full h-11 text-xs shadow-xs cursor-pointer transition-all flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
