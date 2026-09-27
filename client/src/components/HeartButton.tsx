@@ -35,7 +35,8 @@ export const HeartButton: React.FC<HeartButtonProps> = ({
         rounded-full
         active:scale-95
       "
-      aria-label="Save to favorites"
+      aria-label={hasFavorited ? "Remove from favorites" : "Save to favorites"}
+      aria-pressed={hasFavorited}
     >
       <Heart
         className={`
