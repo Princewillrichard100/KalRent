@@ -38,7 +38,7 @@ export default function RentIndexPage() {
   const propertyTypes = Object.values(PROPERTY_TYPES);
 
   return (
-    <div className="py-10">
+    <div className="py-10 bg-background text-foreground min-h-screen">
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: "/" },
@@ -49,8 +49,8 @@ export default function RentIndexPage() {
       <Container>
         {/* Hero Section */}
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold mb-4">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
+            <ShieldCheck className="w-4 h-4 text-primary" />
             <span>Anti-Fraud Guarantee: Zero Ghost Listings</span>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
@@ -79,28 +79,28 @@ export default function RentIndexPage() {
               <Link
                 key={state.slug}
                 href={`/rent/${state.slug}`}
-                className="group p-6 rounded-2xl bg-white border border-neutral-200/80 hover:border-emerald-500/80 hover:shadow-md transition duration-200 flex flex-col justify-between"
+                className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/80 hover:shadow-md transition duration-200 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-neutral-100 group-hover:bg-emerald-50 text-neutral-700 group-hover:text-emerald-700 flex items-center justify-center transition">
+                    <div className="w-10 h-10 rounded-xl bg-muted group-hover:bg-primary/10 text-foreground group-hover:text-primary flex items-center justify-center transition">
                       <MapPin className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg text-neutral-900 group-hover:text-emerald-700 transition">
+                      <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition">
                         {state.name}
                       </h3>
-                      <span className="text-xs text-neutral-500">
+                      <span className="text-xs text-muted-foreground">
                         {state.popularCities.length} Popular Hubs
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-neutral-600 leading-relaxed line-clamp-2">
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                     {state.tagline}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-semibold text-emerald-700">
+                <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs font-semibold text-primary">
                   <span>Explore {state.name} Homes</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
                 </div>
@@ -127,17 +127,17 @@ export default function RentIndexPage() {
               <Link
                 key={`${n.stateSlug}-${n.slug}`}
                 href={`/rent/${n.stateSlug}/${n.slug}`}
-                className="p-4 rounded-xl bg-white border border-neutral-200/80 hover:border-emerald-500 transition hover:shadow-xs flex items-center justify-between group"
+                className="p-4 rounded-xl bg-card border border-border hover:border-primary transition hover:shadow-xs flex items-center justify-between group"
               >
                 <div>
-                  <div className="font-bold text-sm text-neutral-900 group-hover:text-emerald-700 transition">
+                  <div className="font-bold text-sm text-foreground group-hover:text-primary transition">
                     {n.city}
                   </div>
-                  <div className="text-xs text-neutral-500">
+                  <div className="text-xs text-muted-foreground">
                     {n.state} • {n.powerBand.split(" ")[0]}
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-emerald-700 group-hover:translate-x-1 transition" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition" />
               </Link>
             ))}
           </div>
@@ -147,10 +147,10 @@ export default function RentIndexPage() {
         <div>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-neutral-900">
+              <h2 className="text-2xl font-bold text-foreground">
                 Browse by Property Format
               </h2>
-              <p className="text-sm text-neutral-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Find exactly the layout you need.
               </p>
             </div>
@@ -160,35 +160,35 @@ export default function RentIndexPage() {
             {propertyTypes.map((pt) => (
               <div
                 key={pt.slug}
-                className="p-5 rounded-xl bg-white border border-neutral-200/80 flex flex-col justify-between"
+                className="p-5 rounded-xl bg-card border border-border flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3">
                     <Home className="w-4 h-4" />
                   </div>
-                  <h3 className="font-bold text-base text-neutral-900 mb-1">
+                  <h3 className="font-bold text-base text-foreground mb-1">
                     {pt.name}
                   </h3>
-                  <p className="text-xs text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     {pt.descriptionTemplate}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-neutral-100 flex flex-wrap gap-1.5">
+                <div className="mt-4 pt-3 border-t border-border flex flex-wrap gap-1.5">
                   <Link
                     href={`/rent/lagos/lekki/${pt.slug}`}
-                    className="text-[11px] px-2 py-1 rounded bg-neutral-100 hover:bg-emerald-50 hover:text-emerald-700 text-neutral-700 transition"
+                    className="text-[11px] px-2 py-1 rounded bg-muted hover:bg-primary/10 hover:text-primary text-foreground transition"
                   >
                     in Lekki
                   </Link>
                   <Link
                     href={`/rent/lagos/yaba/${pt.slug}`}
-                    className="text-[11px] px-2 py-1 rounded bg-neutral-100 hover:bg-emerald-50 hover:text-emerald-700 text-neutral-700 transition"
+                    className="text-[11px] px-2 py-1 rounded bg-muted hover:bg-primary/10 hover:text-primary text-foreground transition"
                   >
                     in Yaba
                   </Link>
                   <Link
                     href={`/rent/abuja/maitama/${pt.slug}`}
-                    className="text-[11px] px-2 py-1 rounded bg-neutral-100 hover:bg-emerald-50 hover:text-emerald-700 text-neutral-700 transition"
+                    className="text-[11px] px-2 py-1 rounded bg-muted hover:bg-primary/10 hover:text-primary text-foreground transition"
                   >
                     in Maitama
                   </Link>

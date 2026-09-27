@@ -175,11 +175,11 @@ export default function SearchHomesPage() {
   }, [location, paramLat, paramLng, mapCenter]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
       {/* Dedicated Sub-Header Filter Bar (Sticky directly beneath Navbar) */}
-      <div className="pt-20 sticky top-0 z-20 bg-white">
+      <div className="pt-20 sticky top-0 z-20 bg-background/95 border-b border-border transform-gpu">
         <FilterBar
           activeFilters={activeFilters}
           onFilterChange={handleFilterChange}
@@ -211,7 +211,7 @@ export default function SearchHomesPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Link
                     href="/"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-black transition"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>All collections</span>
@@ -244,8 +244,8 @@ export default function SearchHomesPage() {
                     h-[calc(100vh-160px)] 
                     rounded-3xl 
                     overflow-hidden 
-                    border border-neutral-200/90 
-                    shadow-[0_4px_20px_rgba(0,0,0,0.08)]
+                    border border-border 
+                    shadow-md
                     relative
                   ">
                     <InteractiveSearchMap
@@ -267,8 +267,8 @@ export default function SearchHomesPage() {
             {/* ========================================================================= */}
             <div className="lg:hidden w-full">
               {showMapMobile ? (
-                <div className="fixed inset-0 top-[140px] z-30 bg-white p-3">
-                  <div className="w-full h-full rounded-3xl overflow-hidden border border-neutral-200/90 shadow-md relative">
+                <div className="fixed inset-0 top-[140px] z-30 bg-background p-3">
+                  <div className="w-full h-full rounded-3xl overflow-hidden border border-border shadow-md relative">
                     <InteractiveSearchMap
                       listings={properties || []}
                       selectedListing={selectedListing}
@@ -285,7 +285,7 @@ export default function SearchHomesPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <Link
                       href="/"
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-neutral-500"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-foreground transition"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
                       <span>All</span>
@@ -323,13 +323,13 @@ export default function SearchHomesPage() {
                 className="
                   lg:hidden
                   flex items-center gap-2 
-                  bg-neutral-900 hover:bg-black 
-                  text-white 
+                  bg-secondary hover:bg-secondary/80 
+                  text-foreground border border-border
                   font-semibold 
                   text-sm 
                   px-5 py-3 
                   rounded-full 
-                  shadow-[0_8px_24px_rgba(0,0,0,0.3)] 
+                  shadow-lg
                   hover:scale-105 active:scale-95 
                   transition-all duration-200 
                   cursor-pointer
@@ -356,13 +356,13 @@ export default function SearchHomesPage() {
                   className="
                     hidden lg:flex 
                     items-center gap-2 
-                    bg-neutral-900 hover:bg-black 
-                    text-white 
+                    bg-secondary hover:bg-secondary/80 
+                    text-foreground border border-border
                     font-semibold 
                     text-sm 
                     px-5 py-3 
                     rounded-full 
-                    shadow-[0_8px_24px_rgba(0,0,0,0.3)] 
+                    shadow-lg
                     hover:scale-105 active:scale-95 
                     transition-all duration-200 
                     cursor-pointer

@@ -63,7 +63,7 @@ const FeaturesSection = () => {
     >
       <div className="max-w-6xl mx-auto">
         <motion.div variants={itemVariants} className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-3 py-1 rounded-full border border-emerald-200">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
             Why KalRent
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -84,7 +84,7 @@ const FeaturesSection = () => {
                 className="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center mb-5 shadow-2xs">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary border border-primary/15 flex items-center justify-center mb-5 shadow-2xs">
                     <Icon className="w-6 h-6" />
                   </div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
@@ -100,7 +100,7 @@ const FeaturesSection = () => {
 
                 <Link
                   href={feature.linkHref}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors mt-auto group"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary transition-colors mt-auto group"
                   scroll={false}
                 >
                   <span>{feature.linkText}</span>

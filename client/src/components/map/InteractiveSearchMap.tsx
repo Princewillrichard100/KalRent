@@ -385,8 +385,8 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
       {/* Floating Searching Indicator / Search This Area */}
       {isSmoothSearching ? (
         <div className="absolute top-5 left-1/2 -translate-x-1/2 z-30 animate-in fade-in slide-in-from-top-3 duration-200">
-          <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md text-neutral-800 font-semibold text-xs px-4 py-2 rounded-full shadow-lg border border-neutral-200/90">
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-neutral-700" />
+          <div className="flex items-center gap-2 bg-card/95 backdrop-blur-md text-foreground font-semibold text-xs px-4 py-2 rounded-full shadow-lg border border-border">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
             <span>Searching map area...</span>
           </div>
         </div>
@@ -397,21 +397,21 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
             onClick={handleTriggerSearchArea}
             className="
               flex items-center gap-2 
-              bg-white hover:bg-neutral-50 
-              text-neutral-900 
+              bg-card hover:bg-muted 
+              text-foreground 
               font-semibold 
               text-xs 
               px-4 py-2.5 
               rounded-full 
               shadow-lg 
-              border border-neutral-200/90 
+              border border-border 
               transition 
               transform 
               active:scale-95 
               cursor-pointer
             "
           >
-            <RotateCcw className="w-3.5 h-3.5 text-neutral-600 stroke-[2.2]" />
+            <RotateCcw className="w-3.5 h-3.5 text-muted-foreground stroke-[2.2]" />
             <span>Search this area</span>
           </button>
         </div>
@@ -423,10 +423,11 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
           className="
             absolute bottom-6 left-1/2 -translate-x-1/2 z-40 
             w-[310px] sm:w-[330px] 
-            bg-white 
+            bg-card 
+            text-card-foreground 
             rounded-3xl 
-            shadow-[0_16px_40px_rgba(0,0,0,0.22)] 
-            border border-neutral-200/90 
+            shadow-[0_16px_40px_rgba(0,0,0,0.5)] 
+            border border-border 
             overflow-hidden 
             animate-in fade-in zoom-in-95 duration-200
           "
@@ -439,8 +440,9 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
               absolute top-3 right-3 z-30 
               w-7 h-7 
               rounded-full 
-              bg-white/90 hover:bg-white 
-              text-neutral-700 hover:text-black 
+              bg-background/90 hover:bg-background 
+              text-foreground 
+              border border-border/40 
               flex items-center justify-center 
               shadow-md 
               transition 
@@ -453,7 +455,7 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
           {/* Photo Carousel */}
           <div
             onClick={() => router.push(`/listings/${selectedListing.id}`)}
-            className="relative aspect-[4/3] w-full bg-neutral-100 cursor-pointer group"
+            className="relative aspect-[4/3] w-full bg-muted cursor-pointer group"
           >
             <Image
               fill
@@ -476,8 +478,8 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
                     absolute left-2 top-1/2 -translate-y-1/2 z-20 
                     w-7 h-7 
                     rounded-full 
-                    bg-white/80 hover:bg-white 
-                    text-neutral-800 
+                    bg-background/80 hover:bg-background 
+                    text-foreground 
                     flex items-center justify-center 
                     shadow-sm 
                     opacity-0 group-hover:opacity-100 
@@ -494,8 +496,8 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
                     absolute right-2 top-1/2 -translate-y-1/2 z-20 
                     w-7 h-7 
                     rounded-full 
-                    bg-white/80 hover:bg-white 
-                    text-neutral-800 
+                    bg-background/80 hover:bg-background 
+                    text-foreground 
                     flex items-center justify-center 
                     shadow-sm 
                     opacity-0 group-hover:opacity-100 
@@ -523,43 +525,43 @@ const InteractiveSearchMapComponent: React.FC<InteractiveSearchMapProps> = ({
           {/* Card Info Details */}
           <div
             onClick={() => router.push(`/listings/${selectedListing.id}`)}
-            className="p-4 cursor-pointer hover:bg-neutral-50/60 transition"
+            className="p-4 cursor-pointer hover:bg-muted/40 transition"
           >
             <div className="flex items-center justify-between gap-2 mb-1">
-              <span className="text-xs font-semibold text-neutral-500 truncate">
+              <span className="text-xs font-semibold text-muted-foreground truncate">
                 {selectedListing.location?.city || selectedListing.city || "Nigeria"}
               </span>
-              <div className="flex items-center gap-1 shrink-0 text-xs font-bold text-neutral-900">
-                <Star className="w-3.5 h-3.5 fill-black stroke-black" />
+              <div className="flex items-center gap-1 shrink-0 text-xs font-bold text-foreground">
+                <Star className="w-3.5 h-3.5 fill-primary stroke-primary" />
                 <span>
                   {selectedListing.averageRating
                     ? Number(selectedListing.averageRating).toFixed(2)
                     : "4.85"}
                 </span>
-                <span className="text-neutral-400 font-normal">
+                <span className="text-muted-foreground font-normal">
                   ({selectedListing.numberOfReviews || 12})
                 </span>
               </div>
             </div>
 
-            <h4 className="font-bold text-[14px] text-neutral-900 truncate mb-1">
+            <h4 className="font-bold text-[14px] text-foreground truncate mb-1">
               {selectedListing.name}
             </h4>
 
-            <p className="text-xs text-neutral-500 mb-2 truncate">
+            <p className="text-xs text-muted-foreground mb-2 truncate">
               {selectedListing.beds} beds • {selectedListing.baths} baths
               {selectedListing.distanceKm !== undefined && (
-                <span className="ml-1 text-neutral-600 font-medium">
+                <span className="ml-1 text-foreground font-medium">
                   • {selectedListing.distanceKm < 1 ? "Under 1 km" : `${selectedListing.distanceKm} km`}
                 </span>
               )}
             </p>
 
-            <div className="flex items-baseline gap-1 pt-1 border-t border-neutral-100">
-              <span className="font-extrabold text-[15px] text-neutral-900">
+            <div className="flex items-baseline gap-1 pt-1 border-t border-border">
+              <span className="font-extrabold text-[15px] text-foreground">
                 ₦{selectedListing.annualRent?.toLocaleString()}
               </span>
-              <span className="text-xs text-neutral-500 font-normal">/ year</span>
+              <span className="text-xs text-muted-foreground font-normal">/ year</span>
             </div>
           </div>
         </div>

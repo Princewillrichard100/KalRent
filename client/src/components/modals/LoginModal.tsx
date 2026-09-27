@@ -1,13 +1,39 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { signIn } from "aws-amplify/auth";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
+import { AlertCircle } from "lucide-react";
 import { useLoginModal } from "@/hooks/useLoginModal";
 import { useRegisterModal } from "@/hooks/useRegisterModal";
 import Modal from "./Modal";
 import Heading from "@/components/Heading";
 import Input from "@/components/inputs/Input";
+
+const getAuthErrorMessage = (err: any): string => {
+  const name = err?.name || err?.code || "";
+  const message = err?.message || "";
+
+  if (
+    name === "NotAuthorizedException" ||
+    message.toLowerCase().includes("incorrect username or password")
+  ) {
+    return "Incorrect email or password. Please verify your credentials and try again.";
+  }
+  if (name === "UserNotFoundException") {
+    return "No KalRent account found with this email. Please create an account.";
+  }
+  if (name === "UserNotConfirmedException") {
+    return "Your account is not verified yet. Please check your email for the confirmation code.";
+  }
+  if (name === "LimitExceededException") {
+    return "Too many sign-in attempts. Please wait a few moments before trying again.";
+  }
+  if (name === "InvalidParameterException") {
+    return "Please provide a valid email address and password.";
+  }
+  return message || "Failed to sign in. Please try again.";
+};
 
 export const LoginModal = () => {
   const loginModal = useLoginModal();
@@ -16,15 +42,36 @@ export const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Clear errors when modal opens or closes
+  useEffect(() => {
+    if (!loginModal.isOpen) {
+      setErrorMessage(null);
+    }
+  }, [loginModal.isOpen]);
 
   const onToggle = useCallback(() => {
+    setErrorMessage(null);
     loginModal.onClose();
     registerModal.onOpen();
   }, [loginModal, registerModal]);
 
+  const handleInputChange = (setter: (v: string) => void) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (errorMessage) setErrorMessage(null);
+    setter(e.target.value);
+  };
+
   const onSubmit = useCallback(async () => {
-    if (!email || !password) {
-      toast.error("Please fill in both email and password.");
+    setErrorMessage(null);
+
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !password) {
+      const msg = "Please enter both your email address and password.";
+      setErrorMessage(msg);
+      toast.error(msg);
       return;
     }
 
@@ -32,7 +79,7 @@ export const LoginModal = () => {
 
     try {
       const { isSignedIn, nextStep } = await signIn({
-        username: email.trim(),
+        username: cleanEmail,
         password,
       });
 
@@ -48,25 +95,55 @@ export const LoginModal = () => {
         toast(`Next step: ${nextStep.signInStep}`);
       }
     } catch (err: any) {
-      console.error("Sign in error:", err);
-      toast.error(err.message || "Invalid email or password.");
+      // Use console.warn for expected auth rejection to prevent Next.js dev error overlay
+      console.warn("Sign in rejection:", err?.name, err?.message);
+      const friendlyMessage = getAuthErrorMessage(err);
+      setErrorMessage(friendlyMessage);
+      toast.error(friendlyMessage);
     } finally {
       setIsLoading(false);
     }
   }, [email, password, loginModal, registerModal]);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !isLoading) {
+      e.preventDefault();
+      onSubmit();
+    }
+  };
+
   const bodyContent = (
-    <div className="flex flex-col gap-4">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      onKeyDown={handleKeyDown}
+      className="flex flex-col gap-4"
+    >
       <Heading
         title="Welcome back"
-        subtitle="Login to your account!"
+        subtitle="Login to your KalRent account"
       />
+
+      {errorMessage && (
+        <div
+          role="alert"
+          className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium flex items-center gap-2.5 animate-in fade-in-0 duration-200"
+        >
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
       <Input
         id="email"
-        label="Email"
+        label="Email address"
+        type="email"
         disabled={isLoading}
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={handleInputChange(setEmail)}
+        errors={errorMessage ? { email: true } : undefined}
         required
       />
       <Input
@@ -75,33 +152,26 @@ export const LoginModal = () => {
         type="password"
         disabled={isLoading}
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={handleInputChange(setPassword)}
+        errors={errorMessage ? { password: true } : undefined}
         required
       />
-    </div>
+    </form>
   );
 
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
-      <hr />
-      <div 
-        className="
-          text-neutral-500 
-          text-center 
-          mt-4 
-          font-light
-        "
-      >
-        <p>First time using Airbnb?
-          <span 
-            onClick={onToggle} 
-            className="
-              text-neutral-800
-              cursor-pointer 
-              hover:underline
-              ml-1
-            "
-            > Create an account</span>
+      <hr className="border-border" />
+      <div className="text-muted-foreground text-center mt-2 text-sm">
+        <p>
+          First time using KalRent?
+          <button
+            type="button"
+            onClick={onToggle}
+            className="text-primary font-semibold cursor-pointer hover:underline ml-1"
+          >
+            Create an account
+          </button>
         </p>
       </div>
     </div>
@@ -112,7 +182,7 @@ export const LoginModal = () => {
       disabled={isLoading}
       isOpen={loginModal.isOpen}
       title="Login"
-      actionLabel="Continue"
+      actionLabel={isLoading ? "Signing in..." : "Continue"}
       onClose={loginModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}

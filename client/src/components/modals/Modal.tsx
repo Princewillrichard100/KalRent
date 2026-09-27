@@ -80,7 +80,8 @@ const Modal: React.FC<ModalProps> = ({
           z-50 
           outline-none 
           focus:outline-none
-          bg-neutral-800/70
+          bg-black/80
+          backdrop-blur-sm
         "
       >
         <div className="
@@ -109,16 +110,19 @@ const Modal: React.FC<ModalProps> = ({
               h-full
               lg:h-auto
               md:h-auto
-              border-0 
-              rounded-lg 
-              shadow-lg 
+              bg-card 
+              border 
+              border-border 
+              text-card-foreground 
+              shadow-2xl 
+              rounded-2xl 
               relative 
               flex 
               flex-col 
               w-full 
-              bg-white 
               outline-none 
               focus:outline-none
+              overflow-hidden
             "
             >
               {/*header*/}
@@ -129,7 +133,9 @@ const Modal: React.FC<ModalProps> = ({
                 rounded-t
                 justify-center
                 relative
-                border-b-[1px]
+                border-b
+                border-border
+                text-foreground
                 "
               >
                 <button
@@ -140,12 +146,13 @@ const Modal: React.FC<ModalProps> = ({
                     transition
                     absolute
                     left-9
+                    text-foreground
                   "
                   onClick={handleClose}
                 >
                   <IoMdClose size={18} />
                 </button>
-                <div className="text-lg font-semibold">
+                <div className="text-lg font-semibold text-foreground">
                   {title}
                 </div>
               </div>

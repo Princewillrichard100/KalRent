@@ -21,12 +21,12 @@ export default function GeoDirectAnswer({
   floodRisk,
 }: GeoDirectAnswerProps) {
   return (
-    <div className="my-4 p-4 rounded-xl bg-emerald-50/70 border border-emerald-200/60 text-emerald-950 text-sm leading-relaxed">
+    <div className="my-4 p-4 rounded-xl bg-primary/5 border border-primary/15 text-primary text-sm leading-relaxed">
       <p className="font-normal">
-        <strong className="font-semibold text-emerald-900">Direct Answer: </strong>
+        <strong className="font-semibold text-primary">Direct Answer: </strong>
         Renting a verified {propertyTypeName.toLowerCase()} in {locationName} currently averages{" "}
-        <strong className="font-semibold text-emerald-900">{formatNaira(avgAnnualRent)}/year</strong>, with total estimated upfront move-in expenses (rent, caution deposit, and legal agreement) averaging{" "}
-        <strong className="font-semibold text-emerald-900">{formatNaira(totalMoveInBudget)}</strong>. KalRent currently maintains {listingCount}+ verified, scam-protected listings in this area
+        <strong className="font-semibold text-primary">{formatNaira(avgAnnualRent)}/year</strong>, with total estimated upfront move-in expenses (rent, caution deposit, and legal agreement) averaging{" "}
+        <strong className="font-semibold text-primary">{formatNaira(totalMoveInBudget)}</strong>. KalRent currently maintains {listingCount}+ verified, scam-protected listings in this area
         {powerBand ? ` featuring ${powerBand.split(" ")[0]} electricity` : ""}.
       </p>
     </div>

@@ -164,7 +164,7 @@ const FiltersBar = () => {
             className={cn(
               "gap-1.5 rounded-full text-xs font-semibold px-3 py-1.5 h-auto transition-all shadow-2xs cursor-pointer",
               filters.userLat && filters.userLng
-                ? "bg-emerald-50 border-emerald-500 text-emerald-800 hover:bg-emerald-100"
+                ? "bg-primary/10 border-primary text-primary hover:bg-primary/20"
                 : "bg-white border-slate-300 text-slate-700 hover:bg-slate-100"
             )}
           >
@@ -172,7 +172,7 @@ const FiltersBar = () => {
               className={cn(
                 "w-3.5 h-3.5",
                 filters.userLat && filters.userLng
-                  ? "text-emerald-600 animate-pulse"
+                  ? "text-primary animate-pulse"
                   : "text-slate-500"
               )}
             />
@@ -208,7 +208,7 @@ const FiltersBar = () => {
 
         {filters.userLat && filters.userLng && (
           <div className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping inline-block" />
+            <span className="w-2 h-2 rounded-full bg-primary animate-ping inline-block" />
             <span>Calculating live proximity in km</span>
           </div>
         )}

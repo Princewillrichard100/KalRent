@@ -212,7 +212,7 @@ export const RentModal = () => {
           subtitle="Help guests find your property across Nigeria"
         />
         <div>
-          <label className="text-sm font-semibold text-neutral-800 block mb-2">
+          <label className="text-sm font-semibold text-foreground block mb-2">
             Select Destination / City
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[30vh] overflow-y-auto pr-1">
@@ -223,8 +223,8 @@ export const RentModal = () => {
                 onClick={() => setSelectedCity(city)}
                 className={`p-3 rounded-xl border-2 text-xs font-semibold text-center transition cursor-pointer ${
                   selectedCity === city
-                    ? "border-black bg-neutral-100 font-bold shadow-sm"
-                    : "border-neutral-200 hover:border-neutral-400"
+                    ? "border-primary bg-primary/10 text-primary font-bold shadow-sm"
+                    : "border-border text-muted-foreground hover:border-border/80 hover:text-foreground"
                 }`}
               >
                 {city}
@@ -265,14 +265,14 @@ export const RentModal = () => {
           title="Guests"
           subtitle="How many guests do you allow?"
         />
-        <hr />
+        <hr className="border-border" />
         <Counter
           onChange={(value) => setRoomCount(value)}
           value={roomCount}
           title="Rooms"
           subtitle="How many rooms / bedrooms do you have?"
         />
-        <hr />
+        <hr className="border-border" />
         <Counter
           onChange={(value) => setBathCount(value)}
           value={bathCount}
@@ -290,10 +290,10 @@ export const RentModal = () => {
           title="Add photos of your place"
           subtitle="Show guests what makes your place special!"
         />
-        <label className="border-2 border-dashed border-neutral-300 hover:border-neutral-500 p-12 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition bg-neutral-50">
-          <Upload className="w-10 h-10 text-neutral-400 mb-2" />
-          <span className="text-sm font-semibold text-neutral-700">Click to upload photos</span>
-          <span className="text-xs text-neutral-400 mt-1">PNG, JPG, WEBP up to 10MB each</span>
+        <label className="border-2 border-dashed border-border hover:border-muted-foreground p-12 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition bg-muted/40">
+          <Upload className="w-10 h-10 text-muted-foreground mb-2" />
+          <span className="text-sm font-semibold text-foreground">Click to upload photos</span>
+          <span className="text-xs text-muted-foreground mt-1">PNG, JPG, WEBP up to 10MB each</span>
           <input
             type="file"
             multiple
@@ -308,7 +308,7 @@ export const RentModal = () => {
             {selectedPhotos.map((file, idx) => (
               <div
                 key={idx}
-                className="text-xs bg-neutral-100 border border-neutral-200 px-3 py-1.5 rounded-lg text-neutral-700 font-medium"
+                className="text-xs bg-muted border border-border px-3 py-1.5 rounded-lg text-foreground font-medium"
               >
                 {file.name}
               </div>
@@ -334,7 +334,7 @@ export const RentModal = () => {
           onChange={(e) => setName(e.target.value)}
           required
         />
-        <hr />
+        <hr className="border-border" />
         <Input
           id="description"
           label="Description"
@@ -390,16 +390,16 @@ export const RentModal = () => {
           />
         </div>
 
-        <div className="bg-neutral-50 border border-neutral-200 p-4 rounded-xl text-xs space-y-2">
-          <div className="flex justify-between font-bold text-neutral-900 text-sm">
+        <div className="bg-muted/50 border border-border p-4 rounded-xl text-xs space-y-2">
+          <div className="flex justify-between font-bold text-foreground text-sm">
             <span>Estimated Total:</span>
             <span>₦{totalAmount.toLocaleString()}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-neutral-600 text-xs">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
+            <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
             <span>Protected Booking: Includes KalRent Cover & 24/7 guest support.</span>
           </div>
-          <p className="text-neutral-500 text-[11px]">
+          <p className="text-muted-foreground text-[11px]">
             Caution deposit is fully refundable to the guest upon checkout inspection.
           </p>
         </div>

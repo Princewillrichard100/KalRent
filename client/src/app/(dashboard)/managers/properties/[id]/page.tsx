@@ -53,7 +53,7 @@ const PropertyTenants = () => {
       {/* Back to properties page */}
       <Link
         href="/managers/properties"
-        className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-emerald-700 transition-colors"
+        className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-primary transition-colors"
         scroll={false}
       >
         <ArrowLeft className="w-4 h-4 mr-1.5" />
@@ -102,7 +102,7 @@ const PropertyTenants = () => {
                     <TableRow key={lease.id} className="h-20 hover:bg-slate-50/60 transition-colors">
                       <TableCell>
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 font-bold text-sm flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold text-sm flex items-center justify-center shrink-0">
                             {lease.tenant.name.slice(0, 2).toUpperCase()}
                           </div>
                           <div>
@@ -147,7 +147,7 @@ const PropertyTenants = () => {
                           onClick={() =>
                             downloadAgreement(lease.id, property?.name)
                           }
-                          className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-200 hover:bg-emerald-50/50 py-1.5 px-3 rounded-xl font-medium cursor-pointer text-xs transition-colors shadow-xs"
+                          className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-700 hover:text-primary hover:border-primary hover:bg-primary/5 py-1.5 px-3 rounded-xl font-medium cursor-pointer text-xs transition-colors shadow-xs"
                         >
                           <ArrowDownToLine className="w-3.5 h-3.5" />
                           <span>Agreement</span>

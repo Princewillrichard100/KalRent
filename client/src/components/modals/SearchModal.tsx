@@ -237,11 +237,11 @@ export const SearchModal = () => {
       {/* Airbnb "Where" input field with clear button and loading indicator */}
       <div>
         <div className="relative flex items-center">
-          <div className="absolute left-3.5 text-neutral-500 pointer-events-none">
+          <div className="absolute left-3.5 text-muted-foreground pointer-events-none">
             {isAutocompleteLoading || isAutocompleteFetching || isResolvingDetails ? (
-              <Loader2 className="w-4 h-4 animate-spin text-neutral-600" />
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
             ) : (
-              <MapPin className="w-4 h-4 text-neutral-400" />
+              <MapPin className="w-4 h-4 text-muted-foreground" />
             )}
           </div>
 
@@ -262,11 +262,14 @@ export const SearchModal = () => {
               text-sm 
               font-medium 
               rounded-2xl 
+              bg-muted
               border 
-              border-neutral-300 
+              border-border 
+              text-foreground
               focus:outline-none 
-              focus:border-black 
-              placeholder:text-neutral-400 
+              focus:ring-1 
+              focus:ring-primary 
+              placeholder:text-muted-foreground 
               placeholder:font-normal
               shadow-xs
             "
@@ -276,7 +279,7 @@ export const SearchModal = () => {
             <button
               type="button"
               onClick={handleClearInput}
-              className="absolute right-3 p-1 rounded-full text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 transition cursor-pointer"
+              className="absolute right-3 p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -286,7 +289,7 @@ export const SearchModal = () => {
 
       {/* Live autocomplete dropdown list */}
       {shouldFetchAutocomplete ? (
-        <div className="flex flex-col max-h-[42vh] overflow-y-auto rounded-2xl border border-neutral-200/80 bg-white divide-y divide-neutral-100 shadow-sm">
+        <div className="flex flex-col max-h-[42vh] overflow-y-auto rounded-2xl border border-border bg-card divide-y divide-border shadow-sm">
           {suggestions.length > 0 ? (
             suggestions.map((suggestion) => (
               <button
@@ -299,7 +302,7 @@ export const SearchModal = () => {
                   gap-3.5 
                   px-4 
                   py-3 
-                  hover:bg-neutral-50 
+                  hover:bg-muted 
                   transition 
                   cursor-pointer 
                   text-left 
@@ -307,17 +310,17 @@ export const SearchModal = () => {
                 "
               >
                 {/* Left icon: circular light-gray background with MapPin */}
-                <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5 text-neutral-600" />
+                <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5 text-muted-foreground" />
                 </div>
 
                 {/* Text container */}
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="font-medium text-neutral-800 text-sm truncate">
+                  <span className="font-medium text-foreground text-sm truncate">
                     {suggestion.display_name}
                   </span>
                   {suggestion.secondary_text && (
-                    <span className="text-neutral-500 text-xs truncate">
+                    <span className="text-muted-foreground text-xs truncate">
                       {suggestion.secondary_text}
                     </span>
                   )}
@@ -325,7 +328,7 @@ export const SearchModal = () => {
               </button>
             ))
           ) : !isAutocompleteLoading ? (
-            <div className="p-6 text-center text-sm text-neutral-500">
+            <div className="p-6 text-center text-sm text-muted-foreground">
               No matching destinations found across Nigeria.
             </div>
           ) : null}
@@ -333,7 +336,7 @@ export const SearchModal = () => {
       ) : (
         /* Popular Destinations grid when input is empty or < 2 characters */
         <div>
-          <label className="text-xs font-bold uppercase tracking-wider text-neutral-500 block mb-2.5">
+          <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground block mb-2.5">
             Popular Destinations
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[32vh] overflow-y-auto pr-1">
@@ -359,13 +362,13 @@ export const SearchModal = () => {
                     text-left
                     ${
                       isSelected
-                        ? "border-black bg-neutral-100"
-                        : "border-neutral-200 hover:border-neutral-400 bg-white hover:bg-neutral-50/50"
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border hover:border-border/80 bg-card hover:bg-muted text-foreground"
                     }
                   `}
                 >
-                  <span className="truncate w-full font-bold text-neutral-800">{hub.name}</span>
-                  <span className="text-[11px] text-neutral-500">{hub.state}</span>
+                  <span className="truncate w-full font-bold text-foreground">{hub.name}</span>
+                  <span className="text-[11px] text-muted-foreground">{hub.state}</span>
                 </button>
               );
             })}

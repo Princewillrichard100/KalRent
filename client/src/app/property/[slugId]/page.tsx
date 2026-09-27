@@ -112,7 +112,7 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
       : ["/placeholder.jpg"];
 
   return (
-    <div className="py-8 bg-slate-50 min-h-screen">
+    <div className="py-8 bg-background min-h-screen text-foreground">
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: "/" },
@@ -129,35 +129,35 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
         <div className="flex items-center justify-between pb-6">
           <Link
             href={`/rent/${slugify(state)}/${slugify(city)}`}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-600 hover:text-emerald-700 transition"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to {city} Rentals</span>
           </Link>
-          <div className="flex items-center gap-2 text-xs text-neutral-500">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <ShieldCheck className="w-4 h-4 text-primary" />
             <span>Identity Verified Landlord • ID: #{property.id}</span>
           </div>
         </div>
 
         {/* Title & Location Header */}
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-neutral-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-foreground tracking-tight">
             {property.name}
           </h1>
-          <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-neutral-600">
+          <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-muted-foreground">
             <div className="flex items-center gap-1.5 font-medium">
-              <MapPin className="w-4 h-4 text-emerald-600" />
+              <MapPin className="w-4 h-4 text-primary" />
               <span>{location.address || property.landmark || city}, {city}, {state}</span>
             </div>
             <span>•</span>
             <div className="flex items-center gap-1.5">
-              <Bed className="w-4 h-4 text-neutral-500" />
+              <Bed className="w-4 h-4 text-muted-foreground" />
               <span>{property.beds} Bedrooms</span>
             </div>
             <span>•</span>
             <div className="flex items-center gap-1.5">
-              <Bath className="w-4 h-4 text-neutral-500" />
+              <Bath className="w-4 h-4 text-muted-foreground" />
               <span>{property.baths} Bathrooms</span>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
 
         {/* Photo Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-10 rounded-2xl overflow-hidden max-h-[500px]">
-          <div className="md:col-span-2 relative h-[320px] md:h-[500px] bg-neutral-200">
+          <div className="md:col-span-2 relative h-[320px] md:h-[500px] bg-muted">
             <Image
               src={photos[0]}
               alt={`${property.name} main view`}
@@ -177,10 +177,10 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
           </div>
           <div className="hidden md:grid md:col-span-2 grid-cols-2 gap-3 h-[500px]">
             {photos.slice(1, 5).map((photo: string, idx: number) => (
-              <div key={idx} className="relative h-[244px] bg-neutral-200">
+              <div key={idx} className="relative h-[244px] bg-muted">
                 <Image
                   src={photo}
-                  alt={`${property.name} photo ${idx + 2}`}
+                  alt={`${property.name} view ${idx + 2}`}
                   fill
                   className="object-cover hover:scale-102 transition duration-300"
                   sizes="25vw"
@@ -195,24 +195,24 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
           {/* Left: Overview, Amenities & Description */}
           <div className="lg:col-span-7 space-y-8">
             {/* Description */}
-            <div className="bg-white p-6 md:p-8 rounded-2xl border border-neutral-200/80 shadow-2xs">
-              <h2 className="text-xl font-bold text-neutral-900 mb-3">
+            <div className="bg-card p-6 md:p-8 rounded-2xl border border-border shadow-2xs">
+              <h2 className="text-xl font-bold text-foreground mb-3">
                 About this Property
               </h2>
-              <p className="text-sm md:text-base text-neutral-600 leading-relaxed whitespace-pre-line">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed whitespace-pre-line">
                 {property.description}
               </p>
             </div>
 
             {/* Amenities Checklist */}
-            <div className="bg-white p-6 md:p-8 rounded-2xl border border-neutral-200/80 shadow-2xs">
-              <h2 className="text-xl font-bold text-neutral-900 mb-4">
+            <div className="bg-card p-6 md:p-8 rounded-2xl border border-border shadow-2xs">
+              <h2 className="text-xl font-bold text-foreground mb-4">
                 What this place offers
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {(property.amenities || []).map((amenity: string, i: number) => (
-                  <div key={i} className="flex items-center gap-2 text-xs font-semibold text-neutral-700 bg-neutral-50 p-3 rounded-xl border border-neutral-100">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <div key={i} className="flex items-center gap-2 text-xs font-semibold text-foreground bg-muted/40 p-3 rounded-xl border border-border">
+                    <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
                     <span className="truncate">{amenity}</span>
                   </div>
                 ))}
@@ -231,62 +231,62 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
 
           {/* Right: Sticky Reservation Card */}
           <div className="lg:col-span-5">
-            <div className="sticky top-24 bg-white p-6 md:p-8 rounded-2xl border border-neutral-200/90 shadow-md">
-              <div className="flex items-baseline justify-between pb-6 border-b border-neutral-100">
+            <div className="sticky top-24 bg-card p-6 md:p-8 rounded-2xl border border-border shadow-md">
+              <div className="flex items-baseline justify-between pb-6 border-b border-border">
                 <div>
-                  <span className="text-3xl font-black text-neutral-900">
+                  <span className="text-3xl font-black text-foreground">
                     {formatNaira(property.annualRent)}
                   </span>
-                  <span className="text-xs text-neutral-500 font-medium ml-1">/year</span>
+                  <span className="text-xs text-muted-foreground font-medium ml-1">/year</span>
                 </div>
-                <div className="flex items-center gap-1 text-xs text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full">
+                <div className="flex items-center gap-1 text-xs text-primary font-semibold bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Verified</span>
                 </div>
               </div>
 
               {/* Fee Transparency Box */}
-              <div className="py-5 space-y-2.5 text-xs text-neutral-600 border-b border-neutral-100">
+              <div className="py-5 space-y-2.5 text-xs text-muted-foreground border-b border-border">
                 <div className="flex justify-between">
                   <span>Refundable Caution Deposit (10%)</span>
-                  <span className="font-semibold text-neutral-900">
+                  <span className="font-semibold text-foreground">
                     {formatNaira(property.annualRent * 0.1)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tenancy Agreement &amp; Legal (10%)</span>
-                  <span className="font-semibold text-neutral-900">
+                  <span className="font-semibold text-foreground">
                     {formatNaira(property.annualRent * 0.1)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Agency Commission (10%)</span>
-                  <span className="font-semibold text-neutral-900">
+                  <span className="font-semibold text-foreground">
                     {formatNaira(property.annualRent * 0.1)}
                   </span>
                 </div>
-                <div className="flex justify-between text-emerald-700 font-medium pt-1">
+                <div className="flex justify-between text-primary font-medium pt-1">
                   <span>KalRent Escrow Protection</span>
                   <span className="font-bold">FREE (0%)</span>
                 </div>
               </div>
 
-              <div className="py-4 flex justify-between items-baseline text-sm font-bold text-neutral-900">
+              <div className="py-4 flex justify-between items-baseline text-sm font-bold text-foreground">
                 <span>Estimated Upfront Move-In</span>
-                <span className="text-xl text-emerald-800">
+                <span className="text-xl text-primary font-black">
                   {formatNaira(property.annualRent * 1.3)}
                 </span>
               </div>
 
               <Link
                 href={`/listings/${property.id}`}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-700 transition shadow-sm"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition shadow-sm"
               >
                 <Lock className="w-4 h-4" />
                 <span>Reserve with Escrow Protection</span>
               </Link>
 
-              <p className="text-[11px] text-neutral-400 text-center mt-3 leading-normal">
+              <p className="text-[11px] text-muted-foreground text-center mt-3 leading-normal">
                 Funds are held in secure escrow and released to the landlord only after you inspect and accept the keys.
               </p>
             </div>

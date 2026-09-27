@@ -71,16 +71,16 @@ export const ListingSectionRow: React.FC<ListingSectionRowProps> = ({
 
   if (isLoading || !section) {
     return (
-      <section className="w-full py-6 md:py-8 border-b border-neutral-100 last:border-b-0">
+      <section className="w-full py-6 md:py-8 border-b border-border last:border-b-0">
         {/* Header with skeleton Title and Chevrons */}
         <div className="flex items-center justify-between gap-4 mb-4 px-1">
           <div>
-            <div className="h-7 w-64 bg-neutral-200 animate-pulse rounded-md" />
-            <div className="h-4 w-44 bg-neutral-100 animate-pulse rounded-md mt-1" />
+            <div className="h-7 w-64 bg-muted animate-pulse rounded-md" />
+            <div className="h-4 w-44 bg-muted animate-pulse rounded-md mt-1" />
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full border border-neutral-200 bg-neutral-100 animate-pulse" />
-            <div className="w-8 h-8 rounded-full border border-neutral-200 bg-neutral-100 animate-pulse" />
+            <div className="w-8 h-8 rounded-full border border-border bg-muted animate-pulse" />
+            <div className="w-8 h-8 rounded-full border border-border bg-muted animate-pulse" />
           </div>
         </div>
 
@@ -129,21 +129,21 @@ export const ListingSectionRow: React.FC<ListingSectionRowProps> = ({
   if (!section.listings || section.listings.length === 0) return null;
 
   return (
-    <section className="w-full py-6 md:py-8 border-b border-neutral-100 last:border-b-0">
+    <section className="w-full py-6 md:py-8 border-b border-border last:border-b-0">
       {/* 1. Header with Clickable Title and Scroll Chevrons */}
       <div className="flex items-center justify-between gap-4 mb-4 px-1">
         <div>
           <Link
             href={sectionSearchHref}
-            className="group inline-flex items-center gap-2 text-xl sm:text-2xl font-bold text-neutral-900 hover:underline"
+            className="group inline-flex items-center gap-2 text-xl sm:text-2xl font-bold text-foreground hover:underline"
           >
             <span>{section.title}</span>
-            <span className="text-xl font-normal transition-transform duration-200 group-hover:translate-x-1.5 text-neutral-600">
+            <span className="text-xl font-normal transition-transform duration-200 group-hover:translate-x-1.5 text-muted-foreground">
               →
             </span>
           </Link>
           {section.subtitle && (
-            <p className="text-sm text-neutral-500 mt-0.5">{section.subtitle}</p>
+            <p className="text-sm text-muted-foreground mt-0.5">{section.subtitle}</p>
           )}
         </div>
 
@@ -154,10 +154,10 @@ export const ListingSectionRow: React.FC<ListingSectionRowProps> = ({
             onClick={() => handleScroll("left")}
             disabled={!canScrollLeft}
             aria-label="Previous listings"
-            className={`w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center transition ${
+            className={`w-8 h-8 rounded-full border border-border bg-card flex items-center justify-center transition ${
               canScrollLeft
-                ? "hover:border-black text-neutral-800 cursor-pointer hover:scale-105"
-                : "opacity-30 text-neutral-300 cursor-not-allowed"
+                ? "hover:border-foreground text-foreground cursor-pointer hover:scale-105"
+                : "opacity-30 text-muted-foreground cursor-not-allowed"
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -167,10 +167,10 @@ export const ListingSectionRow: React.FC<ListingSectionRowProps> = ({
             onClick={() => handleScroll("right")}
             disabled={!canScrollRight}
             aria-label="Next listings"
-            className={`w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center transition ${
+            className={`w-8 h-8 rounded-full border border-border bg-card flex items-center justify-center transition ${
               canScrollRight
-                ? "hover:border-black text-neutral-800 cursor-pointer hover:scale-105"
-                : "opacity-30 text-neutral-300 cursor-not-allowed"
+                ? "hover:border-foreground text-foreground cursor-pointer hover:scale-105"
+                : "opacity-30 text-muted-foreground cursor-not-allowed"
             }`}
           >
             <ChevronRight className="w-4 h-4" />

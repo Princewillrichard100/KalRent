@@ -105,7 +105,7 @@ export const Categories = () => {
   }
 
   return (
-    <div className="border-b border-neutral-200 bg-white shadow-2xs">
+    <div className="border-b border-border bg-background/95 sticky top-[69px] z-40 transition-colors transform-gpu">
       <Container>
         <div className="pt-4 pb-2 flex flex-row items-center justify-between overflow-x-auto no-scrollbar gap-6 sm:gap-8">
           {CATEGORIES_LIST.map((item) => {
@@ -125,19 +125,18 @@ export const Categories = () => {
                   gap-2 
                   pb-2.5 
                   border-b-2 
-                  hover:text-neutral-800 
-                  transition 
+                  transition-colors 
                   cursor-pointer 
                   whitespace-nowrap 
                   shrink-0
                   ${
                     isSelected
-                      ? "border-neutral-800 text-neutral-800 font-semibold"
-                      : "border-transparent text-neutral-500 font-medium hover:border-neutral-300"
+                      ? "border-foreground text-foreground font-semibold"
+                      : "border-transparent text-muted-foreground font-medium hover:text-foreground hover:border-border"
                   }
                 `}
               >
-                <Icon className={`w-6 h-6 ${isSelected ? "text-neutral-900" : "text-neutral-500"}`} />
+                <Icon className={`w-6 h-6 ${isSelected ? "text-foreground" : "text-muted-foreground"}`} />
                 <span className="text-[13px] font-medium tracking-tight">{item.label}</span>
               </button>
             );

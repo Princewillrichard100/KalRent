@@ -86,17 +86,17 @@ export const Calendar: React.FC<CalendarProps> = ({
   const daysOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
   return (
-    <div className="w-full select-none bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+    <div className="w-full select-none bg-card p-4 rounded-2xl border border-border shadow-xs text-card-foreground">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-2">
-        <span className="text-sm font-bold text-slate-900">
+        <span className="text-sm font-bold text-foreground">
           {format(currentMonth, "MMMM yyyy")}
         </span>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={prevMonth}
-            className="p-1.5 rounded-full hover:bg-slate-100 text-slate-600 transition cursor-pointer"
+            className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition cursor-pointer"
             aria-label="Previous month"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -104,7 +104,7 @@ export const Calendar: React.FC<CalendarProps> = ({
           <button
             type="button"
             onClick={nextMonth}
-            className="p-1.5 rounded-full hover:bg-slate-100 text-slate-600 transition cursor-pointer"
+            className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition cursor-pointer"
             aria-label="Next month"
           >
             <ChevronRight className="w-4 h-4" />
@@ -113,7 +113,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       </div>
 
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 mb-2 text-center text-xs font-semibold text-slate-400">
+      <div className="grid grid-cols-7 mb-2 text-center text-xs font-semibold text-muted-foreground">
         {daysOfWeek.map((day) => (
           <div key={day} className="py-1">
             {day}
@@ -145,20 +145,20 @@ export const Calendar: React.FC<CalendarProps> = ({
             "w-9 h-9 mx-auto flex items-center justify-center rounded-full transition-all text-xs font-medium cursor-pointer ";
 
           if (isDisabled) {
-            dayClasses += "text-slate-300 line-through cursor-not-allowed ";
+            dayClasses += "text-muted-foreground/40 line-through cursor-not-allowed ";
           } else if (isStart || isEnd) {
-            dayClasses += "bg-rose-500 text-white font-bold shadow-xs ";
+            dayClasses += "bg-primary text-primary-foreground font-bold shadow-xs ";
           } else if (isInRange) {
-            dayClasses += "bg-rose-100 text-rose-900 rounded-none ";
+            dayClasses += "bg-primary/20 text-foreground rounded-none ";
           } else {
-            dayClasses += "text-slate-700 hover:bg-slate-100 ";
+            dayClasses += "text-foreground hover:bg-muted ";
           }
 
           return (
             <div
               key={day.toISOString()}
               className={`h-9 flex items-center justify-center ${
-                isInRange && !isStart && !isEnd ? "bg-rose-50" : ""
+                isInRange && !isStart && !isEnd ? "bg-primary/10" : ""
               }`}
             >
               <button

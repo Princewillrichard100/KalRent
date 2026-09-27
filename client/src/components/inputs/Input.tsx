@@ -39,10 +39,10 @@ const Input: React.FC<InputProps> = ({
       {formatPrice && (
         <span
           className="
-            text-neutral-700
+            text-muted-foreground
             absolute
             top-5
-            left-2
+            left-3
             font-bold
             text-base
           "
@@ -63,24 +63,25 @@ const Input: React.FC<InputProps> = ({
           w-full
           p-4
           pt-6 
-          font-light 
-          bg-white 
-          border-2
-          rounded-md
+          font-normal 
+          bg-muted 
+          border 
+          rounded-xl
+          text-foreground
+          placeholder:text-muted-foreground
           outline-none
-          transition
+          transition-all
           disabled:opacity-70
           disabled:cursor-not-allowed
           ${formatPrice ? 'pl-9' : 'pl-4'}
-          ${errors && errors[id] ? 'border-rose-500' : 'border-neutral-300'}
-          ${errors && errors[id] ? 'focus:border-rose-500' : 'focus:border-black'}
+          ${errors && errors[id] ? 'border-destructive focus:ring-1 focus:ring-destructive' : 'border-border focus:border-primary focus:ring-1 focus:ring-primary'}
         `}
       />
       <label 
         htmlFor={id}
         className={`
           absolute 
-          text-md
+          text-sm
           duration-150 
           transform 
           -translate-y-3 
@@ -92,7 +93,7 @@ const Input: React.FC<InputProps> = ({
           peer-placeholder-shown:translate-y-0 
           peer-focus:scale-75
           peer-focus:-translate-y-4
-          ${errors && errors[id] ? 'text-rose-500' : 'text-zinc-400'}
+          ${errors && errors[id] ? 'text-destructive' : 'text-muted-foreground'}
         `}
       >
         {label}

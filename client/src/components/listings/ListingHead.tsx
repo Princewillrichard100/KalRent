@@ -47,20 +47,20 @@ export const ListingHead: React.FC<ListingHeadProps> = ({
       {/* Title & Actions Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
             {title}
           </h1>
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-500 font-medium mt-1">
-            <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+            <MapPin className="w-4 h-4 text-primary shrink-0" />
             <span className="underline cursor-pointer">{locationValue}</span>
             {campusZone && (
               <>
                 <span>•</span>
-                <span className="font-semibold text-neutral-800">{campusZone}</span>
+                <span className="font-semibold text-foreground">{campusZone}</span>
               </>
             )}
             <span>•</span>
-            <span className="text-emerald-700 font-semibold flex items-center gap-1">
+            <span className="text-primary font-semibold flex items-center gap-1">
               <ShieldCheck className="w-4 h-4" /> Verified Listing
             </span>
           </div>
@@ -70,12 +70,12 @@ export const ListingHead: React.FC<ListingHeadProps> = ({
           <button
             type="button"
             onClick={handleShare}
-            className="flex items-center gap-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-100 p-2 rounded-lg transition cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-semibold text-foreground hover:bg-muted p-2 rounded-lg transition cursor-pointer"
           >
             <Share className="w-4 h-4" />
             <span className="underline">Share</span>
           </button>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-100 p-1.5 rounded-lg transition">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground hover:bg-muted p-1.5 rounded-lg transition">
             <HeartButton propertyId={id} currentUser={currentUser} />
             <span className="underline cursor-pointer">Save</span>
           </div>
@@ -83,7 +83,7 @@ export const ListingHead: React.FC<ListingHeadProps> = ({
       </div>
 
       {/* Canonical Airbnb 5-Photo Showcase Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-2 h-[350px] sm:h-[420px] md:h-[480px] rounded-2xl overflow-hidden relative bg-neutral-100">
+      <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-2 h-[350px] sm:h-[420px] md:h-[480px] rounded-2xl overflow-hidden relative bg-muted">
         {/* Large Primary Hero Photo (Left - 2 cols, 2 rows) */}
         <div
           onClick={() => setSelectedPhoto(photos[0])}

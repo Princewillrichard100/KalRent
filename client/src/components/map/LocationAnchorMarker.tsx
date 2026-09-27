@@ -22,23 +22,23 @@ export function LocationAnchorMarker({ name }: LocationAnchorMarkerProps) {
           className="
             animate-airbnb-bounce
             flex items-center gap-1.5 
-            bg-white text-neutral-900 
+            bg-card text-foreground 
             px-3 py-1.5 rounded-full 
             shadow-[0_4px_16px_rgba(0,0,0,0.18)] 
-            border border-neutral-200/90
+            border border-border
             whitespace-nowrap
           "
         >
           {/* Black Map Pin Icon */}
           <svg
-            className="w-3.5 h-3.5 text-neutral-900 fill-current shrink-0"
+            className="w-3.5 h-3.5 text-primary fill-current shrink-0"
             viewBox="0 0 24 24"
           >
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
           </svg>
 
           {/* Location Title */}
-          <span className="font-bold text-xs tracking-tight text-neutral-900">
+          <span className="font-bold text-xs tracking-tight text-foreground">
             {name}
           </span>
         </div>
@@ -50,7 +50,7 @@ export function LocationAnchorMarker({ name }: LocationAnchorMarkerProps) {
             w-0 h-0 
             border-l-[6px] border-l-transparent 
             border-r-[6px] border-r-transparent 
-            border-t-[6px] border-t-white 
+            border-t-[6px] border-t-card 
             filter drop-shadow-[0_2px_1px_rgba(0,0,0,0.08)]
           "
         />

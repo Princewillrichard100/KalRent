@@ -49,7 +49,7 @@ const PaymentMethod = () => {
 
       <div className="border border-slate-200/80 rounded-xl p-5 bg-slate-50/50">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="w-20 h-12 bg-slate-900 text-emerald-400 font-mono font-bold text-sm flex items-center justify-center rounded-xl shadow-xs shrink-0">
+          <div className="w-20 h-12 bg-slate-900 text-primary font-mono font-bold text-sm flex items-center justify-center rounded-xl shadow-xs shrink-0">
             PAYSTACK
           </div>
           <div className="space-y-1">
@@ -67,7 +67,7 @@ const PaymentMethod = () => {
 
         <div className="mt-4 pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500">
           <span>Caution deposit held securely in escrow until tenancy termination</span>
-          <span className="font-medium text-emerald-700">100% Protected</span>
+          <span className="font-medium text-primary">100% Protected</span>
         </div>
       </div>
     </div>
@@ -111,7 +111,7 @@ const BillingHistory = ({ payments }: { payments: Payment[] }) => {
                 <TableRow key={payment.id} className="h-16 hover:bg-slate-50/60 transition-colors">
                   <TableCell className="font-medium text-slate-900 text-sm">
                     <div className="flex items-center">
-                      <FileText className="w-4 h-4 mr-2 text-emerald-600" />
+                      <FileText className="w-4 h-4 mr-2 text-primary" />
                       Invoice #{payment.id} -{" "}
                       {new Date(payment.paymentDate).toLocaleString("default", {
                         month: "short",
@@ -140,7 +140,7 @@ const BillingHistory = ({ payments }: { payments: Payment[] }) => {
                     ₦{payment.amountPaid.toLocaleString()}
                   </TableCell>
                   <TableCell className="text-right">
-                    <button className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-200 hover:bg-emerald-50/50 py-1.5 px-3 rounded-xl font-medium cursor-pointer text-xs transition-colors shadow-xs">
+                    <button className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-700 hover:text-primary hover:border-primary hover:bg-primary/5 py-1.5 px-3 rounded-xl font-medium cursor-pointer text-xs transition-colors shadow-xs">
                       <ArrowDownToLineIcon className="w-3.5 h-3.5" />
                       <span>Download</span>
                     </button>

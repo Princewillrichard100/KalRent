@@ -91,12 +91,12 @@ export const PriceHistogram: React.FC<PriceHistogramProps> = ({
   const rightPercent = Math.max(0, Math.min(100, ((maxVal - minBound) / (maxBound - minBound || 1)) * 100));
 
   return (
-    <div className="col-span-1 sm:col-span-2 bg-[#F7F7F7]/90 border border-neutral-200/90 rounded-3xl p-5 sm:p-7 select-none my-3 shadow-xs">
+    <div className="col-span-1 sm:col-span-2 bg-card border border-border rounded-3xl p-5 sm:p-7 select-none my-3 shadow-xs">
       <div className="mb-4">
-        <h3 className="text-base sm:text-lg font-bold text-neutral-900 tracking-tight">
+        <h3 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
           See what&apos;s in your price range
         </h3>
-        <p className="text-xs text-neutral-500 font-normal">
+        <p className="text-xs text-muted-foreground font-normal">
           Trip price, includes all fees
         </p>
       </div>
@@ -116,7 +116,7 @@ export const PriceHistogram: React.FC<PriceHistogramProps> = ({
                 <div
                   style={{ height: `${Math.round(heightRatio * 100)}%` }}
                   className={`w-full rounded-t-sm transition-colors duration-150 ${
-                    isInRange ? "bg-[#FF385C]" : "bg-neutral-300/80"
+                    isInRange ? "bg-primary" : "bg-muted"
                   }`}
                 />
               </div>
@@ -127,10 +127,10 @@ export const PriceHistogram: React.FC<PriceHistogramProps> = ({
         {/* Dual Range Track & Thumbs */}
         <div className="relative h-6 flex items-center">
           {/* Base track */}
-          <div className="absolute w-full h-1 bg-neutral-300 rounded-full" />
+          <div className="absolute w-full h-1 bg-muted rounded-full" />
           {/* Active highlighted track */}
           <div
-            className="absolute h-1 bg-[#FF385C] rounded-full"
+            className="absolute h-1 bg-primary rounded-full"
             style={{
               left: `${leftPercent}%`,
               width: `${Math.max(0, rightPercent - leftPercent)}%`,
@@ -165,23 +165,23 @@ export const PriceHistogram: React.FC<PriceHistogramProps> = ({
 
           {/* Left Thumb Visual */}
           <div
-            className="absolute w-6 h-6 rounded-full bg-white border-2 border-neutral-300 shadow-md flex items-center justify-center -translate-x-1/2 pointer-events-none transition-transform active:scale-110 z-20"
+            className="absolute w-6 h-6 rounded-full bg-card border-2 border-primary shadow-md flex items-center justify-center -translate-x-1/2 pointer-events-none transition-transform active:scale-110 z-20"
             style={{ left: `${leftPercent}%` }}
           >
-            <div className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
+            <div className="w-1.5 h-1.5 rounded-full bg-foreground" />
           </div>
 
           {/* Right Thumb Visual */}
           <div
-            className="absolute w-6 h-6 rounded-full bg-white border-2 border-neutral-300 shadow-md flex items-center justify-center -translate-x-1/2 pointer-events-none transition-transform active:scale-110 z-20"
+            className="absolute w-6 h-6 rounded-full bg-card border-2 border-primary shadow-md flex items-center justify-center -translate-x-1/2 pointer-events-none transition-transform active:scale-110 z-20"
             style={{ left: `${rightPercent}%` }}
           >
-            <div className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
+            <div className="w-1.5 h-1.5 rounded-full bg-foreground" />
           </div>
         </div>
 
         {/* Labels under slider */}
-        <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 mt-2 px-1">
+        <div className="flex justify-between items-center text-xs font-semibold text-foreground mt-2 px-1">
           <span>{formatShort(minVal)}</span>
           <span>{formatShort(maxVal)}+</span>
         </div>
