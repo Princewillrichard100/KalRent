@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { wktToGeoJSON } from "@terraformer/wkt";
+import { normalizePhotoUrls } from "./propertyControllers";
 
 const prisma = new PrismaClient();
 
@@ -81,36 +81,36 @@ export const getManagerProperties = async (
 ): Promise<void> => {
   try {
     const { cognitoId } = req.params;
-    const properties = await prisma.property.findMany({
-      where: { managerCognitoId: cognitoId },
-      include: {
-        location: true,
-      },
-    });
 
-    const propertiesWithFormattedLocation = await Promise.all(
-      properties.map(async (property) => {
-        const coordinates: { coordinates: string }[] =
-          await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
+    // Performance Optimization: Fetch properties and location coordinates in a single SQL query
+    // eliminating N+1 database round-trips and WKT parsing overhead.
+    const properties = await prisma.$queryRaw<any[]>`
+      SELECT
+        p.*,
+        json_build_object(
+          'id', l.id,
+          'address', l.address,
+          'city', l.city,
+          'state', l.state,
+          'country', l.country,
+          'postalCode', l."postalCode",
+          'coordinates', json_build_object(
+            'longitude', ST_X(l."coordinates"::geometry),
+            'latitude', ST_Y(l."coordinates"::geometry)
+          )
+        ) as location
+      FROM "Property" p
+      JOIN "Location" l ON p."locationId" = l.id
+      WHERE p."managerCognitoId" = ${cognitoId}
+      ORDER BY p."postedDate" DESC
+    `;
 
-        const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
-        const longitude = geoJSON.coordinates[0];
-        const latitude = geoJSON.coordinates[1];
+    const normalizedProperties = properties.map((p) => ({
+      ...p,
+      photoUrls: normalizePhotoUrls(p.photoUrls),
+    }));
 
-        return {
-          ...property,
-          location: {
-            ...property.location,
-            coordinates: {
-              longitude,
-              latitude,
-            },
-          },
-        };
-      })
-    );
-
-    res.json(propertiesWithFormattedLocation);
+    res.json(normalizedProperties);
   } catch (err: any) {
     res
       .status(500)
