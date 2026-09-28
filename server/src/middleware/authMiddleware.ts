@@ -19,15 +19,33 @@ declare global {
 
 export const authMiddleware = (allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const token = req.headers.authorization?.split(" ")[1];
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
 
+    const token = authHeader.split(" ")[1];
     if (!token) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
 
     try {
-      const decoded = jwt.decode(token) as DecodedToken;
+      const secret = process.env.JWT_SECRET;
+      if (!secret) {
+        console.error("Authentication error: JWT_SECRET environment variable is not configured");
+        res.status(500).json({ message: "Authentication configuration error" });
+        return;
+      }
+
+      const decoded = jwt.verify(token, secret) as DecodedToken;
+
+      if (!decoded || typeof decoded !== "object" || !decoded.sub) {
+        res.status(401).json({ message: "Invalid token claims" });
+        return;
+      }
+
       const userRole = decoded["custom:role"] || "";
       req.user = {
         id: decoded.sub,
@@ -40,8 +58,8 @@ export const authMiddleware = (allowedRoles: string[]) => {
         return;
       }
     } catch (err) {
-      console.error("Failed to decode token:", err);
-      res.status(400).json({ message: "Invalid token" });
+      console.error("Failed to authenticate token:", err);
+      res.status(401).json({ message: "Invalid token" });
       return;
     }
 

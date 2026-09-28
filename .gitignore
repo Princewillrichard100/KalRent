@@ -13,6 +13,7 @@ client/.next/
 Thumbs.db
 
 .vscode/
+*.tsbuildinfo
 
 client/node_modules/
 server/node_modules/
