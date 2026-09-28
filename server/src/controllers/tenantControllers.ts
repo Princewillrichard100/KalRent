@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { wktToGeoJSON } from "@terraformer/wkt";
+import { normalizePhotoUrls } from "./propertyControllers";
 
 const prisma = new PrismaClient();
 
@@ -102,40 +102,40 @@ export const getCurrentResidences = async (
 ): Promise<void> => {
   try {
     const { cognitoId } = req.params;
-    const properties = await prisma.property.findMany({
-      where: { tenants: { some: { cognitoId } } },
-      include: {
-        location: true,
-      },
-    });
+    // Performance optimization: Construct location object with PostGIS ST_X/ST_Y in a single raw query,
+    // resolving N+1 database queries and eliminating WKT string parsing.
+    const properties = await prisma.$queryRaw<any[]>`
+      SELECT
+        p.*,
+        json_build_object(
+          'id', l.id,
+          'address', l.address,
+          'city', l.city,
+          'state', l.state,
+          'country', l.country,
+          'postalCode', l."postalCode",
+          'coordinates', json_build_object(
+            'longitude', ST_X(l."coordinates"::geometry),
+            'latitude', ST_Y(l."coordinates"::geometry)
+          )
+        ) as location
+      FROM "Property" p
+      JOIN "Location" l ON p."locationId" = l.id
+      JOIN "_TenantProperties" tp ON tp."A" = p.id
+      JOIN "Tenant" t ON tp."B" = t.id
+      WHERE t."cognitoId" = ${cognitoId}
+    `;
 
-    const residencesWithFormattedLocation = await Promise.all(
-      properties.map(async (property) => {
-        const coordinates: { coordinates: string }[] =
-          await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
+    const normalizedProperties = properties.map((p) => ({
+      ...p,
+      photoUrls: normalizePhotoUrls(p.photoUrls),
+    }));
 
-        const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
-        const longitude = geoJSON.coordinates[0];
-        const latitude = geoJSON.coordinates[1];
-
-        return {
-          ...property,
-          location: {
-            ...property.location,
-            coordinates: {
-              longitude,
-              latitude,
-            },
-          },
-        };
-      })
-    );
-
-    res.json(residencesWithFormattedLocation);
+    res.json(normalizedProperties);
   } catch (err: any) {
     res
       .status(500)
-      .json({ message: `Error retrieving manager properties: ${err.message}` });
+      .json({ message: `Error retrieving tenant residences: ${err.message}` });
   }
 };
 

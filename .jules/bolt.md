@@ -1,0 +1,3 @@
+## 2025-05-18 - Single-Query PostGIS Location Coordinates Extraction
+**Learning:** Fetching PostGIS point coordinates using a two-step approach (`findUnique`/`findMany` followed by individual `SELECT ST_asText(coordinates)` queries and JavaScript `wktToGeoJSON` parsing) introduces severe N+1 database roundtrips and CPU string parsing overhead on GET endpoints.
+**Action:** Always construct location objects directly in raw SQL queries using PostgreSQL `json_build_object` and PostGIS `ST_X(l.coordinates::geometry)` / `ST_Y(l.coordinates::geometry)`. This collapses 1 + N database queries down to 1 single query and eliminates JS-side WKT parsing.
