@@ -27,7 +27,14 @@ export const authMiddleware = (allowedRoles: string[]) => {
     }
 
     try {
-      const decoded = jwt.decode(token) as DecodedToken;
+      const secret = process.env.JWT_SECRET || "default_jwt_secret";
+      const decoded = jwt.verify(token, secret) as DecodedToken;
+
+      if (!decoded || !decoded.sub) {
+        res.status(401).json({ message: "Invalid token payload" });
+        return;
+      }
+
       const userRole = decoded["custom:role"] || "";
       req.user = {
         id: decoded.sub,
@@ -40,8 +47,8 @@ export const authMiddleware = (allowedRoles: string[]) => {
         return;
       }
     } catch (err) {
-      console.error("Failed to decode token:", err);
-      res.status(400).json({ message: "Invalid token" });
+      console.error("Failed to process token:", err);
+      res.status(401).json({ message: "Invalid or expired token" });
       return;
     }
 

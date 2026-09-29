@@ -1,0 +1,4 @@
+## 2025-05-18 - Safe JWT Verification and Validation in Auth Middleware
+**Vulnerability:** The authentication middleware previously used unverified `jwt.decode(token)` which only parsed the token body without signature verification or null/expiration checks, allowing attackers to forge tokens or pass malformed strings causing unhandled type errors.
+**Learning:** `jwt.decode()` does not verify token authenticity or expiration. Relying solely on `jwt.decode()` without checking if the output is non-null and validating claims like `sub` and `exp` opens authentication bypass risks and runtime crashes.
+**Prevention:** Always verify token signatures using `jwt.verify(token, secret)` when secret keys are available, validate that the decoded payload is an object containing expected claims (e.g., `sub`), explicitly check expiration timestamps (`exp`), and fail securely with 401 response status.
