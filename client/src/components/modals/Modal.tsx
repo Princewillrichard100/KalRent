@@ -46,6 +46,19 @@ const Modal: React.FC<ModalProps> = ({
     }, 300);
   }, [disabled, onClose]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen && !disabled) {
+        handleClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, disabled, handleClose]);
+
   const handleSubmit = useCallback(() => {
     if (disabled) {
       return;
@@ -105,25 +118,29 @@ const Modal: React.FC<ModalProps> = ({
             ${showModal ? 'translate-y-0' : 'translate-y-full'}
             ${showModal ? 'opacity-100' : 'opacity-0'}
           `}>
-            <div className="
-              translate
-              h-full
-              lg:h-auto
-              md:h-auto
-              bg-card 
-              border 
-              border-border 
-              text-card-foreground 
-              shadow-2xl 
-              rounded-2xl 
-              relative 
-              flex 
-              flex-col 
-              w-full 
-              outline-none 
-              focus:outline-none
-              overflow-hidden
-            "
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={title ? "modal-title" : undefined}
+              className="
+                translate
+                h-full
+                lg:h-auto
+                md:h-auto
+                bg-card
+                border
+                border-border
+                text-card-foreground
+                shadow-2xl
+                rounded-2xl
+                relative
+                flex
+                flex-col
+                w-full
+                outline-none
+                focus:outline-none
+                overflow-hidden
+              "
             >
               {/*header*/}
               <div className="
@@ -139,6 +156,8 @@ const Modal: React.FC<ModalProps> = ({
                 "
               >
                 <button
+                  type="button"
+                  aria-label="Close modal"
                   className="
                     p-1
                     border-0 
@@ -147,12 +166,17 @@ const Modal: React.FC<ModalProps> = ({
                     absolute
                     left-9
                     text-foreground
+                    rounded-full
+                    focus-visible:outline-none
+                    focus-visible:ring-2
+                    focus-visible:ring-ring
+                    focus-visible:ring-offset-2
                   "
                   onClick={handleClose}
                 >
                   <IoMdClose size={18} />
                 </button>
-                <div className="text-lg font-semibold text-foreground">
+                <div id="modal-title" className="text-lg font-semibold text-foreground">
                   {title}
                 </div>
               </div>
