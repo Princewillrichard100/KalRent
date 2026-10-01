@@ -26,6 +26,8 @@ export const HeartButton: React.FC<HeartButtonProps> = ({
     <button
       type="button"
       onClick={toggleFavorite}
+      aria-label={hasFavorited ? "Remove from favorites" : "Save to favorites"}
+      aria-pressed={hasFavorited}
       className="
         relative
         hover:scale-110
@@ -34,8 +36,11 @@ export const HeartButton: React.FC<HeartButtonProps> = ({
         p-1
         rounded-full
         active:scale-95
+        focus-visible:outline-none
+        focus-visible:ring-2
+        focus-visible:ring-primary
+        focus-visible:ring-offset-2
       "
-      aria-label="Save to favorites"
     >
       <Heart
         className={`
