@@ -27,7 +27,21 @@ export const authMiddleware = (allowedRoles: string[]) => {
     }
 
     try {
-      const decoded = jwt.decode(token) as DecodedToken;
+      // SECURITY FIX: Verify JWT signature using jwt.verify instead of unverified decoding
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret) {
+        console.error("JWT_SECRET environment variable is not configured");
+        res.status(500).json({ message: "Internal server error" });
+        return;
+      }
+
+      const decoded = jwt.verify(token, jwtSecret) as DecodedToken;
+
+      if (!decoded || typeof decoded !== "object" || !decoded.sub) {
+        res.status(401).json({ message: "Invalid token payload" });
+        return;
+      }
+
       const userRole = decoded["custom:role"] || "";
       req.user = {
         id: decoded.sub,
@@ -40,8 +54,8 @@ export const authMiddleware = (allowedRoles: string[]) => {
         return;
       }
     } catch (err) {
-      console.error("Failed to decode token:", err);
-      res.status(400).json({ message: "Invalid token" });
+      console.error("Failed to verify token:", err);
+      res.status(401).json({ message: "Invalid token" });
       return;
     }
 
