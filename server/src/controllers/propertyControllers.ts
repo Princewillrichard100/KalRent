@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { PrismaClient, Prisma } from "@prisma/client";
-import { wktToGeoJSON } from "@terraformer/wkt";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { Location } from "@prisma/client";
 import { Upload } from "@aws-sdk/lib-storage";
@@ -508,39 +507,48 @@ export const getNearbyProperties = async (
   }
 };
 
+// OPTIMIZATION: Replaced 2-step query (Prisma findUnique + ST_asText WKT query + JS wktToGeoJSON parsing)
+// with a single raw query utilizing PostGIS ST_X/ST_Y and json_build_object to construct location coordinates directly.
 export const getProperty = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const property = await prisma.property.findUnique({
-      where: { id: Number(id) },
-      include: {
-        location: true,
-      },
-    });
+    const propertyId = Number(id);
+    if (isNaN(propertyId)) {
+      res.status(400).json({ message: "Invalid property ID" });
+      return;
+    }
+
+    const [property] = await prisma.$queryRaw<any[]>`
+      SELECT
+        p.*,
+        json_build_object(
+          'id', l.id,
+          'address', l.address,
+          'city', l.city,
+          'state', l.state,
+          'country', l.country,
+          'postalCode', l."postalCode",
+          'coordinates', json_build_object(
+            'longitude', ST_X(l."coordinates"::geometry),
+            'latitude', ST_Y(l."coordinates"::geometry)
+          )
+        ) as location
+      FROM "Property" p
+      JOIN "Location" l ON p."locationId" = l.id
+      WHERE p.id = ${propertyId}
+    `;
 
     if (property) {
-      const coordinates: { coordinates: string }[] =
-        await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
-
-      const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
-      const longitude = geoJSON.coordinates[0];
-      const latitude = geoJSON.coordinates[1];
-
       const propertyWithCoordinates = {
         ...property,
         photoUrls: normalizePhotoUrls(property.photoUrls),
-        location: {
-          ...property.location,
-          coordinates: {
-            longitude,
-            latitude,
-          },
-        },
       };
       res.json(propertyWithCoordinates);
+    } else {
+      res.status(404).json({ message: "Property not found" });
     }
   } catch (err: any) {
     res
