@@ -1,0 +1,3 @@
+## 2026-10-02 - PostGIS Location Extraction without N+1 Queries or WKT String Parsing
+**Learning:** Querying PostGIS coordinates with `findMany` followed by separate `SELECT ST_asText(coordinates)` queries in a loop creates an N+1 database bottleneck and requires CPU-heavy JavaScript WKT parsing (`@terraformer/wkt`). PostgreSQL can directly construct formatted JSON location objects using `json_build_object('longitude', ST_X(l.coordinates::geometry), 'latitude', ST_Y(l.coordinates::geometry))` in a single `$queryRaw` call.
+**Action:** Always construct location objects directly in PostgreSQL using `json_build_object` with PostGIS `ST_X` and `ST_Y` in single SQL queries instead of executing multi-step queries with JavaScript WKT parsing.
