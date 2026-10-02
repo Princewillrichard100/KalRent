@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-import { wktToGeoJSON } from "@terraformer/wkt";
+import { PrismaClient, Prisma } from "@prisma/client";
+import { normalizePhotoUrls } from "./propertyControllers";
 
 const prisma = new PrismaClient();
 
@@ -102,40 +102,51 @@ export const getCurrentResidences = async (
 ): Promise<void> => {
   try {
     const { cognitoId } = req.params;
-    const properties = await prisma.property.findMany({
+
+    // Fetch matching tenant property IDs via Prisma ORM to safely handle relations
+    const tenantProperties = await prisma.property.findMany({
       where: { tenants: { some: { cognitoId } } },
-      include: {
-        location: true,
-      },
+      select: { id: true },
     });
 
-    const residencesWithFormattedLocation = await Promise.all(
-      properties.map(async (property) => {
-        const coordinates: { coordinates: string }[] =
-          await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
+    if (tenantProperties.length === 0) {
+      res.json([]);
+      return;
+    }
 
-        const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
-        const longitude = geoJSON.coordinates[0];
-        const latitude = geoJSON.coordinates[1];
+    const propertyIds = tenantProperties.map((p) => p.id);
 
-        return {
-          ...property,
-          location: {
-            ...property.location,
-            coordinates: {
-              longitude,
-              latitude,
-            },
-          },
-        };
-      })
-    );
+    // Efficiently query properties and format PostGIS coordinates in a single raw query
+    const properties = await prisma.$queryRaw<any[]>`
+      SELECT
+        p.*,
+        json_build_object(
+          'id', l.id,
+          'address', l.address,
+          'city', l.city,
+          'state', l.state,
+          'country', l.country,
+          'postalCode', l."postalCode",
+          'coordinates', json_build_object(
+            'longitude', ST_X(l."coordinates"::geometry),
+            'latitude', ST_Y(l."coordinates"::geometry)
+          )
+        ) as location
+      FROM "Property" p
+      JOIN "Location" l ON p."locationId" = l.id
+      WHERE p.id IN (${Prisma.join(propertyIds)});
+    `;
+
+    const residencesWithFormattedLocation = properties.map((property) => ({
+      ...property,
+      photoUrls: normalizePhotoUrls(property.photoUrls),
+    }));
 
     res.json(residencesWithFormattedLocation);
   } catch (err: any) {
     res
       .status(500)
-      .json({ message: `Error retrieving manager properties: ${err.message}` });
+      .json({ message: `Error retrieving current residences: ${err.message}` });
   }
 };
 
